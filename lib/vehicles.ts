@@ -1,0 +1,167 @@
+export interface Vehicle {
+  id: string;
+  name: string;
+  category: string;
+  otr: number;
+  rebate: number;
+  range: number;
+  battery: number;
+  power: number;
+  torque: number;
+  acceleration: number;
+  driveType: string;
+  seats: number;
+  image: string;
+  url: string;
+}
+
+export const vehicles: Vehicle[] = [
+  {
+    id: "atto2",
+    name: "Atto 2 Premium",
+    category: "Compact Electric SUV",
+    otr: 106353.00,
+    rebate: 9000,
+    range: 410,
+    battery: 51.13,
+    power: 130,
+    torque: 290,
+    acceleration: 7.9,
+    driveType: "FWD",
+    seats: 5,
+    image: "/images/atto2.png",
+    url: "https://byd.simemotors.my/models/byd-atto-2.html",
+  },
+  {
+    id: "atto3ultra",
+    name: "Atto 3 Ultra",
+    category: "Electric SUV",
+    otr: 132729.25,
+    rebate: 10000,
+    range: 480,
+    battery: 60.48,
+    power: 150,
+    torque: 310,
+    acceleration: 7.3,
+    driveType: "FWD",
+    seats: 5,
+    image: "/images/atto3-ultra.png",
+    url: "https://byd.simemotors.my/byd-atto-3",
+  },
+  {
+    id: "atto3premium",
+    name: "Atto 3 Premium",
+    category: "Electric SUV",
+    otr: 146227.90,
+    rebate: 10000,
+    range: 600,
+    battery: 74.88,
+    power: 230,
+    torque: 380,
+    acceleration: 5.5,
+    driveType: "RWD",
+    seats: 5,
+    image: "/images/atto3-premium.png",
+    url: "https://byd.simemotors.my/byd-atto-3",
+  },
+  {
+    id: "sealion7premium",
+    name: "Sealion 7 Premium",
+    category: "Performance Electric SUV",
+    otr: 192115.85,
+    rebate: 9000,
+    range: 567,
+    battery: 82.5,
+    power: 230,
+    torque: 380,
+    acceleration: 6.7,
+    driveType: "RWD",
+    seats: 5,
+    image: "/images/sealion7-premium.png",
+    url: "https://byd.simemotors.my/models/byd-sealion-7.html",
+  },
+  {
+    id: "sealion7performance",
+    name: "Sealion 7 Performance",
+    category: "Performance Electric SUV",
+    otr: 209061.55,
+    rebate: 9000,
+    range: 542,
+    battery: 82.5,
+    power: 390,
+    torque: 690,
+    acceleration: 4.5,
+    driveType: "AWD",
+    seats: 5,
+    image: "/images/sealion7-performance.png",
+    url: "https://byd.simemotors.my/models/byd-sealion-7.html",
+  },
+  {
+    id: "sealpremium",
+    name: "Seal Premium",
+    category: "Electric Sports Sedan",
+    otr: 179879.05,
+    rebate: 2000,
+    range: 650,
+    battery: 82.56,
+    power: 230,
+    torque: 360,
+    acceleration: 5.9,
+    driveType: "RWD",
+    seats: 5,
+    image: "/images/seal-premium.png",
+    url: "https://byd.simemotors.my/models/byd-seal.html",
+  },
+  {
+    id: "sealperformance",
+    name: "Seal Performance",
+    category: "Electric Sports Sedan",
+    otr: 200903.70,
+    rebate: 2000,
+    range: 580,
+    battery: 82.56,
+    power: 390,
+    torque: 670,
+    acceleration: 3.8,
+    driveType: "AWD",
+    seats: 5,
+    image: "/images/seal-performance.png",
+    url: "https://byd.simemotors.my/models/byd-seal.html",
+  },
+  {
+    id: "seal6",
+    name: "Seal 6 Premium",
+    category: "Electric Sedan",
+    otr: 122551.95,
+    rebate: 1800,
+    range: 485,
+    battery: 56.64,
+    power: 160,
+    torque: 330,
+    acceleration: 7.5,
+    driveType: "RWD",
+    seats: 5,
+    image: "/images/seal6.png",
+    url: "https://byd.simemotors.my/models/byd-seal-6-ev.html",
+  },
+  {
+    id: "m6",
+    name: "M6 Extended",
+    category: "7-Seater Electric MPV",
+    otr: 130729.25,
+    rebate: 6000,
+    range: 530,
+    battery: 71.8,
+    power: 150,
+    torque: 310,
+    acceleration: 8.6,
+    driveType: "FWD",
+    seats: 7,
+    image: "/images/m6.png",
+    url: "https://byd.simemotors.my/models/byd-m6.html",
+  },
+];
+
+export function getPriceAfterRebate(v: Vehicle) {
+  return v.otr - v.rebate;
+}

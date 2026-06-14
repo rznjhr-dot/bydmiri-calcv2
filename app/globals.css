@@ -1,26 +1,348 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #00E676;
+  --color-secondary: #00D4FF;
+  --color-whatsapp: #25D366;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 0.5;
+}
+
+::selection {
+  background: #00E676;
+  color: black;
+}
+
+/* ── Theme CSS Variables ── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cz-bg: #050505;
+  --cz-bg-alt: #0A0A0A;
+  --cz-bg-section: #050505;
+  --cz-bg-card: #080808;
+  --cz-text: #FFFFFF;
+  --cz-text-90: rgba(255,255,255,0.9);
+  --cz-text-80: rgba(255,255,255,0.8);
+  --cz-text-70: rgba(255,255,255,0.7);
+  --cz-text-50: rgba(255,255,255,0.5);
+  --cz-text-40: rgba(255,255,255,0.4);
+  --cz-text-30: rgba(255,255,255,0.3);
+  --cz-text-20: rgba(255,255,255,0.2);
+  --cz-border: rgba(255,255,255,0.1);
+  --cz-nav: rgba(5,5,5,0.8);
+  --cz-input: rgba(0,0,0,0.3);
+  --cz-ledger: rgba(5,5,5,0.8);
+  --cz-hero-from: #050505;
+  --cz-hero-via: #0A0A0A;
+  --cz-hero-to: #050505;
+  --cz-footer: #050505;
+  --cz-card-border: rgba(255,255,255,0.1);
+  --cz-ring: rgba(0,230,118,0.15);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="light"] {
+  --cz-bg: #FFFFFF;
+  --cz-bg-alt: #F0FDF4;
+  --cz-bg-section: #F8FAFC;
+  --cz-bg-card: #FFFFFF;
+  --cz-text: #050505;
+  --cz-text-90: #0A0A0A;
+  --cz-text-80: #1F2937;
+  --cz-text-70: #374151;
+  --cz-text-50: #6B7280;
+  --cz-text-40: #9CA3AF;
+  --cz-text-30: #D1D5DB;
+  --cz-text-20: #E5E7EB;
+  --cz-border: #E5E7EB;
+  --cz-nav: rgba(255,255,255,0.85);
+  --cz-input: rgba(255,255,255,0.3);
+  --cz-ledger: #F0FDF4;
+  --cz-hero-from: #00E676;
+  --cz-hero-via: #00D4FF;
+  --cz-hero-to: #059669;
+  --cz-footer: #F8FAFC;
+  --cz-card-border: #E5E7EB;
+  --cz-ring: rgba(0,230,118,0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Theme utility classes ── */
+
+.bg-theme { background-color: var(--cz-bg); }
+.bg-theme-alt { background-color: var(--cz-bg-alt); }
+.bg-theme-section { background-color: var(--cz-bg-section); }
+.bg-theme-card { background-color: var(--cz-bg-card); }
+.text-theme { color: var(--cz-text); }
+.text-theme-90 { color: var(--cz-text-90); }
+.text-theme-80 { color: var(--cz-text-80); }
+.text-theme-70 { color: var(--cz-text-70); }
+.text-theme-50 { color: var(--cz-text-50); }
+.text-theme-40 { color: var(--cz-text-40); }
+.text-theme-30 { color: var(--cz-text-30); }
+.text-theme-20 { color: var(--cz-text-20); }
+.border-theme { border-color: var(--cz-border); }
+
+/* ── Animations ── */
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -50px) scale(1.1); }
+  50% { transform: translate(-20px, 20px) scale(0.9); }
+  75% { transform: translate(40px, 30px) scale(1.05); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.3); }
+  50% { box-shadow: 0 0 60px rgba(0, 230, 118, 0.6); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.08); }
+}
+
+.animate-blob { animation: blob 12s infinite ease-in-out; }
+.animate-glow-pulse { animation: glow-pulse 2s infinite ease-in-out; }
+.animate-shimmer { background-size: 200% auto; animation: shimmer 3s infinite linear; }
+.animate-breathe { animation: breathe 3s ease-in-out infinite; }
+
+.animation-delay-1000 { animation-delay: 1s; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-3000 { animation-delay: 3s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+/* Card 3D perspective */
+.card-3d { perspective: 1000px; }
+
+/* Gradient text utility */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Circuit board grid — PCB-inspired traces and solder points */
+.circuit-grid {
+  background-image:
+    /* Horizontal traces */
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 230, 118, 0.04) 0px,
+      rgba(0, 230, 118, 0.04) 1px,
+      transparent 1px,
+      transparent 60px
+    ),
+    /* Vertical traces */
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 212, 255, 0.04) 0px,
+      rgba(0, 212, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 60px
+    ),
+    /* Solder pads */
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 230, 118, 0.08) 0px,
+      rgba(0, 230, 118, 0.08) 2px,
+      transparent 2px
+    );
+  background-size: 60px 60px, 60px 60px, 30px 30px;
+  background-position: 0 0, 0 0, 15px 15px;
+}
+
+/* Denser circuit overlay for hero */
+.circuit-grid-dense {
+  background-image:
+    /* Horizontal traces */
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 230, 118, 0.03) 0px,
+      rgba(0, 230, 118, 0.03) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    /* Vertical traces */
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 212, 255, 0.03) 0px,
+      rgba(0, 212, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    /* Solder pads */
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 230, 118, 0.06) 0px,
+      rgba(0, 230, 118, 0.06) 1.5px,
+      transparent 1.5px
+    );
+  background-size: 30px 30px, 30px 30px, 15px 15px;
+  background-position: 0 0, 0 0, 7.5px 7.5px;
+}
+
+/* ── Parking Lot ── */
+
+.parking-lot-bg {
+  background-color: #080808;
+  background-image:
+    /* Coarse asphalt grain */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.008) 3px,
+      rgba(255,255,255,0.008) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.005) 3px,
+      rgba(255,255,255,0.005) 4px
+    );
+}
+
+/* Diagonal parking stripes */
+.parking-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255,255,200,0.06) 0px,
+    rgba(255,255,200,0.06) 2px,
+    transparent 2px,
+    transparent 28px
+  );
+}
+
+/* Individual parking spot */
+.parking-spot {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  cursor: pointer;
+}
+
+.parking-spot:hover {
+  opacity: 0.85;
+}
+
+.parking-spot.selected {
+  box-shadow: 0 0 35px rgba(0,230,118,0.15);
+}
+
+/* Expanded vehicle panel */
+.parking-expanded {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--cz-bg-alt);
+  border: 1px solid rgba(0,230,118,0.2);
+  box-shadow: 0 0 60px rgba(0,230,118,0.08);
+}
+
+/* Specs bar in expanded view */
+.specs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  justify-content: center;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: rgba(0,230,118,0.05);
+  border: 1px solid rgba(0,230,118,0.1);
+}
+
+.specs-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cz-text-80);
+}
+
+.specs-bar-item .spec-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--color-primary);
+}
+
+/* View specs button */
+.btn-view-specs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cz-text-50);
+  border: 1px solid var(--cz-border);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 6px;
+}
+
+.btn-view-specs:hover {
+  color: var(--color-primary);
+  border-color: rgba(0,230,118,0.3);
+  background: rgba(0,230,118,0.05);
+}
+
+/* Car silhouette container */
+.car-silhouette {
+  width: 100%;
+  max-width: 100px;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.parking-spot:hover .car-silhouette {
+  transform: translateY(-4px);
+}
+
+.parking-spot.selected .car-silhouette {
+  transform: translateY(-2px);
+}
+
+/* Card glow (kept for backward compat) */
+.card-glow {
+  box-shadow: 0 0 0 1px rgba(0, 230, 118, 0.1), 0 4px 20px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(0, 230, 118, 0.2), 0 0 50px -12px rgba(0, 230, 118, 0.15), 0 8px 30px rgba(0,0,0,0.12);
+}
+
+/* ── Gold pulse for Place Booking ── */
+
+@keyframes pulse-gold {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.25), 0 0 30px rgba(255, 215, 0, 0.08);
+    border-color: #FFD700;
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.45), 0 0 50px rgba(255, 215, 0, 0.18);
+    border-color: #FFE44D;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.btn-gold-pulse {
+  animation: pulse-gold 2.5s ease-in-out infinite;
 }
