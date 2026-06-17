@@ -63,10 +63,16 @@ export function fmtDec(n: number): string {
   return n.toLocaleString("en-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export function rm(n: number): string {
-  return "RM" + fmt(n);
-}
 
-export function rmDec(n: number): string {
-  return "RM" + fmtDec(n);
+
+const CARD_LOAN_PCT = 0.9;       // 90% loan-to-value for card estimate
+const CARD_INTEREST_RATE = 0.022; // 2.2% p.a. flat rate for card estimate
+const CARD_TENURE = 9;            // 9 years for card estimate
+const MONTHS_PER_YEAR = 12;
+
+/** Monthly payment used on vehicle cards: (OTR - rebate) × 90% loan × 2.2% flat × 9 years */
+export function calcCardMonthly(otr: number, rebate: number): number {
+  const loanAmount = (otr - rebate) * CARD_LOAN_PCT;
+  const totalRepayment = loanAmount + loanAmount * CARD_INTEREST_RATE * CARD_TENURE;
+  return totalRepayment / (CARD_TENURE * MONTHS_PER_YEAR);
 }

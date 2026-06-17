@@ -1,21 +1,6 @@
-"use client";
+// ThemeProvider — no-op; dark-only theme is applied via CSS variables in globals.css
+import type { ReactNode } from "react";
 
-import { createContext, useContext } from "react";
-
-interface ThemeContextType {
-  theme: "dark";
-}
-
-const ThemeContext = createContext<ThemeContextType>({ theme: "dark" });
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <ThemeContext.Provider value={{ theme: "dark" }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-export function useTheme() {
-  return useContext(ThemeContext);
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  return <>{children}</>;
 }

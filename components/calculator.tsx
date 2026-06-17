@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, MousePointerClick } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
 import { generateWhatsAppUrl, generateWhatsAppBookingUrl } from "@/lib/whatsapp";
@@ -112,7 +112,7 @@ export default function Calculator({ vehicle }: Props) {
             {/* Downpayment */}
             <div>
               <Label>Downpayment</Label>
-              <div className="grid grid-cols-7 gap-1.5 mb-1.5">
+              <div className="grid grid-cols-7 gap-1.5 mb-1.5" role="group" aria-label="Downpayment percentage">
                 {DEPOSIT_PCTS.map((pct) => (
                   <button
                     key={pct}
@@ -145,6 +145,7 @@ export default function Calculator({ vehicle }: Props) {
                   onChange={(e) => setCustomDeposit(e.target.value)}
                   placeholder="Custom"
                   min={0}
+                  aria-label="Custom downpayment amount"
                   className="w-full px-3 py-1.5 rounded-r-lg text-xs outline-none transition-colors placeholder:text-theme-30"
                   style={{
                     backgroundColor: "var(--cz-input)",
@@ -158,7 +159,7 @@ export default function Calculator({ vehicle }: Props) {
             {/* Rate & Tenure */}
             <div>
               <Label>Rate &amp; Tenure</Label>
-              <div className="grid grid-cols-[1.8fr_0.4fr_1fr_1fr_1fr] gap-1.5 items-center">
+              <div className="grid grid-cols-[1.8fr_0.4fr_1fr_1fr_1fr] gap-1.5 items-center" role="group" aria-label="Loan tenure in years">
                 <div className="relative">
                   <input
                     type="number"
@@ -166,6 +167,7 @@ export default function Calculator({ vehicle }: Props) {
                     onChange={(e) => setInterestRate(e.target.value)}
                     step="0.01"
                     min="0"
+                    aria-label="Interest rate percentage"
                     className="w-full px-2 py-1.5 rounded-lg text-xs outline-none transition-colors text-center pr-6"
                     style={{
                       backgroundColor: "var(--cz-input)",
@@ -276,64 +278,28 @@ export default function Calculator({ vehicle }: Props) {
               </div>
             </div>
 
-            {/* WhatsApp CTA */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-xl font-semibold text-sm hover:brightness-110 transition-all"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              WhatsApp Direct for Enquiry
-            </a>
-
-            {/* ── Place Booking ── */}
+            {/* ── Place Booking ── primary like protonmiri test-drive btn */}
             <a
               href={whatsappBookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 w-full inline-flex items-center justify-center gap-2 bg-transparent text-[#FFD700] border-2 px-5 py-[11px] rounded-xl font-semibold text-sm hover:brightness-125 transition-all btn-gold-pulse"
+              className="mt-4 w-full inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:shadow-[0_0_30px_rgba(52,211,153,0.25)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
             >
-              <span className="flex items-center gap-2">
-                {/* Car */}
-                <svg width="24" height="16" viewBox="0 0 40 28" fill="currentColor" className="shrink-0">
-                  <rect x="4" y="10" width="32" height="14" rx="4" opacity="0.8" />
-                  <rect x="10" y="6" width="20" height="8" rx="2" opacity="0.5" />
-                  <rect x="6" y="22" width="8" height="5" rx="2" opacity="0.3" />
-                  <rect x="26" y="22" width="8" height="5" rx="2" opacity="0.3" />
-                  <motion.circle cx="33" cy="17" r="2.5" fill="#34D399"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                </svg>
-                {/* Cable */}
-                <span className="relative w-8 h-[3px] rounded-full overflow-hidden" style={{ backgroundColor: "currentColor", opacity: 0.15 }}>
-                  <motion.span
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400"
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-                  />
-                </span>
-                {/* Plug with lightning bolt */}
-                <span className="relative shrink-0">
-                  <svg width="12" height="16" viewBox="0 0 20 28" fill="currentColor" className="shrink-0">
-                    <rect x="6" y="2" width="8" height="16" rx="2" opacity="0.8" />
-                    <rect x="4" y="16" width="12" height="10" rx="1.5" opacity="0.5" />
-                    <rect x="7" y="20" width="2" height="4" rx="0.5" fill="#34D399" />
-                    <rect x="11" y="20" width="2" height="4" rx="0.5" fill="#34D399" />
-                  </svg>
-                  <motion.span
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 text-[10px] leading-none"
-                    animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
-                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    ⚡
-                  </motion.span>
-                </span>
-              </span>
+              <MousePointerClick size={16} />
               Place Booking
+            </a>
+
+            {/* WhatsApp CTA — secondary like protonmiri card btn */}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1.5 w-full inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 border border-emerald-500/25 text-emerald-300 hover:from-emerald-500/30 hover:to-emerald-600/20 hover:border-emerald-400/40 hover:shadow-[0_0_25px_rgba(52,211,153,0.15)] transition-all duration-200"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp for Enquiry
             </a>
 
             <p className="text-[11px] text-center text-theme-40 mt-4">
@@ -349,8 +315,8 @@ export default function Calculator({ vehicle }: Props) {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--cz-text-40)" }}>
+    <span className="block text-[11px] font-semibold uppercase tracking-wide mb-1" style={{ color: "var(--cz-text-40)" }}>
       {children}
-    </label>
+    </span>
   );
 }
