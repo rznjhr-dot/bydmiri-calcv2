@@ -66,7 +66,7 @@ export function fmtDec(n: number): string {
 
 
 const CARD_LOAN_PCT = 0.9;       // 90% loan-to-value for card estimate
-const CARD_INTEREST_RATE = 0.022; // 2.2% p.a. flat rate for card estimate
+const CARD_INTEREST_RATE = 0.023; // 2.3% p.a. flat rate for card estimate
 const CARD_TENURE = 9;            // 9 years for card estimate
 const MONTHS_PER_YEAR = 12;
 

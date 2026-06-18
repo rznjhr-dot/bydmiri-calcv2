@@ -11,9 +11,9 @@ interface Props {
   vehicle: Vehicle;
 }
 
-const TENURES = [5, 7, 9];
+const TENURES = [2, 3, 4, 5, 6, 7, 8, 9];
 const DEPOSIT_PCTS = [0, 10, 15, 20, 25, 30, 35];
-const DEFAULT_INTEREST = 2.2;
+const DEFAULT_INTEREST = 2.3;
 
 export default function Calculator({ vehicle }: Props) {
   const [rebateOn, setRebateOn] = useState(true);
@@ -159,7 +159,7 @@ export default function Calculator({ vehicle }: Props) {
             {/* Rate & Tenure */}
             <div>
               <Label>Rate &amp; Tenure</Label>
-              <div className="grid grid-cols-[1.8fr_0.4fr_1fr_1fr_1fr] gap-1.5 items-center" role="group" aria-label="Loan tenure in years">
+              <div className="grid grid-cols-[1.8fr_0.3fr_repeat(8,1fr)] gap-1 items-center" role="group" aria-label="Loan tenure in years">
                 <div className="relative">
                   <input
                     type="number"

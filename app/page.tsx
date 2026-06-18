@@ -451,7 +451,7 @@ export default function Home() {
                   <p>
                     The calculation takes into account: downpayment you entered, current
                     rebate offered, financing tenure period, and estimated current interest
-                    rate of 2.2% per annum.
+                    rate of 2.3% per annum.
                   </p>
                   <p>
                     Actual instalment and financing approval are subject to bank assessment,
