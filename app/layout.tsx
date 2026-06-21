@@ -46,12 +46,21 @@ export const metadata: Metadata = {
     siteName: "BYD Miri Loan Calculator",
     locale: "en_MY",
     type: "website",
+    images: [
+      {
+        url: "/byd-logo.png",
+        width: 512,
+        height: 512,
+        alt: "BYD Miri",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "BYD Miri Loan Calculator — Your Monthly Payment in Seconds",
     description:
       "Calculate BYD monthly financing instantly. Compare 9 models, deposit, tenure & rates. Contact Ridzuan Jahari, BYD Miri.",
+    images: ["/byd-logo.png"],
   },
   robots: {
     index: true,

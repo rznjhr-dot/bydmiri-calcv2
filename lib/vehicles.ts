@@ -4,6 +4,7 @@ export interface Vehicle {
   category: string;
   otr: number;
   rebate: number;
+  cspRebate: number;
   range: number;
   battery: number;
   power: number;
@@ -22,6 +23,7 @@ export const vehicles: Vehicle[] = [
     category: "Compact Electric SUV",
     otr: 106353.00,
     rebate: 9000,
+    cspRebate: 2000,
     range: 410,
     battery: 51.13,
     power: 130,
@@ -38,6 +40,7 @@ export const vehicles: Vehicle[] = [
     category: "Electric Sedan",
     otr: 122551.95,
     rebate: 1800,
+    cspRebate: 2000,
     range: 485,
     battery: 56.64,
     power: 160,
@@ -54,6 +57,7 @@ export const vehicles: Vehicle[] = [
     category: "Electric SUV",
     otr: 132729.25,
     rebate: 10000,
+    cspRebate: 2000,
     range: 480,
     battery: 60.48,
     power: 150,
@@ -70,6 +74,7 @@ export const vehicles: Vehicle[] = [
     category: "Electric SUV",
     otr: 146227.90,
     rebate: 10000,
+    cspRebate: 2000,
     range: 600,
     battery: 74.88,
     power: 230,
@@ -86,6 +91,7 @@ export const vehicles: Vehicle[] = [
     category: "Performance Electric SUV",
     otr: 192115.85,
     rebate: 9000,
+    cspRebate: 4000,
     range: 567,
     battery: 82.5,
     power: 230,
@@ -102,6 +108,7 @@ export const vehicles: Vehicle[] = [
     category: "Performance Electric SUV",
     otr: 209061.55,
     rebate: 9000,
+    cspRebate: 4000,
     range: 542,
     battery: 82.5,
     power: 390,
@@ -118,6 +125,7 @@ export const vehicles: Vehicle[] = [
     category: "Electric Sports Sedan",
     otr: 179879.05,
     rebate: 2000,
+    cspRebate: 2000,
     range: 650,
     battery: 82.56,
     power: 230,
@@ -134,6 +142,7 @@ export const vehicles: Vehicle[] = [
     category: "Electric Sports Sedan",
     otr: 200903.70,
     rebate: 2000,
+    cspRebate: 2000,
     range: 580,
     battery: 82.56,
     power: 390,
@@ -150,6 +159,7 @@ export const vehicles: Vehicle[] = [
     category: "7-Seater Electric MPV",
     otr: 130729.25,
     rebate: 6000,
+    cspRebate: 2000,
     range: 530,
     battery: 71.8,
     power: 150,

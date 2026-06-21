@@ -17,6 +17,7 @@ const DEFAULT_INTEREST = 2.3;
 
 export default function Calculator({ vehicle }: Props) {
   const [rebateOn, setRebateOn] = useState(true);
+  const [cspOn, setCspOn] = useState(false);
   const [depositPct, setDepositPct] = useState(10);
   const [customDeposit, setCustomDeposit] = useState("");
   const [tenure, setTenure] = useState(9);
@@ -29,12 +30,14 @@ export default function Calculator({ vehicle }: Props) {
       otr: vehicle.otr,
       rebate: vehicle.rebate,
       rebateEnabled: rebateOn,
+      cspEnabled: cspOn,
+      cspRebate: vehicle.cspRebate,
       depositPercent: depositPct,
       customDeposit: !customVal || isNaN(customVal) ? null : customVal,
       tenure,
       interestRate: rate,
     });
-  }, [vehicle, rebateOn, depositPct, customDeposit, tenure, interestRate]);
+  }, [vehicle, rebateOn, cspOn, depositPct, customDeposit, tenure, interestRate]);
 
   const whatsappUrl = useMemo(
     () =>
@@ -84,30 +87,61 @@ export default function Calculator({ vehicle }: Props) {
           {/* ---- Inputs ---- */}
           <div className="space-y-4 text-center">
             {/* Rebate toggle */}
-            <button
-              onClick={() => setRebateOn(!rebateOn)}
-              className={`flex items-center justify-center gap-2.5 px-3.5 py-2 rounded-lg border transition-colors text-sm w-full ${
-                rebateOn
-                  ? "border-emerald-500/40 text-emerald-400"
-                  : "text-theme-50"
-              }`}
-              style={{
-                backgroundColor: rebateOn ? "rgba(0,230,118,0.1)" : "transparent",
-                borderColor: rebateOn ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
-              }}
-            >
-              <div
-                className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
-                  rebateOn ? "bg-emerald-500" : ""
+            <div className="space-y-2">
+              <button
+                onClick={() => setRebateOn(!rebateOn)}
+                className={`flex items-center justify-center gap-2.5 px-3.5 py-2 rounded-lg border transition-colors text-sm w-full ${
+                  rebateOn
+                    ? "border-emerald-500/40 text-emerald-400"
+                    : "text-theme-50"
                 }`}
-                style={{ backgroundColor: rebateOn ? undefined : "var(--cz-text-30)" }}
+                style={{
+                  backgroundColor: rebateOn ? "rgba(0,230,118,0.1)" : "transparent",
+                  borderColor: rebateOn ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
+                }}
               >
-                {rebateOn && <Check size={10} className="text-white" />}
-              </div>
-              <span className="font-medium">
-                RM{fmt(vehicle.rebate)} Rebate
-              </span>
-            </button>
+                <div
+                  className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
+                    rebateOn ? "bg-emerald-500" : ""
+                  }`}
+                  style={{ backgroundColor: rebateOn ? undefined : "var(--cz-text-30)" }}
+                >
+                  {rebateOn && <Check size={10} className="text-white" />}
+                </div>
+                <span className="font-medium">
+                  RM{fmt(vehicle.rebate)} Rebate
+                </span>
+              </button>
+
+              {/* CSP/GSP/SSP toggle */}
+              <button
+                onClick={() => setCspOn(!cspOn)}
+                className={`flex items-center justify-center gap-2.5 px-3.5 py-2 rounded-lg border transition-colors text-sm w-full ${
+                  cspOn
+                    ? "border-cyan-500/40 text-cyan-400"
+                    : "text-theme-50"
+                }`}
+                style={{
+                  backgroundColor: cspOn ? "rgba(0,206,209,0.1)" : "transparent",
+                  borderColor: cspOn ? "rgba(0,206,209,0.4)" : "var(--cz-border)",
+                }}
+              >
+                <div
+                  className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
+                    cspOn ? "bg-cyan-500" : ""
+                  }`}
+                  style={{ backgroundColor: cspOn ? undefined : "var(--cz-text-30)" }}
+                >
+                  {cspOn && <Check size={10} className="text-white" />}
+                </div>
+                <span className="font-medium">
+                  RM{fmt(vehicle.cspRebate)} CSP/GSP/SSP*
+                </span>
+              </button>
+              <p className="text-[10px] text-theme-50/50 text-center leading-tight mt-0.5">
+                *CSP/GSP/SSP = Corporate/Government/Student Support Program (T&amp;Cs apply)
+              </p>
+            </div>
 
             {/* Downpayment */}
             <div>
@@ -222,6 +256,16 @@ export default function Calculator({ vehicle }: Props) {
                     <span className="text-theme-50">Rebate :</span>
                     <span className="text-emerald-400 font-medium tabular-nums">
                       (-)&nbsp;{fmtDec(result.rebateAmount)}
+                    </span>
+                  </div>
+                )}
+
+                {/* CSP/GSP/SSP */}
+                {cspOn && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-theme-50">CSP/GSP/SSP :</span>
+                    <span className="text-cyan-400 font-medium tabular-nums">
+                      (-)&nbsp;{fmtDec(result.cspAmount)}
                     </span>
                   </div>
                 )}

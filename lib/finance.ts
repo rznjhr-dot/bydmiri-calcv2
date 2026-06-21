@@ -2,6 +2,8 @@ export interface FinanceInput {
   otr: number;
   rebate: number;
   rebateEnabled: boolean;
+  cspRebate: number;
+  cspEnabled: boolean;
   depositPercent: number;
   customDeposit: number | null;
   tenure: number;
@@ -11,6 +13,7 @@ export interface FinanceInput {
 export interface FinanceResult {
   effectivePrice: number;
   rebateAmount: number;
+  cspAmount: number;
   depositAmount: number;
   loanAmount: number;
   totalInterest: number;
@@ -20,11 +23,9 @@ export interface FinanceResult {
 }
 
 export function calculateFinance(input: FinanceInput): FinanceResult {
-  const effectivePrice = input.rebateEnabled
-    ? input.otr - input.rebate
-    : input.otr;
-
   const rebateAmount = input.rebateEnabled ? input.rebate : 0;
+  const cspAmount = input.cspEnabled ? input.cspRebate : 0;
+  const effectivePrice = input.otr - rebateAmount - cspAmount;
 
   const depositAmount =
     input.customDeposit !== null && input.customDeposit > 0
@@ -46,6 +47,7 @@ export function calculateFinance(input: FinanceInput): FinanceResult {
   return {
     effectivePrice,
     rebateAmount,
+    cspAmount,
     depositAmount,
     loanAmount,
     totalInterest,
@@ -70,7 +72,7 @@ const CARD_INTEREST_RATE = 0.023; // 2.3% p.a. flat rate for card estimate
 const CARD_TENURE = 9;            // 9 years for card estimate
 const MONTHS_PER_YEAR = 12;
 
-/** Monthly payment used on vehicle cards: (OTR - rebate) × 90% loan × 2.2% flat × 9 years */
+/** Monthly payment used on vehicle cards: (OTR - rebate) × 90% loan × 2.3% flat × 9 years */
 export function calcCardMonthly(otr: number, rebate: number): number {
   const loanAmount = (otr - rebate) * CARD_LOAN_PCT;
   const totalRepayment = loanAmount + loanAmount * CARD_INTEREST_RATE * CARD_TENURE;
