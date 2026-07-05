@@ -3,13 +3,14 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Phone, Zap, Gauge, Battery, CircleDot, Info } from "lucide-react";
+import { Phone, Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
+import CheckEligibilityForm from "@/components/check-eligibility-form";
 
 export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -21,6 +22,7 @@ export default function Home() {
   // Focus modal close button when modal opens
   useEffect(() => {
     if (selectedId) calcCloseRef.current?.focus();
+    setShowEligibilityForm(false);
   }, [selectedId]);
 
   useEffect(() => {
@@ -30,6 +32,8 @@ export default function Home() {
   const handleSelect = useCallback((id: string) => {
     setSelectedId((prev) => (prev === id ? null : id));
   }, []);
+
+  const [showEligibilityForm, setShowEligibilityForm] = useState(false);
 
   const handleClose = useCallback(() => setSelectedId(null), []);
 
@@ -59,6 +63,15 @@ export default function Home() {
             <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
           </Link>
           <div className="flex items-center gap-2">
+            <Link
+              href="/why-byd"
+              className="relative inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold border border-emerald-500/20 text-emerald-400/80 hover:text-emerald-300 hover:border-emerald-500/40 bg-emerald-500/[0.03] hover:bg-emerald-500/[0.06] transition-all"
+            >
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Why BYD
+              <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75" />
+              <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400" />
+            </Link>
             <a
               href="https://wa.me/601131933930"
               target="_blank"
@@ -286,6 +299,25 @@ export default function Home() {
               </span>
             </a>
           </motion.div>
+
+          {/* Check Eligibility — bottom CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-6 pt-6 border-t border-white/[0.06]"
+          >
+            <p className="text-xs text-theme-50 mb-3">
+              Not sure if you're eligible? Let us check for you.
+            </p>
+            <Link
+              href="/why-byd"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-emerald-500/20 text-emerald-400/70 text-sm font-semibold hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
+            >
+              <ClipboardCheck size={14} />
+              Check My Eligibility — Free & No Obligation
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -393,6 +425,22 @@ export default function Home() {
 
             {/* Calculator */}
             <Calculator vehicle={selectedVehicle} />
+
+            {/* Check Eligibility */}
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setShowEligibilityForm(!showEligibilityForm)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-500/20 text-emerald-400/70 text-xs font-medium hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
+              >
+                <ClipboardCheck size={12} />
+                {showEligibilityForm ? "Close" : "Not sure about loan eligibility? Check here"}
+              </button>
+              {showEligibilityForm && (
+                <div className="mt-4">
+                  <CheckEligibilityForm defaultCar={selectedVehicle.name} />
+                </div>
+              )}
+            </div>
           </>
         )}
       </Modal>

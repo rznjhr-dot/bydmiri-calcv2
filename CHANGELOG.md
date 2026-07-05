@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.0.0] — 2026-07-05
+
+### Added
+- **Why BYD page** (`/why-byd`) — full-page brand advocacy with:
+  - Blade Battery safety (nail puncture test, LFP chemistry, 500k km lifespan)
+  - Industry-leading warranty (6yr vehicle + 8yr battery)
+  - V2L standard across all models
+  - World's #1 NEV manufacturer credentials
+  - Sales advantages: Savings, Comfort, Technology, Silence, Family Usability, Instant Pickup
+  - Curated comparisons: Atto 3 vs e.MAS 7, Seal vs Model 3, M6 category leadership
+  - Data disclaimers (amber-highlighted)
+- **Check Eligibility form** — discreet lead capture with:
+  - Full name, phone, target car (dropdown), monthly income fields
+  - Google Sheets integration via Google Apps Script (hidden popup submission)
+  - Auto-defaults to currently selected model in calculator modal
+  - Success state with WhatsApp follow-up message (24hrs)
+- **Inline eligibility form** in calculator modal — "Not sure about loan eligibility? Check here"
+- **Eligibility CTA** on main page (before footer) + on Why BYD page (bottom CTA)
+
+### Changed
+- **Nav**: "Why BYD" button (star icon, green ping dot, visible on all screen sizes)
+- **All text**: Standardised to English throughout (form labels, hints, disclaimers)
+- **Calculator modal**: Added eligibility check toggle below loan calculator
+
+### Infrastructure
+- New Google Apps Script web app for lead capture (`GOOGLE_APPS_SCRIPT.md`)
+- Environment variable: `NEXT_PUBLIC_GSHEET_URL` for Google Script endpoint
+- `.env.local` added to `.gitignore`
+- Lead data schema: Timestamp, Name, Phone, Target Car, Monthly Salary, Source
+
 ## [1.5.0] — 2026-06-21
 
 ### Added
