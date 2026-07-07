@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useCallback, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -28,12 +28,53 @@ const panel = {
 };
 
 export function Modal({ open, onClose, children, label, closeRef, className = "" }: ModalProps) {
+  // Focus trap
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const modal = e.currentTarget.querySelector<HTMLElement>(
+        '[role="dialog"]'
+      );
+      if (!modal) return;
+
+      const focusable = modal.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    },
+    [onClose]
+  );
+
+  // Auto-focus close button on open
+  useEffect(() => {
+    if (open && closeRef?.current) {
+      closeRef.current.focus();
+    }
+  }, [open, closeRef]);
+
   return (
     <AnimatePresence>
       {open && (
         <motion.div
           {...backdrop}
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          onKeyDown={handleKeyDown}
         >
           <motion.div
             {...backdrop}
@@ -43,7 +84,7 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
           />
           <motion.div
             {...panel}
-            className={`relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6 ${className}`}
+            className={`relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6 bg-[#080808] ${className}`}
             role="dialog"
             aria-modal="true"
             aria-label={label}

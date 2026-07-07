@@ -74,18 +74,16 @@ export default function Hero() {
 
           {/* Badge */}
           <motion.div
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] text-white/60 text-[10px] font-semibold tracking-[0.15em] uppercase mb-6 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.03)] backdrop-blur-sm"
           >
             The World&apos;s Leading NEV Manufacturer
           </motion.div>
 
           {/* Headline */}
           <motion.h1
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="font-[family-name:var(--font-syne)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
           >
             <span className="text-white/90">Your Dream BYD.</span>
             <br />
@@ -98,9 +96,8 @@ export default function Hero() {
 
           {/* Subtitle */}
           <motion.p
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-base md:text-lg text-white/50 max-w-xl mx-auto mb-8 leading-relaxed"
           >
             No registration. No paperwork. Simply pick your model, choose your deposit,
             and instantly see your monthly estimate — all in one place.
@@ -108,6 +105,7 @@ export default function Hero() {
 
           {/* Browse Models CTA */}
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.45 }}
             className="flex flex-col items-center gap-3"
@@ -136,9 +134,8 @@ export default function Hero() {
 
           {/* Stats */}
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-10 flex justify-center gap-8 md:gap-16"
           >
             {[
               { value: "9", label: "Models" },
@@ -159,9 +156,8 @@ export default function Hero() {
 
           {/* Ridzuan Info Card — centered column */}
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="flex flex-col items-center gap-3"
           >
             {/* Avatar */}
             <Img
@@ -220,6 +216,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
         className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10"

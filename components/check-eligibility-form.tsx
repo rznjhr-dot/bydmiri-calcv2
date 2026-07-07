@@ -47,15 +47,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
 
     const url = GSHEET_WEBAPP_URL + qs;
 
-    // Open tiny popup offscreen and auto-close — user won't see it
-    const popup = window.open("", "_blank", "width=1,height=1,left=-9999,top=-9999");
-    if (popup) {
-      popup.location.href = url;
-      setTimeout(() => { try { popup.close(); } catch (_) {} }, 500);
-    } else {
-      // Fallback: navigator.sendBeacon
-      navigator.sendBeacon(url);
-    }
+    // Send via fetch with no-cors — works across all browsers
+    fetch(url, { method: "GET", mode: "no-cors" }).catch(() => {});
 
     setSubmitted(true);
     setLoading(false);
