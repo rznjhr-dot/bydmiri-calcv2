@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 const GSHEET_WEBAPP_URL =
-  process.env.NEXT_PUBLIC_GSHEET_URL || "";
+  process.env.NEXT_PUBLIC_GSHEET_URL ||
+  "https://script.google.com/macros/s/AKfycbz0jdVsbUzuwK9ecuAvZJ9AWtuGsA5Gn32sBpxC0wzPURsi3WEDF3mXoNpBe9cQsqd0/exec";
 
 interface Props {
   className?: string;
