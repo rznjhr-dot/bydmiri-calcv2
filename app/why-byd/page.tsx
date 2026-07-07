@@ -43,11 +43,11 @@ const advantages = [
     ],
     link: {
       text: "Watch the Blade Battery puncture test →",
-      url: "https://www.youtube.com/watch?v=K07bOv-xSG0",
+      url: "https://www.youtube.com/watch?v=CGQwqWqzkNA",
     },
     link2: {
       text: "BYD Blade Battery official page →",
-      url: "https://www.byd.com/eu/blade-battery",
+      url: "https://byd.simemotors.my/byd-blade-battery",
     },
     gradient: "from-emerald-500/20 to-emerald-600/5",
     accent: "emerald",

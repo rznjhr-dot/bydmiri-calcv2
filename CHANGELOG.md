@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.1.0] — 2026-07-05
+
+### Added
+- **Full Active Sales Lineup** page (`/pricelist`) — transparent pricing table with:
+  - Body Price, Road Tax, Registration (RM60), EV Plate (RM150), B2 Inspection (RM200)
+  - OTR without insurance, Insurance estimate, OTR Price
+  - Rebate in red, Monthly estimate (10% down, 2.30%, 9yr)
+  - Brochure link per model, mobile card layout
+- **Pricelist section** on landing page — condensed table (Model → OTR → Rebate → Monthly)
+- **Why BYD link** in hero section (subtle pill above "Browse Models")
+- Vehicle data: `roadTax`, `sumInsured`, `otrWithoutInsurance` fields per model
+
+### Changed
+- **Landing page flow**: Hero → Browse Models → Full Price List → Calculate Your Monthly Payment → model cards
+- **Nav**: Compact mobile layout (smaller logo, icon-only Why BYD, "Sales" text)
+- **Hero**: "Browse Models" scrolls to Full Price List section (`#full-lineup`)
+- **Section gap**: Reduced spacing between pricelist and vehicle cards
+- **Blade Battery video link**: Updated to working YouTube URL
+- **Blade Battery official link**: Fixed to byd.simemotors.my
+
+### Infrastructure
+- New route: `/pricelist` (static page)
+- Branch: `staging/pricelist`
+
 ## [2.0.0] — 2026-07-05
 
 ### Added

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowDown, Zap, Cpu, CircuitBoard, Radio } from "lucide-react";
+import Link from "next/link";
 import { Img } from "@/components/img";
 
 export default function Hero() {
@@ -109,12 +110,20 @@ export default function Hero() {
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.45 }}
-            className="group relative inline-flex"
+            className="flex flex-col items-center gap-3"
           >
+            <Link
+              href="/why-byd"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.08] text-white/50 text-[11px] font-medium hover:bg-white/[0.04] hover:border-emerald-500/30 hover:text-emerald-400 transition-all"
+            >
+              <svg className="w-[10px] h-[10px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Why BYD?
+            </Link>
+            <div className="group relative inline-flex">
             {/* Outer glow ring */}
             <div className="absolute inset-[-6px] rounded-full bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
             <a
-              href="#main-content"
+              href="#full-lineup"
               className="relative inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-9 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:shadow-[0_0_60px_rgba(52,211,153,0.5)] hover:scale-105 active:scale-95"
             >
               <span className="relative z-10 flex items-center gap-2.5">
@@ -122,6 +131,7 @@ export default function Hero() {
                 <ArrowDown size={18} className="transition-transform duration-300 group-hover:translate-y-1" />
               </span>
             </a>
+            </div>
           </motion.div>
 
           {/* Stats */}

@@ -10,6 +10,7 @@ import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
+import { calcCardMonthly, fmt } from "@/lib/finance";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 
 export default function Home() {
@@ -58,28 +59,26 @@ export default function Home() {
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-theme backdrop-blur-xl border-b border-theme">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-5 w-auto" />
-            <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
+          <Link href="/" className="flex items-center gap-1 text-sm text-white" aria-label="BYD Miri Home">
+            <Img src="/byd-logo-white.svg" alt="" className="h-4 sm:h-5 w-auto" />
+            <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <Link
-              href="/why-byd"
-              className="relative inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold border border-emerald-500/20 text-emerald-400/80 hover:text-emerald-300 hover:border-emerald-500/40 bg-emerald-500/[0.03] hover:bg-emerald-500/[0.06] transition-all"
+              href="/pricelist"
+              className="hidden sm:inline-flex items-center gap-1.5 text-[10px] text-white/30 hover:text-white/60 transition-colors"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Why BYD
-              <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75" />
-              <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400" />
+              Price List
             </Link>
             <a
               href="https://wa.me/601131933930"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold hover:shadow-[0_0_30px_rgba(0,230,118,0.3)] transition-all"
+              className="flex items-center gap-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold hover:shadow-[0_0_30px_rgba(0,230,118,0.3)] transition-all"
             >
-              <Phone size={11} />
-              Contact Sales
+              <Phone size={10} />
+              <span className="hidden sm:inline">Contact Sales</span>
+              <span className="sm:hidden">Sales</span>
             </a>
           </div>
         </div>
@@ -88,10 +87,77 @@ export default function Home() {
       {/* Hero */}
       <Hero />
 
-      {/* Vehicle Section — Parking Lot Style */}
+      {/* ── Full Price List ── */}
+      <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
+        <div className="max-w-6xl mx-auto relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-center mb-6"
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide">
+              <Zap size={12} />
+              Complete BYD Lineup
+            </span>
+            <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1">
+              Full Active Sales Lineup
+            </h2>
+            <p className="text-xs text-theme-50">All prices On-The-Road (OTR). Monthly at 10% down, 2.30%, 9 years.</p>
+          </motion.div>
+
+          <div className="overflow-x-auto rounded-2xl border border-white/[0.06]">
+            <table className="w-full text-left text-xs md:text-sm">
+              <thead>
+                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Model</th>
+                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR</th>
+                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
+                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
+                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">From/mo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicles.map((v) => {
+                  const monthly = calcCardMonthly(v.otr, v.rebate);
+                  return (
+                    <tr key={v.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                      <td className="px-2 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="hidden sm:block w-12 h-7 md:w-16 md:h-9 rounded overflow-hidden bg-black/40 shrink-0">
+                            <Img src={v.image} alt="" className="w-full h-full object-contain" />
+                          </div>
+                          <span className="font-semibold text-theme-80 text-[10px] md:text-sm">{v.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-2 py-2 font-mono text-theme-70 text-[10px] md:text-sm">RM{fmt(v.otr)}</td>
+                      <td className="px-2 py-2 font-mono text-red-400 font-semibold text-[10px] md:text-sm">-RM{fmt(v.rebate)}</td>
+                      <td className="px-2 py-2 text-theme-50 text-[10px] md:text-sm hidden sm:table-cell">{v.range} km</td>
+                      <td className="px-2 py-2 font-mono font-bold text-emerald-400 text-[10px] md:text-sm">RM{fmt(monthly)}/mo</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="text-center mt-4">
+            <Link
+              href="/pricelist"
+              className="inline-flex items-center gap-1.5 text-xs text-emerald-400/60 hover:text-emerald-400 transition-colors"
+            >
+              View full details &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Vehicle Section — Parking Lot Style ── */}
       <section
         id="main-content"
-        className="relative px-6 pt-16 md:pt-24 pb-0"
+        className="relative px-6 pt-8 md:pt-10 pb-0"
         style={{ backgroundColor: "#080808" }}
       >
         <div className="absolute inset-0 parking-lot-bg opacity-30" />
@@ -116,7 +182,7 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="text-3xl md:text-4xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-0"
             >
-              Choose Your BYD
+              Calculate Your Monthly Payment
             </motion.h2>
           </div>
 
