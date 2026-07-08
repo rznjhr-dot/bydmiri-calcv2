@@ -29,7 +29,7 @@ export default function PricelistPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-5 w-auto" />
+            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
           </Link>
           <Link href="/" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80 transition-colors">
@@ -100,7 +100,7 @@ export default function PricelistPage() {
                           <div>
                             <div className="font-semibold text-white/80 text-sm">{v.name}</div>
                             <div className="text-[10px] text-white/30">{v.category}</div>
-                            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 text-[10px] text-emerald-400/50 hover:text-emerald-400 transition-colors mt-0.5">
+                            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] transition-all mt-0.5">
                               Brochure <ExternalLink size={9} />
                             </a>
                           </div>
@@ -184,8 +184,8 @@ export default function PricelistPage() {
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-white/80 truncate">{v.name}</div>
                       <div className="text-[10px] text-white/30 truncate">{v.category}</div>
-                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 text-[10px] text-emerald-400/50 hover:text-emerald-400 transition-colors">
-                        Brochure <ExternalLink size={9} />
+                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all">
+                        Brochure <ExternalLink size={8} />
                       </a>
                     </div>
                     <div className="text-right shrink-0">

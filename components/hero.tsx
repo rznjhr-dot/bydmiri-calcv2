@@ -37,7 +37,7 @@ export default function Hero() {
       />
 
       {/* Floating tech icons */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
         <motion.div
           animate={{ y: [0, -25, 0], rotate: [0, 5, 0] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
@@ -142,19 +142,30 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-10 mb-2"
+          >
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/20 text-center">
+              BYD Miri by Ridzuan Jahari
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-10 flex justify-center gap-8 md:gap-16"
+            className="grid grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
           >
             {[
               { value: "9", label: "Models" },
+              { value: "Fully Electric", label: "EV Lineup" },
               { value: "Up to 650km", label: "Max Range" },
               { value: "0%", label: "Deposit Option" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-xl md:text-2xl font-semibold text-white/40">
+                <div className="text-[9px] sm:text-xs md:text-xl font-semibold text-white/40 leading-tight">
                   {stat.value}
                 </div>
-                <div className="text-xs text-white/20 mt-0.5">{stat.label}</div>
+                <div className="text-[8px] sm:text-[10px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -200,7 +211,7 @@ export default function Hero() {
                   href="https://www.tiktok.com/@ridzuanbydmiri"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                  className="inline-flex items-center gap-1 text-[11px] text-pink-400/70 hover:text-pink-300 transition-colors"
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11">
                     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.33 0 .64.05.93.15V8.5a6.3 6.3 0 0 0-.93-.07 6.35 6.35 0 0 0 0 12.69 6.35 6.35 0 0 0 6.35-6.35v-7.1a8.27 8.27 0 0 0 4.77 1.48v-3.4a4.83 4.83 0 0 1-1.13-.16z"/>
@@ -211,7 +222,7 @@ export default function Hero() {
                   href="https://web.facebook.com/ridzuanbydmiri"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[11px] text-white/30 hover:text-white/60 transition-colors"
+                  className="inline-flex items-center gap-1 text-[11px] text-blue-400/70 hover:text-blue-300 transition-colors"
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>

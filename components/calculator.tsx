@@ -2,10 +2,11 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Check, MousePointerClick } from "lucide-react";
+import { Check, MousePointerClick, ClipboardCheck } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
 import { generateWhatsAppUrl, generateWhatsAppBookingUrl } from "@/lib/whatsapp";
+import CheckEligibilityForm from "@/components/check-eligibility-form";
 
 interface Props {
   vehicle: Vehicle;
@@ -22,6 +23,7 @@ export default function Calculator({ vehicle }: Props) {
   const [customDeposit, setCustomDeposit] = useState("");
   const [tenure, setTenure] = useState(9);
   const [interestRate, setInterestRate] = useState(String(DEFAULT_INTEREST));
+  const [showEligibilityForm, setShowEligibilityForm] = useState(false);
 
   const result = useMemo(() => {
     const rate = parseFloat(interestRate) || 0;
@@ -135,18 +137,22 @@ export default function Calculator({ vehicle }: Props) {
                   {cspOn && <Check size={10} className="text-white" />}
                 </div>
                 <span className="font-medium">
-                  RM{fmt(vehicle.cspRebate)} CSP/GSP/SSP*
+                  {vehicle.cspRebate > 0
+                    ? `RM${fmt(vehicle.cspRebate)} CSP/GSP/SSP*`
+                    : "6-Year Service Package (worth RM3,888)"}
                 </span>
               </button>
               <p className="text-[10px] text-theme-50/50 text-center leading-tight mt-0.5">
-                *CSP/GSP/SSP = Corporate/Government/Student Support Program (T&amp;Cs apply)
+                {vehicle.cspRebate > 0
+                  ? "*CSP/GSP/SSP = Corporate/Government/Student Support Program (T&amp;Cs apply)"
+                  : "*Replaces CSP/GSP/SSP rebate — 6 Years Standard Service Package worth RM3,888"}
               </p>
             </div>
 
             {/* Downpayment */}
             <div>
               <Label>Downpayment</Label>
-              <div className="grid grid-cols-7 gap-1.5 mb-1.5" role="group" aria-label="Downpayment percentage">
+              <div className="flex flex-wrap gap-1.5 mb-1.5 justify-center" role="group" aria-label="Downpayment percentage">
                 {DEPOSIT_PCTS.map((pct) => (
                   <button
                     key={pct}
@@ -162,7 +168,7 @@ export default function Calculator({ vehicle }: Props) {
                   </button>
                 ))}
               </div>
-              <div className="flex justify-center">
+              <div className="flex justify-center max-w-[160px] mx-auto">
                 <span
                   className="inline-flex items-center px-2.5 rounded-l-lg border border-r-0 text-xs"
                   style={{
@@ -193,7 +199,7 @@ export default function Calculator({ vehicle }: Props) {
             {/* Rate & Tenure */}
             <div>
               <Label>Rate &amp; Tenure</Label>
-              <div className="grid grid-cols-[1.8fr_0.3fr_repeat(8,1fr)] gap-1 items-center" role="group" aria-label="Loan tenure in years">
+              <div className="flex flex-wrap gap-1 items-center justify-center" role="group" aria-label="Loan tenure in years">
                 <div className="relative">
                   <input
                     type="number"
@@ -213,12 +219,13 @@ export default function Calculator({ vehicle }: Props) {
                     %
                   </span>
                 </div>
-                <span className="text-xs text-center" style={{ color: "var(--cz-text-30)" }}>×</span>
+                <span className="text-xs shrink-0" style={{ color: "var(--cz-text-30)" }}>×</span>
+                <div className="flex flex-wrap gap-1">
                 {TENURES.map((y) => (
                   <button
                     key={y}
                     onClick={() => setTenure(y)}
-                    className="w-full py-1.5 rounded-lg border text-xs font-medium transition-colors text-center"
+                    className="px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors text-center"
                     style={{
                       backgroundColor: tenure === y ? "rgba(0,230,118,0.1)" : "transparent",
                       borderColor: tenure === y ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
@@ -228,6 +235,7 @@ export default function Calculator({ vehicle }: Props) {
                     {y}yr
                   </button>
                 ))}
+                </div>
               </div>
             </div>
           </div>
@@ -264,9 +272,15 @@ export default function Calculator({ vehicle }: Props) {
                 {cspOn && (
                   <div className="flex justify-between items-center">
                     <span className="text-theme-50">CSP/GSP/SSP :</span>
-                    <span className="text-cyan-400 font-medium tabular-nums">
-                      (-)&nbsp;{fmtDec(result.cspAmount)}
-                    </span>
+                    {vehicle.cspRebate > 0 ? (
+                      <span className="text-cyan-400 font-medium tabular-nums">
+                        (-)&nbsp;{fmtDec(result.cspAmount)}
+                      </span>
+                    ) : (
+                      <span className="text-emerald-400 font-medium text-[10px] text-right leading-tight max-w-[180px]">
+                        6-Year Service Package*
+                      </span>
+                    )}
                   </div>
                 )}
 
@@ -345,6 +359,22 @@ export default function Calculator({ vehicle }: Props) {
               </svg>
               WhatsApp for Enquiry
             </a>
+
+            {/* Check Eligibility */}
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setShowEligibilityForm(!showEligibilityForm)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-500/20 text-emerald-400/70 text-xs font-medium hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
+              >
+                <ClipboardCheck size={12} />
+                {showEligibilityForm ? "Close" : "Not sure about loan eligibility? Check here"}
+              </button>
+              {showEligibilityForm && (
+                <div className="mt-4">
+                  <CheckEligibilityForm defaultCar={vehicle.name} />
+                </div>
+              )}
+            </div>
 
             <p className="text-[11px] text-center text-theme-40 mt-4">
               Ridzuan Jahari · Sales Consultant · Kah Progression Auto

@@ -234,7 +234,7 @@ export default function WhyBydPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-5 w-auto" />
+            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
           </Link>
           <Link

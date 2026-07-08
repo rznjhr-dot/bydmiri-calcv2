@@ -11,7 +11,8 @@ import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, fmt } from "@/lib/finance";
-import CheckEligibilityForm from "@/components/check-eligibility-form";
+import ChargingEstimator from "@/components/charging-estimator";
+import WarrantyDetails from "@/components/warranty-details";
 
 export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -23,7 +24,6 @@ export default function Home() {
   // Focus modal close button when modal opens
   useEffect(() => {
     if (selectedId) calcCloseRef.current?.focus();
-    setShowEligibilityForm(false);
   }, [selectedId]);
 
   useEffect(() => {
@@ -33,8 +33,6 @@ export default function Home() {
   const handleSelect = useCallback((id: string) => {
     setSelectedId((prev) => (prev === id ? null : id));
   }, []);
-
-  const [showEligibilityForm, setShowEligibilityForm] = useState(false);
 
   const handleClose = useCallback(() => setSelectedId(null), []);
 
@@ -60,7 +58,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-theme backdrop-blur-xl border-b border-theme">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-4 sm:h-5 w-auto" />
+            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
           </Link>
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -123,7 +121,14 @@ export default function Home() {
                 {vehicles.map((v) => {
                   const monthly = calcCardMonthly(v.otr, v.rebate);
                   return (
-                    <tr key={v.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                    <tr
+                      key={v.id}
+                      onClick={() => handleSelect(v.id)}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelect(v.id); } }}
+                      role="button"
+                      tabIndex={0}
+                      className="border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer"
+                    >
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-2">
                           <div className="hidden sm:block w-12 h-7 md:w-16 md:h-9 rounded overflow-hidden bg-black/40 shrink-0">
@@ -199,6 +204,57 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Extras: Charging & Warranty ── */}
+      <section className="relative px-6 py-12 md:py-16 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
+        <div className="absolute inset-0 parking-lot-bg opacity-15" />
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center mb-8">
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                <line x1="6" y1="1" x2="6" y2="4" />
+                <line x1="10" y1="1" x2="10" y2="4" />
+                <line x1="14" y1="1" x2="14" y2="4" />
+              </svg>
+              Extras
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1"
+            >
+              Charging &amp; Warranty
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className="text-sm text-theme-50"
+            >
+              Everything you need to know about charging and warranty coverage
+            </motion.p>
+          </div>
+
+          {/* Charging Estimator */}
+          <div className="mb-8">
+            <ChargingEstimator />
+          </div>
+
+          {/* Warranty Details */}
+          <WarrantyDetails />
         </div>
       </section>
 
@@ -491,22 +547,6 @@ export default function Home() {
 
             {/* Calculator */}
             <Calculator vehicle={selectedVehicle} />
-
-            {/* Check Eligibility */}
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setShowEligibilityForm(!showEligibilityForm)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-500/20 text-emerald-400/70 text-xs font-medium hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
-              >
-                <ClipboardCheck size={12} />
-                {showEligibilityForm ? "Close" : "Not sure about loan eligibility? Check here"}
-              </button>
-              {showEligibilityForm && (
-                <div className="mt-4">
-                  <CheckEligibilityForm defaultCar={selectedVehicle.name} />
-                </div>
-              )}
-            </div>
           </>
         )}
       </Modal>

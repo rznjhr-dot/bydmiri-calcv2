@@ -12,7 +12,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "BYD Miri Loan Calculator | Calculate Monthly Payment Online",
+  title: "BYD Miri by Ridzuan Jahari",
   description:
     "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 9 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment.",
   keywords: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "BYD Miri Loan Calculator — Your Monthly Payment in Seconds",
+    title: "BYD Miri by Ridzuan Jahari",
     description:
       "Calculate BYD monthly financing instantly. Compare 9 models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari, BYD Miri.",
     url: baseUrl,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BYD Miri Loan Calculator — Your Monthly Payment in Seconds",
+    title: "BYD Miri by Ridzuan Jahari",
     description:
       "Calculate BYD monthly financing instantly. Compare 9 models, deposit, tenure & rates. Contact Ridzuan Jahari, BYD Miri.",
     images: ["/byd-logo.png"],
