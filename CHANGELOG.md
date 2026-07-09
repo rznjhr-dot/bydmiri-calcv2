@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.3.0] — 2026-07-09
+
+### Added
+- **Charging Profile Service** (`lib/charging-profiles.ts`) — fetches charging rates from Master Database (`charging.json`) instead of hardcoded values
+- **Charging disclaimer** — "Charging costs are estimates only..." in charging estimator & Disclaimer modal
+- **Charging disclaimer footer** — Charging cost/time estimates disclaimer in Disclaimer popup modal
+- **Nav bar** — Home · Models · Calculator · Charge · Warranty · Contact Us (scroll-to-section, scroll-mt-24 offset)
+- **Calculator button** (amber) in pricelist table — opens calculator modal for specific model via `?calc=` param
+- **Eligibility form inline** on main page — toggle form without redirect
+- **Keyboard focus indicators** — `focus-visible` emerald rings for accessibility
+- **`scrollbar-none` utility** — hide scrollbar on nav while keeping scroll functionality
+- **`scroll-mt-24`** — proper scroll offset for fixed nav on all sections
+
+### Changed
+- **Charging rates**: Removed hardcoded `AC_RATE`, `DC_RATE_MIN`, `DC_RATE_MAX` — now fetched from Master DB
+- **DC cost**: Simplified to single rate (RM1.40/kWh) instead of range display
+- **Energy Recouped**: Merged into Range Recouped as subtle kWh sub-text (+X.X kWh)
+- **KM Recouped → Range Recouped**: Renamed for clarity
+- **Battery Capacity**: Shows `X kWh (X km)` — range integrated inline
+- **Wallbox → Wallbox (Home Charger)**: Clearer label in charger selector
+- **Vehicle dropdown**: Sorted by defined order (Atto 2 → Seal 6 → ...)
+- **Hero stats**: `grid-cols-4` → `grid-cols-2 md:grid-cols-4` for mobile
+- **Hero stats font**: `text-[9px]` → `text-[11px]` mobile, larger labels
+- **Hero subtitle**: `text-base` → `text-sm` mobile
+- **Full Active Sales Lineup → Discover the Lineup. 6 Models, 9 Choices.**
+- **Sales Consultant → Sales Advisor**
+- **CSP/GSP/SSP footnote**: `(T&Cs apply)` → `(Terms & Conditions apply)`
+- **Pricelist finance summary**: Simplified text, removed redundant finance details row
+- **Nav**: Removed "Price List" link and gradient Contact button — Contact Us now in nav links
+- **Pricelist page**: Title, subtitle, and calculator buttons synced with main page
+
+### Fixed
+- **aria-label template literal**: `{v.name}` rendering literally → proper interpolation
+- **Mobile layout**: Nav overflow, stats grid breakage, charging results overflow
+- **Scroll anchoring**: All section IDs have `scroll-mt-24` for fixed nav clearance
+
 ## [2.2.1] — 2026-07-09
 
 ### Performance

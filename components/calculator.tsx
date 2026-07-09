@@ -137,7 +137,7 @@ export default function Calculator({ vehicle }: Props) {
               </button>
               <p className="text-[10px] text-theme-50/50 text-center leading-tight mt-0.5">
                 {vehicle.cspRebate > 0
-                  ? "*CSP/GSP/SSP = Corporate/Government/Student Support Program (T&amp;Cs apply)"
+                  ? "*CSP/GSP/SSP = Corporate/Government/Student Support Program (Terms & Conditions apply)"
                   : "*Replaces CSP/GSP/SSP rebate — 6 Years Standard Service Package worth RM3,888"}
               </p>
             </div>
@@ -376,7 +376,7 @@ export default function Calculator({ vehicle }: Props) {
             </div>
 
             <p className="text-[11px] text-center text-theme-40 mt-4">
-              Ridzuan Jahari · Sales Consultant · Kah Progression Auto
+              Ridzuan Jahari · Sales Advisor · Kah Progression Auto
             </p>
           </div>
         </div>

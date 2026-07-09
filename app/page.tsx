@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Phone, Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck } from "lucide-react";
+import { Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck, ChevronDown } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
@@ -13,11 +13,13 @@ import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
 import WarrantyDetails from "@/components/warranty-details";
+import CheckEligibilityForm from "@/components/check-eligibility-form";
 
 export default function Home() {
   const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
+  const [showEligibility, setShowEligibility] = useState(false);
 
   const calcCloseRef = useRef<HTMLButtonElement>(null);
   const legalCloseRef = useRef<HTMLButtonElement>(null);
@@ -49,6 +51,17 @@ export default function Home() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [handleClose]);
 
+  // Handle ?calc=vehicle-id from pricelist page
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const calcId = params.get("calc");
+    if (calcId && vehicles.some((v) => v.id === calcId)) {
+      setSelectedId(calcId);
+      // Clean URL without reload
+      window.history.replaceState(null, "", "/");
+    }
+  }, []);
+
   const selectedVehicle = selectedId
     ? vehicles.find((v) => v.id === selectedId)
     : null;
@@ -57,28 +70,30 @@ export default function Home() {
     <>
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-theme backdrop-blur-xl border-b border-theme">
-        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 text-sm text-white" aria-label="BYD Miri Home">
+        <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between gap-2">
+          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-1 text-sm text-white shrink-0" aria-label="BYD Miri Home">
             <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
           </Link>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Link
-              href="/pricelist"
-              className="hidden sm:inline-flex items-center gap-1.5 text-[10px] text-white/30 hover:text-white/60 transition-colors"
-            >
-              Price List
+          <div className="flex items-center gap-1 sm:gap-3 overflow-x-auto flex-nowrap scrollbar-none ml-auto">
+            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap">
+              Home
             </Link>
-            <a
-              href="https://wa.me/601131933930"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold hover:shadow-[0_0_30px_rgba(0,230,118,0.3)] transition-all"
-            >
-              <Phone size={10} />
-              <span className="hidden sm:inline">Contact Sales</span>
-              <span className="sm:hidden">Sales</span>
-            </a>
+            <button onClick={() => document.getElementById("full-lineup")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+              Models
+            </button>
+            <button onClick={() => document.getElementById("main-content")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+              Calculator
+            </button>
+            <button onClick={() => document.getElementById("charging")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+              Charge
+            </button>
+            <button onClick={() => document.getElementById("warranty")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+              Warranty
+            </button>
+            <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+              Contact Us
+            </button>
           </div>
         </div>
       </nav>
@@ -87,7 +102,7 @@ export default function Home() {
       <Hero />
 
       {/* ── Full Price List ── */}
-      <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden">
+      <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
         <div className="max-w-6xl mx-auto relative">
           <div
@@ -98,9 +113,9 @@ export default function Home() {
               Complete BYD Lineup
             </span>
             <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1">
-              Full Active Sales Lineup
+              Discover the Lineup. 6 Models, 9 Choices.
             </h2>
-            <p className="text-xs text-theme-50">All prices On-The-Road (OTR). Monthly at 10% down, 2.30%, 9 years.</p>
+            <p className="text-xs text-theme-50">Explore every model. OTR pricing &amp; monthly instalments below.</p>
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-white/[0.06]">
@@ -112,6 +127,7 @@ export default function Home() {
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">From/mo</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs w-6"></th>
                 </tr>
               </thead>
               <tbody>
@@ -138,6 +154,23 @@ export default function Home() {
                       <td className="px-2 py-2 font-mono text-red-400 font-semibold text-[10px] md:text-sm">-RM{fmt(v.rebate)}</td>
                       <td className="px-2 py-2 text-theme-50 text-[10px] md:text-sm hidden sm:table-cell">{v.range} km</td>
                       <td className="px-2 py-2 font-mono font-bold text-emerald-400 text-[10px] md:text-sm">RM{fmt(monthly)}/mo</td>
+                      <td className="px-2 py-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelect(v.id);
+                          }}
+                          className="flex items-center justify-center w-5 h-5 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
+                          aria-label={`Calculate monthly payment for ${v.name}`}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="4" y="2" width="16" height="20" rx="2" />
+                            <line x1="8" y1="6" x2="16" y2="6" />
+                            <line x1="8" y1="10" x2="16" y2="10" />
+                            <line x1="8" y1="14" x2="12" y2="14" />
+                          </svg>
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -159,7 +192,7 @@ export default function Home() {
       {/* ── Vehicle Section — Parking Lot Style ── */}
       <section
         id="main-content"
-        className="relative px-6 pt-8 md:pt-10 pb-0"
+        className="relative px-6 pt-8 md:pt-10 pb-0 scroll-mt-24"
         style={{ backgroundColor: "#080808" }}
       >
         <div className="absolute inset-0 parking-lot-bg opacity-30" />
@@ -198,7 +231,7 @@ export default function Home() {
       </section>
 
       {/* ── Extras: Charging & Warranty ── */}
-      <section className="relative px-6 py-12 md:py-16 overflow-hidden">
+      <section id="charging" className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-6xl mx-auto relative">
@@ -233,7 +266,9 @@ export default function Home() {
           </div>
 
           {/* Warranty Details */}
-          <WarrantyDetails />
+          <div id="warranty" className="scroll-mt-24">
+            <WarrantyDetails />
+          </div>
         </div>
       </section>
 
@@ -338,7 +373,7 @@ export default function Home() {
       </section>
 
       {/* ── Schedule a Test Drive ── */}
-      <section className="relative px-6 py-16 md:py-20 overflow-hidden">
+      <section id="contact" className="relative px-6 py-16 md:py-20 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-emerald-500 rounded-full opacity-[0.04] blur-[120px]" />
@@ -387,13 +422,25 @@ export default function Home() {
             <p className="text-xs text-theme-50 mb-3">
               Not sure if you're eligible? Let us check for you.
             </p>
-            <Link
-              href="/why-byd"
+            <button
+              onClick={() => setShowEligibility(!showEligibility)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-emerald-500/20 text-emerald-400/70 text-sm font-semibold hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
             >
               <ClipboardCheck size={14} />
               Check My Eligibility — Free & No Obligation
-            </Link>
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-200 ${
+                  showEligibility ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {showEligibility && (
+              <div className="mt-4 animate-fade-in">
+                <CheckEligibilityForm />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -577,6 +624,18 @@ export default function Home() {
                     Actual instalment and financing approval are subject to bank assessment,
                     CCRIS/CTOS records, current financial commitments, and applicable
                     financing rates at the time of application.
+                  </p>
+                  <p className="flex items-center gap-1.5 font-semibold text-theme-80 pt-2 border-t border-white/[0.06]">
+                    <Info size={15} className="shrink-0" />
+                    Charging estimates
+                  </p>
+                  <p>
+                    Charging cost estimates are for reference only. Actual rates depend on
+                    charger type, location, network operator, and time of use.
+                  </p>
+                  <p>
+                    Charging times are estimates and may vary based on temperature, battery
+                    condition, and charger output.
                   </p>
                   <p>
                     For a more accurate assessment based on your financial profile, please

@@ -1,20 +1,29 @@
 "use client";
 
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { Zap, Battery, Clock, DollarSign, Cable, Car, Gauge } from "lucide-react";
+import { Zap, Battery, Clock, DollarSign, Cable, Car, Info } from "lucide-react";
+import { fetchChargingProfiles, type ChargingProfiles } from "@/lib/charging-profiles";
 
 const CHARGERS = [
-  { kw: 7, label: "7 kW", type: "Wallbox", ac: true },
+  { kw: 7, label: "7 kW", type: "Wallbox (Home Charger)", ac: true },
   { kw: 22, label: "22 kW", type: "AC Public", ac: true },
   { kw: 60, label: "60 kW", type: "DC Fast", ac: false },
   { kw: 180, label: "180 kW", type: "DC Ultra-fast", ac: false },
 ];
 
-const AC_RATE = 0.30;
-const DC_RATE_MIN = 1.00;
-const DC_RATE_MAX = 1.40;
-
 const VEHICLES_URL = "https://bydmiri-data.netlify.app/data/vehicles.json";
+
+const OPTION_ORDER = [
+  "atto-2-premium",
+  "seal-6-premium",
+  "atto-3-ultra",
+  "atto-3-premium",
+  "sealion-7-premium",
+  "sealion-7-performance",
+  "seal-premium",
+  "seal-performance",
+  "m6-extended",
+];
 
 function parseACKW(val: string): number {
   const m = val.match(/(\d+\.?\d*)\s*kW/);
@@ -77,6 +86,7 @@ export default function ChargingEstimator() {
   const [chargerKw, setChargerKw] = useState(7);
   const [fromPct, setFromPct] = useState(20);
   const [toPct, setToPct] = useState(80);
+  const [profiles, setProfiles] = useState<ChargingProfiles | null>(null);
   const [loading, setLoading] = useState(true);
 
   const trackRef = useRef<HTMLDivElement>(null);
@@ -87,6 +97,7 @@ export default function ChargingEstimator() {
       .then((r) => r.json())
       .then((data: RawModel[]) => {
         const flat = flattenVariants(data);
+        flat.sort((a, b) => OPTION_ORDER.indexOf(a.id) - OPTION_ORDER.indexOf(b.id));
         setOptions(flat);
         if (flat.length > 0) setSelectedId(flat[0]!.id);
       })
@@ -94,6 +105,12 @@ export default function ChargingEstimator() {
         // fallback: keep empty
       })
       .finally(() => setLoading(false));
+
+    fetchChargingProfiles()
+      .then(setProfiles)
+      .catch(() => {
+        // fallback: keep null, calculation will use hardcoded fallbacks
+      });
   }, []);
 
   const clampPct = useCallback((clientX: number): number => {
@@ -146,11 +163,11 @@ export default function ChargingEstimator() {
     const effectivePower = Math.min(chargerKw, carLimit);
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
     const hours = effectivePower > 0 ? energyNeeded / effectivePower : 0;
-    const costLow = energyNeeded * (isAc ? AC_RATE : DC_RATE_MIN);
-    const costHigh = isAc ? costLow : energyNeeded * DC_RATE_MAX;
+    const rate = isAc ? (profiles?.homeRate ?? 0.30) : (profiles?.dcRate ?? 1.40);
+    const cost = energyNeeded * rate;
     const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
-    return { energyNeeded, effectivePower, carLimit, isAc, hours, costLow, costHigh, kmRecouped };
-  }, [vehicle, chargerKw, fromPct, toPct, selectedCharger]);
+    return { energyNeeded, effectivePower, carLimit, isAc, hours, cost, rate, kmRecouped };
+  }, [vehicle, chargerKw, fromPct, toPct, selectedCharger, profiles]);
 
   if (loading) {
     return (
@@ -326,7 +343,7 @@ export default function ChargingEstimator() {
                   <ResultBox
                     icon={<Battery size={13} />}
                     label="Battery Capacity"
-                    value={`${vehicle.battery} kWh`}
+                    value={`${vehicle.battery} kWh (${vehicle.range} km)`}
                   />
                   <ResultBox
                     icon={<Cable size={13} />}
@@ -345,35 +362,12 @@ export default function ChargingEstimator() {
                   />
                 </div>
 
-                <div className="grid grid-cols-4 gap-2">
-                  <ResultBox
-                    icon={<Gauge size={13} />}
-                    label="Energy Recouped"
-                    value={`${result.energyNeeded.toFixed(1)} kWh`}
-                    sub={`${fromPct}% → ${toPct}%`}
-                    highlight
-                  />
+                <div className="grid grid-cols-3 gap-1.5 overflow-hidden">
                   <ResultBox
                     icon={<Car size={13} />}
-                    label="KM Recouped"
+                    label="Range Recouped"
                     value={`~${result.kmRecouped} km`}
-                    sub={`${vehicle.range} km full range`}
-                    highlight
-                  />
-                  <ResultBox
-                    icon={<DollarSign size={13} />}
-                    label="Est. Cost"
-                    value={
-                      result.isAc
-                        ? `~RM${result.costLow.toFixed(2)}`
-                        : `RM${result.costLow.toFixed(2)} – RM${result.costHigh.toFixed(2)}`
-                    }
-                    sub={
-                      result.isAc
-                        ? `@ RM${AC_RATE}/kWh`
-                        : `@ RM${DC_RATE_MIN}–${DC_RATE_MAX}/kWh`
-                    }
-                    color="cyan"
+                    sub={`+${result.energyNeeded.toFixed(1)} kWh`}
                     highlight
                   />
                   <ResultBox
@@ -383,6 +377,14 @@ export default function ChargingEstimator() {
                     sub={`${fromPct}% → ${toPct}%`}
                     highlight
                   />
+                  <ResultBox
+                    icon={<DollarSign size={13} />}
+                    label="Est. Cost"
+                    value={`~RM${result.cost.toFixed(2)}`}
+                    sub={`@ RM${result.rate.toFixed(2)}/kWh`}
+                    color="cyan"
+                    highlight
+                  />
                 </div>
 
                 {result.effectivePower < chargerKw && (
@@ -390,6 +392,13 @@ export default function ChargingEstimator() {
                     Limited by vehicle&apos;s {result.isAc ? "onboard AC charger" : "max DC charge rate"} ({result.carLimit} kW)
                   </p>
                 )}
+
+                <div className="flex items-start gap-1.5 mt-3 pt-3 border-t border-white/[0.06]">
+                  <Info size={11} className="shrink-0 mt-0.5 text-white/30" />
+                  <p className="text-[9px] text-white/30 leading-relaxed">
+                    Charging costs are estimates only. Actual public DC charging fees vary by charging network and location.
+                  </p>
+                </div>
               </div>
             )}
           </div>

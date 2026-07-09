@@ -93,7 +93,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p
-            className="animate-fade-up text-base md:text-lg text-white/50 max-w-xl mx-auto mb-8 leading-relaxed"
+            className="animate-fade-up text-sm md:text-base text-white/50 max-w-xl mx-auto mb-8 leading-relaxed"
             style={{ animationDelay: "0.3s" }}
           >
             No registration. No paperwork. Simply pick your model, choose your deposit,
@@ -137,7 +137,7 @@ export default function Hero() {
             </p>
           </div>
           <div
-            className="animate-fade-up grid grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
+            className="animate-fade-up grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
             style={{ animationDelay: "0.7s" }}
           >
             {[
@@ -147,10 +147,10 @@ export default function Hero() {
               { value: "0%", label: "Deposit Option" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-[9px] sm:text-xs md:text-xl font-semibold text-white/40 leading-tight">
+                <div className="text-[11px] sm:text-xs md:text-xl font-semibold text-white/40 leading-tight">
                   {stat.value}
                 </div>
-                <div className="text-[8px] sm:text-[10px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
+                <div className="text-[9px] sm:text-[10px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -175,7 +175,7 @@ export default function Hero() {
             {/* Details */}
             <div className="text-center">
               <div className="text-white/70 font-semibold text-sm">Ridzuan Jahari</div>
-              <div className="text-xs text-white/40">Sales Consultant</div>
+              <div className="text-xs text-white/40">Sales Advisor</div>
               <div className="text-xs text-white/40">BYD Kah Progression Auto, Miri</div>
               <a
                 href="https://wa.me/601131933930"

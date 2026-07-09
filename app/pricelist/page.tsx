@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, ExternalLink, Zap, Calculator } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
@@ -16,6 +17,7 @@ function calcOtrWithoutIns(v: typeof vehicles[0]): number {
 }
 
 export default function PricelistPage() {
+  const router = useRouter();
   useEffect(() => {
     document.title = "Full Price List | BYD Miri";
   }, []);
@@ -49,10 +51,10 @@ export default function PricelistPage() {
               Complete BYD Lineup
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-[family-name:var(--font-syne)] font-bold tracking-tight leading-[1.1] mb-3 text-white/90">
-              Full Active Sales Lineup
+              Discover the Lineup. 6 Models, 9 Choices.
             </h1>
             <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto">
-              Transparent pricing breakdown for all 9 BYD models at BYD Kah Progression Auto, Miri.
+              Explore every model. OTR pricing &amp; monthly instalments below.
             </p>
           </div>
         </div>
@@ -73,6 +75,7 @@ export default function PricelistPage() {
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-emerald-400 uppercase tracking-wider">/mo*</th>
+                  <th scope="col" className="px-3 py-2.5 w-6"></th>
                 </tr>
               </thead>
               <tbody>
@@ -149,6 +152,15 @@ export default function PricelistPage() {
                         <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
                         <div className="text-[9px] text-white/20">10% down, 9yr</div>
                       </td>
+                      <td className="px-3 py-2.5">
+                        <button
+                          onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+                          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+                          aria-label={`Calculate for ${v.name}`}
+                        >
+                          <Calculator size={11} />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -178,9 +190,18 @@ export default function PricelistPage() {
                         Brochure <ExternalLink size={8} />
                       </a>
                     </div>
-                    <div className="text-right shrink-0">
-                      <div className="text-[10px] text-white/30">From</div>
-                      <div className="text-sm font-bold text-emerald-400 font-mono">RM{fmt(monthly)}/mo</div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="text-right">
+                        <div className="text-[10px] text-white/30">From</div>
+                        <div className="text-sm font-bold text-emerald-400 font-mono">RM{fmt(monthly)}/mo</div>
+                      </div>
+                      <button
+                        onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+                        className="flex items-center justify-center w-7 h-7 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+                        aria-label={`Calculate for ${v.name}`}
+                      >
+                        <Calculator size={12} />
+                      </button>
                     </div>
                   </div>
                   <div className="space-y-1 text-xs pt-2 border-t border-white/[0.04]">
@@ -210,13 +231,10 @@ export default function PricelistPage() {
 
           {/* Finance summary */}
           <div className="animate-fade-up rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-center">
-            <p className="text-xs text-white/40 mb-2">
-              Monthly estimates based on 10% down, 2.30% flat rate, 9 years. Subject to bank approval.
+            <p className="text-xs text-white/40 mb-3">
+              Monthly estimates are based on current rebates, 10% down, 9 years. Subject to bank approval T&amp;Cs.
             </p>
-            <p className="text-xs text-white/30">
-              Finance: 2.30% interest · 90% margin · 2-9 years tenure · CSP/GSP/SSP rebate available
-            </p>
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/#main-content" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-semibold hover:shadow-[0_0_30px_rgba(52,211,153,0.3)] transition-all">
                 Calculate My Payment
               </Link>

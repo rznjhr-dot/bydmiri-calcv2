@@ -88,6 +88,33 @@ input[type="number"]::-webkit-outer-spin-button {
 .text-theme-20 { color: var(--cz-text-20); }
 .border-theme { border-color: var(--cz-border); }
 
+/* ── Focus styles for keyboard nav ── */
+*:focus-visible {
+  outline: 2px solid #34D399;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #34D399;
+  outline-offset: 2px;
+}
+
+/* Hide focus ring for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Hide scrollbar for nav ── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── Animations ── */
 
 @keyframes blob {
