@@ -80,7 +80,8 @@ export default function ChargingEstimator() {
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
     const hours = effectivePower > 0 ? energyNeeded / effectivePower : 0;
     const cost = energyNeeded * RATE_PER_KWH;
-    return { energyNeeded, effectivePower, carLimit, isDc, hours, cost };
+    const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
+    return { energyNeeded, effectivePower, carLimit, isDc, hours, cost, kmRecouped };
   }, [vehicle, chargerKw, fromPct, toPct, selectedCharger]);
 
   return (
@@ -258,7 +259,7 @@ export default function ChargingEstimator() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <ResultBox
                     icon={<DollarSign size={13} />}
                     label="Est. Cost"
@@ -272,6 +273,13 @@ export default function ChargingEstimator() {
                     label="Charging Time"
                     value={`~${formatDuration(result.hours)}`}
                     sub={`${fromPct}% → ${toPct}% · ${result.energyNeeded.toFixed(1)} kWh`}
+                    highlight
+                  />
+                  <ResultBox
+                    icon={<Car size={13} />}
+                    label="KM Recouped"
+                    value={`~${result.kmRecouped} km`}
+                    sub={`${vehicle.range} km full range`}
                     highlight
                   />
                 </div>
