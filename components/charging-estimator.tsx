@@ -12,7 +12,7 @@ const CHARGERS = [
   { kw: 180, label: "180 kW", type: "DC Ultra-fast" },
 ];
 
-const AC_LIMIT_KW = 7; // All BYD models have 7 kW onboard AC charger
+const AC_LIMIT_KW_DEFAULT = 7; // Fallback if model has no specific OBC data
 const RATE_PER_KWH = 0.30;
 
 function formatDuration(hours: number): string {
@@ -75,7 +75,7 @@ export default function ChargingEstimator() {
   const result = useMemo(() => {
     if (!vehicle) return null;
     const isDc = selectedCharger.type.includes("DC");
-    const carLimit = isDc ? vehicle.maxChargeKw : AC_LIMIT_KW;
+    const carLimit = isDc ? vehicle.maxChargeKw : (vehicle.acLimitKw ?? AC_LIMIT_KW_DEFAULT);
     const effectivePower = Math.min(chargerKw, carLimit);
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
     const hours = effectivePower > 0 ? energyNeeded / effectivePower : 0;

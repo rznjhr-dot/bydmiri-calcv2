@@ -10,6 +10,8 @@ export interface Vehicle {
   range: number;
   battery: number;
   maxChargeKw: number;
+  /** On-board AC charger limit (kW). Falls back to 7 if not set. */
+  acLimitKw?: number;
   power: number;
   torque: number;
   acceleration: number;
@@ -29,6 +31,7 @@ export const vehicles: Vehicle[] = [
     roadTax: 120,
     rebate: 11000,
     cspRebate: 2000,
+    acLimitKw: 7,
     range: 410,
     battery: 51.13,
     maxChargeKw: 82,
@@ -49,6 +52,7 @@ export const vehicles: Vehicle[] = [
     roadTax: 180,
     rebate: 1000,
     cspRebate: 2000,
+    acLimitKw: 7,
     range: 485,
     battery: 56.64,
     maxChargeKw: 100,
@@ -62,13 +66,14 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "atto3ultra",
-    name: "Atto 3 Ultra",
+    name: "Atto 3 Ultra (2026)",
     category: "Electric SUV",
     otr: 132729.25,
     sumInsured: 129300,
     roadTax: 160,
     rebate: 10000,
     cspRebate: 0,
+    acLimitKw: 7,
     range: 480,
     battery: 60.48,
     maxChargeKw: 110,
@@ -82,13 +87,14 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "atto3premium",
-    name: "Atto 3 Premium",
+    name: "Atto 3 Premium (2026)",
     category: "Electric SUV",
     otr: 146227.90,
     sumInsured: 142300,
     roadTax: 335,
     rebate: 10000,
     cspRebate: 0,
+    acLimitKw: 11,
     range: 600,
     battery: 74.88,
     maxChargeKw: 220,
@@ -109,6 +115,7 @@ export const vehicles: Vehicle[] = [
     roadTax: 335,
     rebate: 7000,
     cspRebate: 4000,
+    acLimitKw: 11,
     range: 567,
     battery: 82.5,
     maxChargeKw: 150,
@@ -129,6 +136,7 @@ export const vehicles: Vehicle[] = [
     roadTax: 965,
     rebate: 7000,
     cspRebate: 4000,
+    acLimitKw: 11,
     range: 542,
     battery: 82.5,
     maxChargeKw: 150,
@@ -189,6 +197,7 @@ export const vehicles: Vehicle[] = [
     roadTax: 160,
     rebate: 4000,
     cspRebate: 2000,
+    acLimitKw: 7,
     range: 530,
     battery: 71.8,
     maxChargeKw: 115,
