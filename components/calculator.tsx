@@ -361,18 +361,29 @@ export default function Calculator({ vehicle }: Props) {
             </a>
 
             {/* Check Eligibility */}
-            <div className="mt-4 text-center">
+            <div className="mt-5 text-center">
               <button
                 onClick={() => setShowEligibilityForm(!showEligibilityForm)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-500/20 text-emerald-400/70 text-xs font-medium hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
+                className={`group inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  showEligibilityForm
+                    ? "bg-white/[0.04] border border-white/[0.08] text-white/50 hover:bg-white/[0.06]"
+                    : "bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20 text-amber-300 hover:shadow-[0_0_25px_rgba(245,158,11,0.12)] hover:border-amber-400/30 hover:scale-[1.02] active:scale-[0.98]"
+                }`}
               >
-                <ClipboardCheck size={12} />
-                {showEligibilityForm ? "Close" : "Not sure about loan eligibility? Check here"}
+                <ClipboardCheck size={14} className={`transition-transform duration-200 ${showEligibilityForm ? "" : "group-hover:scale-110"}`} />
+                <span>
+                  {showEligibilityForm ? "Close" : "Not sure about loan eligibility? Check here"}
+                </span>
               </button>
               {showEligibilityForm && (
-                <div className="mt-4">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-4"
+                >
                   <CheckEligibilityForm defaultCar={vehicle.name} />
-                </div>
+                </motion.div>
               )}
             </div>
 

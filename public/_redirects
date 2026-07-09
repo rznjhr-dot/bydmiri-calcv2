@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────────────────────
+# NETLIFY REDIRECTS
+# ─────────────────────────────────────────────────────────────
+
+# ── SPA Fallback ──
+# Static export generates all pages as flat HTML files.
+# No fallback needed — Next.js static export handles routing.
+
+# ── WWW → Non-WWW ──
+# Uncomment if you want www.bydmiri.com → bydmiri.com
+# https://www.bydmiri.com/*  https://bydmiri.com/:splat  301!
+
+# ── Force HTTPS ──
+# Already handled by Cloudflare + Netlify edge.
+
+# ── Canonical Redirects ──
+# Redirect trailing-slash URLs to non-trailing-slash
+/*/  /:splat  301!

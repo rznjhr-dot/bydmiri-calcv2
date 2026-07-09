@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────────────────────
+# NETLIFY SECURITY HEADERS
+# These headers are applied at the CDN edge, not by a server.
+# ─────────────────────────────────────────────────────────────
+
+# ── CORE SECURITY HEADERS (applied to all paths) ──
+/*
+  # Strict-Transport-Security (HSTS)
+  # Forces browsers to always use HTTPS. Prevents SSL stripping attacks.
+  # - max-age=31536000 = 1 year (Google requires ≥1 year for HSTS preload)
+  # - includeSubDomains covers all subdomains (www, app, etc.)
+  # - preload allows submission to browser HSTS preload list
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # X-Content-Type-Options
+  # Prevents MIME-type sniffing. Forces browser to honor declared Content-Type.
+  X-Content-Type-Options: nosniff
+
+  # X-Frame-Options
+  # Prevents clickjacking by blocking the site from being loaded in iframes.
+  X-Frame-Options: DENY
+
+  # Referrer-Policy
+  # Controls what referrer info is sent with requests.
+  # strict-origin-when-cross-origin: full URL on same-origin, origin only cross-origin, nothing on HTTPS→HTTP
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Permissions-Policy
+  # Restricts which browser APIs the site can use.
+  # Blocks camera, microphone, geolocation, payment — not needed for a calculator site.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), sync-xhr=()
+
+  # Cross-Origin-Embedder-Policy
+  # Ensures the site can only load resources from the same origin or explicitly allowed.
+  # Note: Setting to "require-corp" may break cross-origin resources (Google Maps embed).
+  # We use "credentialless" as a pragmatic middle-ground for static sites.
+  Cross-Origin-Embedder-Policy: credentialless
+
+  # Cross-Origin-Resource-Policy
+  # Restricts who can load our resources.
+  # "same-origin" means only this site can embed our images/fonts.
+  Cross-Origin-Resource-Policy: same-origin
+
+  # Cross-Origin-Opener-Policy
+  # Isolates the browsing context. Prevents cross-origin window.open attacks.
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+  # ── CACHING ──
+  # HTML: short cache (user sees updates quickly)
+  # JS/CSS/images: long cache (content-hashed filenames)
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ── STATIC ASSETS (content-hashed, cache forever) ──
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── IMAGES ──
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+*.png
+  Cache-Control: public, max-age=31536000, immutable
+*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+*.webp
+  Cache-Control: public, max-age=31536000, immutable
+*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── FONTS ──
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# ── DATA FILES ──
+*.json
+  Cache-Control: public, max-age=3600, must-revalidate

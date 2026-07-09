@@ -1,0 +1,20 @@
+{
+  "name": "BYD Miri — Loan Calculator",
+  "short_name": "BYD Miri",
+  "description": "Calculate your BYD monthly payment instantly. Compare 9 BYD models, deposit options, loan tenure, and interest rates.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "en-MY",
+  "categories": ["automotive", "finance", "business"]
+}

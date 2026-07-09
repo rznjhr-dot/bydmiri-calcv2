@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Phone, Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck } from "lucide-react";
 import Hero from "@/components/hero";
@@ -15,6 +16,7 @@ import ChargingEstimator from "@/components/charging-estimator";
 import WarrantyDetails from "@/components/warranty-details";
 
 export default function Home() {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
 
@@ -58,7 +60,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-theme backdrop-blur-xl border-b border-theme">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
+            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
           </Link>
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -123,8 +125,8 @@ export default function Home() {
                   return (
                     <tr
                       key={v.id}
-                      onClick={() => handleSelect(v.id)}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSelect(v.id); } }}
+                      onClick={() => router.push('/pricelist')}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); router.push('/pricelist'); } }}
                       role="button"
                       tabIndex={0}
                       className="border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer"
@@ -132,7 +134,7 @@ export default function Home() {
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-2">
                           <div className="hidden sm:block w-12 h-7 md:w-16 md:h-9 rounded overflow-hidden bg-black/40 shrink-0">
-                            <Img src={v.image} alt="" className="w-full h-full object-contain" />
+                            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
                           </div>
                           <span className="font-semibold text-theme-80 text-[10px] md:text-sm">{v.name}</span>
                         </div>

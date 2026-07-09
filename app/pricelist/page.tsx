@@ -29,7 +29,7 @@ export default function PricelistPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
+            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
           </Link>
           <Link href="/" className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80 transition-colors">
@@ -95,7 +95,7 @@ export default function PricelistPage() {
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-3">
                           <div className="w-20 h-11 rounded overflow-hidden bg-black/40 shrink-0">
-                            <Img src={v.image} alt="" className="w-full h-full object-contain" />
+                            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
                           </div>
                           <div>
                             <div className="font-semibold text-white/80 text-sm">{v.name}</div>
@@ -179,7 +179,7 @@ export default function PricelistPage() {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-20 h-12 rounded overflow-hidden bg-black/40 shrink-0">
-                      <Img src={v.image} alt="" className="w-full h-full object-contain" />
+                      <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-white/80 truncate">{v.name}</div>

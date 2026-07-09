@@ -5,15 +5,19 @@ import { memo } from "react";
 
 interface ImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
+  /** Override default lazy loading for above-the-fold images */
+  priority?: boolean;
 }
 
-function ImgBase({ alt, className, draggable, ...props }: ImgProps) {
+function ImgBase({ alt, className, priority, loading: _loading, draggable, ...props }: ImgProps) {
   return (
     <img
       alt={alt}
       className={className}
       draggable={draggable ?? false}
-      loading="lazy"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
+      decoding="async"
       {...props}
     />
   );

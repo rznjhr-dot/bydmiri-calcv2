@@ -234,7 +234,7 @@ export default function WhyBydPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="" className="h-3.5 w-auto -mt-[2px]" />
+            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
           </Link>
           <Link
@@ -292,7 +292,7 @@ export default function WhyBydPage() {
               { value: "#1", label: "World's NEV Maker" },
               { value: "8M+", label: "Electrified Vehicles Sold" },
               { value: "3.8M+", label: "Blade Batteries Sold" },
-              { value: "1,200+", label: "Dealers Nationwide" },
+              { value: "100+", label: "Countries Worldwide" },
             ].map((stat) => (
               <div key={stat.label} className="bg-[#080808] p-5 text-center">
                 <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-300 text-gradient">

@@ -114,6 +114,7 @@ export default function ChargingEstimator() {
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
+                aria-label="Select vehicle model"
                 className="w-full pl-7 pr-3 py-2 rounded-lg text-sm outline-none transition-colors appearance-none"
                 style={{
                   backgroundColor: "var(--cz-input, #111)",
