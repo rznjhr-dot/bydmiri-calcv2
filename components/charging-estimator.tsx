@@ -5,6 +5,7 @@ import { Zap, Battery, Clock, DollarSign, Cable, Car } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 
 const CHARGERS = [
+  { kw: 3, label: "3 kW", type: "3-Pin Plug" },
   { kw: 7, label: "7 kW", type: "Wallbox" },
   { kw: 22, label: "22 kW", type: "AC Public" },
   { kw: 60, label: "60 kW", type: "DC Fast" },
@@ -73,7 +74,7 @@ export default function ChargingEstimator() {
 
   const result = useMemo(() => {
     if (!vehicle) return null;
-    const isDc = selectedCharger.type === "DC";
+    const isDc = selectedCharger.type.includes("DC");
     const carLimit = isDc ? vehicle.maxChargeKw : AC_LIMIT_KW;
     const effectivePower = Math.min(chargerKw, carLimit);
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
