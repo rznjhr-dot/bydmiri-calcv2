@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useCallback, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 
 interface ModalProps {
@@ -13,21 +12,22 @@ interface ModalProps {
   className?: string;
 }
 
-const backdrop = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.2 },
-};
-
-const panel = {
-  initial: { opacity: 0, scale: 0.95, y: 20 },
-  animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 20 },
-  transition: { duration: 0.25, ease: "easeOut" as const },
-};
-
 export function Modal({ open, onClose, children, label, closeRef, className = "" }: ModalProps) {
+  const [render, setRender] = useState(false);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setRender(true);
+      const frame = requestAnimationFrame(() => setActive(true));
+      return () => cancelAnimationFrame(frame);
+    } else {
+      setActive(false);
+      const timer = setTimeout(() => setRender(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
   // Focus trap
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -68,39 +68,40 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
     }
   }, [open, closeRef]);
 
+  if (!render) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          {...backdrop}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          onKeyDown={handleKeyDown}
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      onKeyDown={handleKeyDown}
+    >
+      <div
+        className={`absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-200 ${
+          active ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div
+        className={`relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6 bg-[#080808] transition-all duration-200 ${
+          active
+            ? "opacity-100 scale-100 translate-y-0"
+            : "opacity-0 scale-95 translate-y-5"
+        } ${className}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+      >
+        <button
+          ref={closeRef}
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1.5 rounded-lg text-theme-50 hover:text-theme-90 hover:bg-white/5 transition-colors z-10"
+          aria-label={`Close ${label}`}
         >
-          <motion.div
-            {...backdrop}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={onClose}
-            aria-hidden="true"
-          />
-          <motion.div
-            {...panel}
-            className={`relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6 bg-[#080808] ${className}`}
-            role="dialog"
-            aria-modal="true"
-            aria-label={label}
-          >
-            <button
-              ref={closeRef}
-              onClick={onClose}
-              className="absolute top-3 right-3 p-1.5 rounded-lg text-theme-50 hover:text-theme-90 hover:bg-white/5 transition-colors z-10"
-              aria-label={`Close ${label}`}
-            >
-              <X size={18} />
-            </button>
-            {children}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          <X size={18} />
+        </button>
+        {children}
+      </div>
+    </div>
   );
 }

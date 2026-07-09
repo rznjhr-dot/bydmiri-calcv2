@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 const GSHEET_WEBAPP_URL =
@@ -59,17 +58,15 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
 
   if (submitted) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5 text-center ${className}`}
+      <div
+        className={`animate-scale-in rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5 text-center ${className}`}
       >
         <CheckCircle2 size={28} className="text-emerald-400 mx-auto mb-2" />
         <p className="text-sm font-semibold text-emerald-300">Thank You!</p>
         <p className="text-xs text-white/50 mt-1">
           We will review your eligibility and contact you via WhatsApp within 24 hours.
         </p>
-      </motion.div>
+      </div>
     );
   }
 

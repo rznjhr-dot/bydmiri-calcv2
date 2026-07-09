@@ -37,8 +37,7 @@ const nextConfig: NextConfig = {
   // framer-motion: Reduces bundle by importing only used sub-modules.
   experimental: {
     optimizePackageImports: [
-      "lucide-react",     // ~120kB+ full → only used icons in bundle
-      "framer-motion",    // ~170kB → tree-shake unused features
+      "lucide-react",
     ],
   },
 };

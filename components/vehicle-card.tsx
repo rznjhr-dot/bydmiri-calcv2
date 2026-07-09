@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Calculator } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
+import { useInView } from "@/lib/use-in-view";
 
 interface Props {
   vehicle: Vehicle;
@@ -34,6 +34,7 @@ export default function VehicleCard({
   index,
 }: Props) {
   const monthly = calcCardMonthly(vehicle.otr, vehicle.rebate);
+  const { ref, inView } = useInView<HTMLDivElement>();
 
   const handleClick = () => onSelect(vehicle.id);
 
@@ -45,11 +46,15 @@ export default function VehicleCard({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+    <div
+      ref={ref}
       className="flex flex-col items-center w-full"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(20px)",
+        transition: `opacity 0.4s ease-out, transform 0.4s ease-out`,
+        transitionDelay: `${index * 0.05}s`,
+      }}
     >
       <div
         onClick={handleClick}
@@ -76,6 +81,6 @@ export default function VehicleCard({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

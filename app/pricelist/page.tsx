@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, Zap } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, fmt } from "@/lib/finance";
@@ -11,18 +11,15 @@ const REG_FEE = 60;
 const EV_PLATE_FEE = 150;
 const INSPECTION_FEE = 200;
 
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-};
-
 function calcOtrWithoutIns(v: typeof vehicles[0]): number {
   return v.sumInsured + v.roadTax + REG_FEE + EV_PLATE_FEE + INSPECTION_FEE;
 }
 
 export default function PricelistPage() {
+  useEffect(() => {
+    document.title = "Full Price List | BYD Miri";
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#080808" }}>
       {/* Nav */}
@@ -46,7 +43,7 @@ export default function PricelistPage() {
         </div>
         <div className="absolute inset-0 circuit-grid opacity-30" />
         <div className="relative max-w-6xl mx-auto px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="animate-fade-up">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide mb-4">
               <Zap size={12} />
               Complete BYD Lineup
@@ -57,7 +54,7 @@ export default function PricelistPage() {
             <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto">
               Transparent pricing breakdown for all 9 BYD models at BYD Kah Progression Auto, Miri.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -84,12 +81,8 @@ export default function PricelistPage() {
                   const otrWO = calcOtrWithoutIns(v);
                   const insurance = v.otr - otrWO;
                   return (
-                    <motion.tr
+                    <tr
                       key={v.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.03 }}
                       className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
                     >
                       <td className="px-3 py-2.5">
@@ -156,7 +149,7 @@ export default function PricelistPage() {
                         <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
                         <div className="text-[9px] text-white/20">10% down, 9yr</div>
                       </td>
-                    </motion.tr>
+                    </tr>
                   );
                 })}
               </tbody>
@@ -170,11 +163,8 @@ export default function PricelistPage() {
               const otrWO = calcOtrWithoutIns(v);
               const insurance = v.otr - otrWO;
               return (
-                <motion.div
+                <div
                   key={v.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
                   className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3"
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -213,13 +203,13 @@ export default function PricelistPage() {
                       <div className="flex justify-between"><span className="text-white/30">Range</span><span className="text-white/50">{v.range} km · {v.battery} kWh</span></div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
 
           {/* Finance summary */}
-          <motion.div {...fadeUp} className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-center">
+          <div className="animate-fade-up rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-center">
             <p className="text-xs text-white/40 mb-2">
               Monthly estimates based on 10% down, 2.30% flat rate, 9 years. Subject to bank approval.
             </p>
@@ -234,7 +224,7 @@ export default function PricelistPage() {
                 Why BYD?
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

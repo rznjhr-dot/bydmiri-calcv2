@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ShieldCheck, Battery, Gauge, Settings, Lightbulb } from "lucide-react";
 
 type TierColor = "emerald" | "cyan" | "violet" | "amber" | "pink";
@@ -115,10 +114,7 @@ const COLOR_MAP: Record<TierColor, {
 
 export default function WarrantyDetails() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+    <div
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {WARRANTY_TIERS.map((tier) => {
@@ -177,6 +173,6 @@ export default function WarrantyDetails() {
         * All warranty periods are &ldquo;whichever comes first&rdquo; —
         either the year limit or the kilometre limit, whichever is reached first.
       </p>
-    </motion.div>
+    </div>
   );
 }

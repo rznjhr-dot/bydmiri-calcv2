@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
 import { Zap, Battery, Clock, DollarSign, Cable, Car } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 
@@ -84,10 +83,7 @@ export default function ChargingEstimator() {
   }, [vehicle, chargerKw, fromPct, toPct, selectedCharger]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+    <div
       className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6"
     >
       {/* Header */}
@@ -289,7 +285,7 @@ export default function ChargingEstimator() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

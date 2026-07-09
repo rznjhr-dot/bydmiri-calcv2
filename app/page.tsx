@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Phone, Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
@@ -91,11 +90,7 @@ export default function Home() {
       <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
         <div className="max-w-6xl mx-auto relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+          <div
             className="text-center mb-6"
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide">
@@ -106,7 +101,7 @@ export default function Home() {
               Full Active Sales Lineup
             </h2>
             <p className="text-xs text-theme-50">All prices On-The-Road (OTR). Monthly at 10% down, 2.30%, 9 years.</p>
-          </motion.div>
+          </div>
 
           <div className="overflow-x-auto rounded-2xl border border-white/[0.06]">
             <table className="w-full text-left text-xs md:text-sm">
@@ -173,24 +168,17 @@ export default function Home() {
         <div className="max-w-6xl mx-auto relative">
           {/* Section header */}
           <div className="text-center mb-8">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <span
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-4 border border-emerald-500/10"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               Find Your Match
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+            </span>
+            <h2
               className="text-3xl md:text-4xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-0"
             >
               Calculate Your Monthly Payment
-            </motion.h2>
+            </h2>
           </div>
 
           {/* Parking Lot Grid */}
@@ -215,10 +203,7 @@ export default function Home() {
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-8">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <span
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -229,25 +214,17 @@ export default function Home() {
                 <line x1="14" y1="1" x2="14" y2="4" />
               </svg>
               Extras
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+            </span>
+            <h2
               className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1"
             >
               Charging &amp; Warranty
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.15 }}
+            </h2>
+            <p
               className="text-sm text-theme-50"
             >
               Everything you need to know about charging and warranty coverage
-            </motion.p>
+            </p>
           </div>
 
           {/* Charging Estimator */}
@@ -266,10 +243,7 @@ export default function Home() {
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
         <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-8">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <span
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -277,33 +251,22 @@ export default function Home() {
                 <circle cx="12" cy="10" r="3" />
               </svg>
               Our Location
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+            </span>
+            <h2
               className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-0"
             >
               Visit Our Showroom
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.15 }}
+            </h2>
+            <p
               className="text-sm text-theme-50"
             >
               Kah Progression Auto — Official BYD Dealer Miri
-            </motion.p>
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4 items-stretch">
             {/* Map */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+            <div
               className="rounded-2xl overflow-hidden border border-white/[0.06] bg-black/40 min-h-[300px] md:min-h-[320px]"
             >
               <iframe
@@ -314,14 +277,10 @@ export default function Home() {
                 allowFullScreen
                 title="BYD Kah Progression Auto Miri"
               />
-            </motion.div>
+            </div>
 
             {/* Info card */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+            <div
               className="flex flex-col justify-center gap-1.5"
             >
               <div className="rounded-xl p-3 bg-white/[0.03] border border-white/[0.06]">
@@ -373,7 +332,7 @@ export default function Home() {
                   </svg>
                 </a>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -384,10 +343,7 @@ export default function Home() {
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-emerald-500 rounded-full opacity-[0.04] blur-[120px]" />
         <div className="max-w-3xl mx-auto relative text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
             className="space-y-5"
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide">
@@ -422,13 +378,10 @@ export default function Home() {
                 Book Test Drive
               </span>
             </a>
-          </motion.div>
+          </div>
 
           {/* Check Eligibility — bottom CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
             className="mt-6 pt-6 border-t border-white/[0.06]"
           >
             <p className="text-xs text-theme-50 mb-3">
@@ -441,7 +394,7 @@ export default function Home() {
               <ClipboardCheck size={14} />
               Check My Eligibility — Free & No Obligation
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 

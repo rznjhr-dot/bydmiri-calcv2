@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowDown, Zap, Cpu, CircuitBoard, Radio } from "lucide-react";
 import Link from "next/link";
 import { Img } from "@/components/img";
@@ -19,8 +18,8 @@ export default function Hero() {
       {/* Neon ambient orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-emerald-500 rounded-full opacity-[0.08] blur-[150px] animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-blue-500 rounded-full opacity-[0.06] blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-emerald-400 rounded-full opacity-[0.05] blur-[100px] animate-blob animation-delay-4000" />
+        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-blue-500 rounded-full opacity-[0.06] blur-[120px] animate-blob" style={{ animationDelay: "5s" }} />
+        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-emerald-400 rounded-full opacity-[0.05] blur-[100px] animate-blob" style={{ animationDelay: "10s" }} />
       </div>
 
       {/* Circuit grid */}
@@ -38,34 +37,30 @@ export default function Hero() {
 
       {/* Floating tech icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
-        <motion.div
-          animate={{ y: [0, -25, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-24 left-[12%]"
+        <div
+          className="absolute top-24 left-[12%] animate-float"
+          style={{ animationDuration: "7s", animationDelay: "0s" }}
         >
           <Cpu className="text-emerald-400/20 w-10 h-10" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, -8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute top-32 right-[18%]"
+        </div>
+        <div
+          className="absolute top-32 right-[18%] animate-float"
+          style={{ animationDuration: "6s", animationDelay: "1s" }}
         >
           <Zap className="text-blue-400/20 w-9 h-9" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -30, 0], rotate: [0, 3, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-40 left-[20%]"
+        </div>
+        <div
+          className="absolute bottom-40 left-[20%] animate-float"
+          style={{ animationDuration: "8s", animationDelay: "2s" }}
         >
           <Radio className="text-emerald-400/15 w-12 h-12" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-          className="absolute bottom-48 right-[12%]"
+        </div>
+        <div
+          className="absolute bottom-48 right-[12%] animate-float"
+          style={{ animationDuration: "5.5s", animationDelay: "3s" }}
         >
           <CircuitBoard className="text-blue-400/15 w-10 h-10" />
-        </motion.div>
+        </div>
       </div>
 
       {/* ── Main Content + Bottom Section (centered as one block) ── */}
@@ -73,21 +68,19 @@ export default function Hero() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
 
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] text-white/60 text-[10px] font-semibold tracking-[0.15em] uppercase mb-6 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.03)] backdrop-blur-sm"
+          <div
+            className="animate-fade-up"
+            style={{ animationDelay: "0.05s" }}
           >
-            The World&apos;s Leading NEV Manufacturer
-          </motion.div>
+            <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] text-white/60 text-[10px] font-semibold tracking-[0.15em] uppercase mb-6 border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.03)] backdrop-blur-sm">
+              The World&apos;s Leading NEV Manufacturer
+            </div>
+          </div>
 
           {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="font-[family-name:var(--font-syne)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
+          <h1
+            className="animate-fade-up font-[family-name:var(--font-syne)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6"
+            style={{ animationDelay: "0.15s" }}
           >
             <span className="text-white/90">Your Dream BYD.</span>
             <br />
@@ -96,25 +89,21 @@ export default function Hero() {
             </span>
             <br />
             <span className="text-white/90">In Seconds.</span>
-          </motion.h1>
+          </h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-base md:text-lg text-white/50 max-w-xl mx-auto mb-8 leading-relaxed"
+          <p
+            className="animate-fade-up text-base md:text-lg text-white/50 max-w-xl mx-auto mb-8 leading-relaxed"
+            style={{ animationDelay: "0.3s" }}
           >
             No registration. No paperwork. Simply pick your model, choose your deposit,
             and instantly see your monthly estimate — all in one place.
-          </motion.p>
+          </p>
 
           {/* Browse Models CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="flex flex-col items-center gap-3"
+          <div
+            className="animate-fade-up flex flex-col items-center gap-3"
+            style={{ animationDelay: "0.45s" }}
           >
             <Link
               href="/why-byd"
@@ -136,24 +125,20 @@ export default function Hero() {
               </span>
             </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-10 mb-2"
+          <div
+            className="animate-fade-up mt-10 mb-2"
+            style={{ animationDelay: "0.6s" }}
           >
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/20 text-center">
               BYD Miri by Ridzuan Jahari
             </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="grid grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
+          </div>
+          <div
+            className="animate-fade-up grid grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
+            style={{ animationDelay: "0.7s" }}
           >
             {[
               { value: "9", label: "Models" },
@@ -168,17 +153,15 @@ export default function Hero() {
                 <div className="text-[8px] sm:text-[10px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
 
           {/* Thin divider */}
           <div className="w-16 h-[1px] mx-auto mt-10 mb-5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Ridzuan Info Card — centered column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="flex flex-col items-center gap-3"
+          <div
+            className="animate-fade-up flex flex-col items-center gap-3"
+            style={{ animationDelay: "1.0s" }}
           >
             {/* Avatar */}
             <Img
@@ -231,26 +214,18 @@ export default function Hero() {
                 </a>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10"
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-0.5 text-white/15 text-[10px]"
-        >
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
+        <div className="flex flex-col items-center gap-0.5 text-white/15 text-[10px] animate-float"
+             style={{ animationDuration: "1.8s" }}>
           <span>Scroll</span>
           <ArrowDown size={14} />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

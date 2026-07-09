@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.2.1] — 2026-07-09
+
+### Performance
+- **Removed framer-motion (170kB)** — replaced all 26 `motion.*` instances with pure CSS animations (`@keyframes fade-up`, `scale-in`, `fade-in`) and a lightweight `useInView` Intersection Observer hook. Bundle size reduced significantly.
+- **Flattened Modal animation** — replaced `AnimatePresence` with CSS transitions for enter/exit (no library needed)
+- **Removed `optimizePackageImports` for framer-motion** from Next.js config
+
+### SEO
+- **Page-specific titles** — added `document.title` updates on `/pricelist` and `/why-byd` for browser tabs
+
+### Maintenance
+- **Removed dead/unused code**:
+  - `lib/use-in-view.ts` created (tiny custom hook, 24 lines)
+  - `lib/theme.tsx` now empty placeholder (no-op wrapper removed earlier)
+  - `next.config.ts` cleaned up comments referencing removed dependencies
+
 ## [2.2.0] — 2026-07-09
 
 ### Security

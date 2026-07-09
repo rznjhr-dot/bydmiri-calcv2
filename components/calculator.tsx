@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
 import { Check, MousePointerClick, ClipboardCheck } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
@@ -78,13 +77,7 @@ export default function Calculator({ vehicle }: Props) {
     customDeposit !== "" && parseFloat(customDeposit) > 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.35, ease: "easeInOut" }}
-      className="overflow-hidden"
-    >
+    <div>
       <div className="grid md:grid-cols-2 gap-6">
           {/* ---- Inputs ---- */}
           <div className="space-y-4 text-center">
@@ -376,14 +369,9 @@ export default function Calculator({ vehicle }: Props) {
                 </span>
               </button>
               {showEligibilityForm && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="mt-4"
-                >
+                <div className="mt-4 animate-fade-up">
                   <CheckEligibilityForm defaultCar={vehicle.name} />
-                </motion.div>
+                </div>
               )}
             </div>
 
@@ -392,7 +380,7 @@ export default function Calculator({ vehicle }: Props) {
             </p>
           </div>
         </div>
-    </motion.div>
+    </div>
   );
 }
 

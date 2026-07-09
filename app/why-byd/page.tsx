@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   Shield,
   BadgeCheck,
@@ -22,13 +21,6 @@ import {
 } from "lucide-react";
 import { Img } from "@/components/img";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 },
-};
 
 const advantages = [
   {
@@ -227,6 +219,10 @@ const salesPoints = [
 ];
 
 export default function WhyBydPage() {
+  useEffect(() => {
+    document.title = "Why BYD? | BYD Miri";
+  }, []);
+
   const [showForm, setShowForm] = useState(false);
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#080808" }}>
@@ -255,10 +251,7 @@ export default function WhyBydPage() {
         </div>
         <div className="absolute inset-0 circuit-grid opacity-40" />
         <div className="relative max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+          <div
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide mb-4">
               <BadgeCheck size={12} />
@@ -275,17 +268,14 @@ export default function WhyBydPage() {
               From the world&apos;s safest EV battery to the most comprehensive warranty in Malaysia —
               discover why BYD is Malaysia&apos;s fastest-growing automotive brand.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ── Brand Stat Bar ── */}
       <section className="relative px-6 pb-12">
         <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
             className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.04]"
           >
             {[
@@ -301,7 +291,7 @@ export default function WhyBydPage() {
                 <div className="text-xs text-white/40 mt-1">{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -309,23 +299,19 @@ export default function WhyBydPage() {
       <section className="relative px-6 pb-16 md:pb-24">
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-white/90">
               Engineered to Outperform
             </h2>
             <p className="text-sm text-white/40 mt-2">
               Every BYD is built on years of R&D, vertical integration, and millions of real-world kilometres.
             </p>
-          </motion.div>
+          </div>
 
           <div className="space-y-4">
-            {advantages.map((adv, i) => (
-              <motion.div
+            {advantages.map((adv) => (
+              <div
                 key={adv.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
                 className={`rounded-2xl border border-white/[0.06] bg-gradient-to-br ${adv.gradient} p-5 md:p-6`}
               >
                 <div className="flex items-start gap-4">
@@ -372,7 +358,7 @@ export default function WhyBydPage() {
                     })()}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -383,7 +369,7 @@ export default function WhyBydPage() {
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
         <div className="absolute top-1/2 left-1/3 w-[400px] h-[400px] bg-emerald-500 rounded-full opacity-[0.03] blur-[120px]" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="text-center mb-10">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide mb-3">
               <Heart size={12} />
               It&apos;s Not About Specs
@@ -394,16 +380,12 @@ export default function WhyBydPage() {
             <p className="text-sm text-white/40 mt-2 max-w-xl mx-auto">
               We don&apos;t sell kilowatts. We sell what matters — how it feels, how it fits your life, what you save.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {salesPoints.map((pt, i) => (
-              <motion.div
+            {salesPoints.map((pt) => (
+              <div
                 key={pt.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
                 className={`rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-4`}
               >
                 <div className={`w-8 h-8 rounded-lg bg-${pt.accent}-500/10 flex items-center justify-center mb-3`}>
@@ -411,7 +393,7 @@ export default function WhyBydPage() {
                 </div>
                 <h3 className="text-sm font-bold text-white/80 mb-1">{pt.title}</h3>
                 <p className="text-xs text-white/50 leading-relaxed">{pt.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -421,7 +403,7 @@ export default function WhyBydPage() {
       <section className="relative px-6 pb-16 md:pb-24">
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-5xl mx-auto relative">
-          <motion.div {...fadeUp} className="text-center mb-10">
+          <div className="text-center mb-10">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/15 uppercase tracking-wide mb-3">
               <Gauge size={12} />
               How We Compare
@@ -437,16 +419,12 @@ export default function WhyBydPage() {
                 <span className="font-semibold text-amber-400">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of July 2026.
               </p>
             </div>
-          </motion.div>
+          </div>
 
           <div className="space-y-5">
-            {comparisons.map((cmp, i) => (
-              <motion.div
+            {comparisons.map((cmp) => (
+              <div
                 key={cmp.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
                 className={`rounded-2xl border border-white/[0.06] bg-gradient-to-br ${cmp.gradient} p-5 md:p-6`}
               >
                 <h3 className="text-base md:text-lg font-bold text-white/80 mb-4">{cmp.title}</h3>
@@ -495,7 +473,7 @@ export default function WhyBydPage() {
                     <p className="text-sm text-white/70 leading-relaxed">{cmp.verdict}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -506,7 +484,7 @@ export default function WhyBydPage() {
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
         <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-emerald-500 rounded-full opacity-[0.04] blur-[150px]" />
         <div className="max-w-3xl mx-auto relative text-center">
-          <motion.div {...fadeUp} className="space-y-5">
+          <div className="space-y-5 animate-fade-up">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide">
               <Car size={12} />
               Ready to Go Electric?
@@ -553,17 +531,14 @@ export default function WhyBydPage() {
                 <ChevronDown size={12} className={`transition-transform duration-200 ${showForm ? "rotate-180" : ""}`} />
               </button>
               {showForm && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
+                <div
                   className="mt-4 max-w-md mx-auto"
                 >
                   <CheckEligibilityForm />
-                </motion.div>
+                </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
