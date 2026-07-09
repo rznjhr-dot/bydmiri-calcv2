@@ -3,7 +3,6 @@ export interface Vehicle {
   name: string;
   category: string;
   otr: number;
-  otrWithoutInsurance: number;
   sumInsured: number;
   roadTax: number;
   rebate: number;
@@ -26,7 +25,6 @@ export const vehicles: Vehicle[] = [
     name: "Atto 2 Premium",
     category: "Compact Electric SUV",
     otr: 106353.00,
-    otrWithoutInsurance: 104030,
     sumInsured: 103500,
     roadTax: 120,
     rebate: 11000,
@@ -47,7 +45,6 @@ export const vehicles: Vehicle[] = [
     name: "Seal 6 Premium",
     category: "Electric Sedan",
     otr: 122551.95,
-    otrWithoutInsurance: 119890,
     sumInsured: 119300,
     roadTax: 180,
     rebate: 1000,
@@ -68,7 +65,6 @@ export const vehicles: Vehicle[] = [
     name: "Atto 3 Ultra",
     category: "Electric SUV",
     otr: 132729.25,
-    otrWithoutInsurance: 129870,
     sumInsured: 129300,
     roadTax: 160,
     rebate: 10000,
@@ -89,7 +85,6 @@ export const vehicles: Vehicle[] = [
     name: "Atto 3 Premium",
     category: "Electric SUV",
     otr: 146227.90,
-    otrWithoutInsurance: 143045,
     sumInsured: 142300,
     roadTax: 335,
     rebate: 10000,
@@ -110,7 +105,6 @@ export const vehicles: Vehicle[] = [
     name: "Sealion 7 Premium",
     category: "Performance Electric SUV",
     otr: 192115.85,
-    otrWithoutInsurance: 188045,
     sumInsured: 187300,
     roadTax: 335,
     rebate: 7000,
@@ -131,7 +125,6 @@ export const vehicles: Vehicle[] = [
     name: "Sealion 7 Performance",
     category: "Performance Electric SUV",
     otr: 209061.55,
-    otrWithoutInsurance: 204675,
     sumInsured: 203300,
     roadTax: 965,
     rebate: 7000,
@@ -152,7 +145,6 @@ export const vehicles: Vehicle[] = [
     name: "Seal Premium",
     category: "Electric Sports Sedan",
     otr: 179879.05,
-    otrWithoutInsurance: 176045,
     sumInsured: 175300,
     roadTax: 335,
     rebate: 3000,
@@ -173,7 +165,6 @@ export const vehicles: Vehicle[] = [
     name: "Seal Performance",
     category: "Electric Sports Sedan",
     otr: 200903.70,
-    otrWithoutInsurance: 196675,
     sumInsured: 195300,
     roadTax: 965,
     rebate: 3000,
@@ -194,7 +185,6 @@ export const vehicles: Vehicle[] = [
     name: "M6 Extended",
     category: "7-Seater Electric MPV",
     otr: 130729.25,
-    otrWithoutInsurance: 127870,
     sumInsured: 127300,
     roadTax: 160,
     rebate: 4000,

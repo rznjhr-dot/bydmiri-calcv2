@@ -37,18 +37,21 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
 
     setLoading(true);
 
-    const qs =
-      "?name=" + encodeURIComponent(name.trim()) +
-      "&phone=" + encodeURIComponent(phone.trim()) +
-      "&targetCar=" + encodeURIComponent(targetCar.trim()) +
-      "&salary=" + encodeURIComponent(salary.trim()) +
-      "&timestamp=" + encodeURIComponent(new Date().toISOString()) +
-      "&source=" + encodeURIComponent("BYD Miri Website");
+    const body = new URLSearchParams({
+      name: name.trim(),
+      phone: phone.trim(),
+      targetCar: targetCar.trim(),
+      salary: salary.trim(),
+      timestamp: new Date().toISOString(),
+      source: "BYD Miri Website",
+    });
 
-    const url = GSHEET_WEBAPP_URL + qs;
-
-    // Send via fetch with no-cors — works across all browsers
-    fetch(url, { method: "GET", mode: "no-cors" }).catch(() => {});
+    // POST with form-urlencoded — data stays out of URL/server logs
+    fetch(GSHEET_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: body.toString(),
+    }).catch(() => {});
 
     setSubmitted(true);
     setLoading(false);

@@ -30,17 +30,6 @@
   # Blocks camera, microphone, geolocation, payment — not needed for a calculator site.
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), midi=(), sync-xhr=()
 
-  # Cross-Origin-Embedder-Policy
-  # Ensures the site can only load resources from the same origin or explicitly allowed.
-  # Note: Setting to "require-corp" may break cross-origin resources (Google Maps embed).
-  # We use "credentialless" as a pragmatic middle-ground for static sites.
-  Cross-Origin-Embedder-Policy: credentialless
-
-  # Cross-Origin-Resource-Policy
-  # Restricts who can load our resources.
-  # "same-origin" means only this site can embed our images/fonts.
-  Cross-Origin-Resource-Policy: same-origin
-
   # Cross-Origin-Opener-Policy
   # Isolates the browsing context. Prevents cross-origin window.open attacks.
   Cross-Origin-Opener-Policy: same-origin-allow-popups

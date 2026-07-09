@@ -69,13 +69,13 @@ export default function PricelistPage() {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Model</th>
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider" colSpan={4}>Price Breakdown</th>
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR<br /><span className="text-[9px] font-normal lowercase">w/o ins.</span></th>
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Insurance</th>
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
-                  <th className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
-                  <th className="px-3 py-2.5 font-semibold text-emerald-400 uppercase tracking-wider">/mo*</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider" colSpan={4}>Price Breakdown</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR<br /><span className="text-[9px] font-normal lowercase">w/o ins.</span></th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Insurance</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-emerald-400 uppercase tracking-wider">/mo*</th>
                 </tr>
               </thead>
               <tbody>

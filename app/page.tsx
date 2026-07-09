@@ -112,11 +112,11 @@ export default function Home() {
             <table className="w-full text-left text-xs md:text-sm">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Model</th>
-                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR</th>
-                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
-                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
-                  <th className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">From/mo</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">From/mo</th>
                 </tr>
               </thead>
               <tbody>

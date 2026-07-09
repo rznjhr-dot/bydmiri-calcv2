@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.2.0] — 2026-07-09
+
+### Security
+- **Form submission**: Changed from GET (sensitive data in URL) to POST with form-urlencoded body — data no longer exposed to server logs or browser history
+- **Removed `Cross-Origin-Embedder-Policy: credentialless`** — fixed Safari resource-loading errors on iOS
+- **Removed `Cross-Origin-Resource-Policy: same-origin`** — unblocked cross-origin resources (Google Maps embed, CDN fonts)
+
+### Fixed
+- **Redirect loop on iOS Safari** — disabled trailing-slash redirect in `_redirects` (caused infinite loop when Netlify normalized URLs alongside Next.js `trailingSlash: false`)
+- **Table accessibility** — added `scope="col"` to all table header cells (`<th>`)
+
+### Cleanup
+- **Removed dead `ThemeProvider`** — no-op wrapper that just rendered `{children}`. Dark-only theme handled entirely via CSS variables.
+- **Removed redundant `otrWithoutInsurance`** from vehicle data model and all 9 vehicle entries — field is derived from `sumInsured + roadTax + registration + plate + inspection`
+- **Cleaned stale asset caching rules** in `_headers`
+
 ## [2.1.0] — 2026-07-05
 
 ### Added

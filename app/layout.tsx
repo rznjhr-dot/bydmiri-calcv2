@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Syne } from "next/font/google";
-import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
 const baseUrl = "https://bydmiri.com";
@@ -137,7 +136,7 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
 
         {/* ── Structured Data — JSON-LD ── */}
         <script

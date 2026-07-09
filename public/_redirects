@@ -14,5 +14,7 @@
 # Already handled by Cloudflare + Netlify edge.
 
 # ── Canonical Redirects ──
-# Redirect trailing-slash URLs to non-trailing-slash
-/*/  /:splat  301!
+# DISABLED: Trailing-slash redirect causes redirect loops on Netlify
+# because static export generates both .html files and directories.
+# Next.js trailingSlash: false handles this at build level.
+# /*/  /:splat  301!
