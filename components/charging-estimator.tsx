@@ -1,19 +1,30 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from "react";
-import { Zap, Battery, Clock, DollarSign, Cable, Car } from "lucide-react";
-import { vehicles } from "@/lib/vehicles";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { Zap, Battery, Clock, DollarSign, Cable, Car, Gauge } from "lucide-react";
 
 const CHARGERS = [
-  { kw: 3, label: "3 kW", type: "3-Pin Plug" },
-  { kw: 7, label: "7 kW", type: "Wallbox" },
-  { kw: 22, label: "22 kW", type: "AC Public" },
-  { kw: 60, label: "60 kW", type: "DC Fast" },
-  { kw: 180, label: "180 kW", type: "DC Ultra-fast" },
+  { kw: 7, label: "7 kW", type: "Wallbox", ac: true },
+  { kw: 22, label: "22 kW", type: "AC Public", ac: true },
+  { kw: 60, label: "60 kW", type: "DC Fast", ac: false },
+  { kw: 180, label: "180 kW", type: "DC Ultra-fast", ac: false },
 ];
 
-const AC_LIMIT_KW_DEFAULT = 7; // Fallback if model has no specific OBC data
-const RATE_PER_KWH = 0.30;
+const AC_RATE = 0.30;
+const DC_RATE_MIN = 1.00;
+const DC_RATE_MAX = 1.40;
+
+const VEHICLES_URL = "https://bydmiri-data.netlify.app/data/vehicles.json";
+
+function parseACKW(val: string): number {
+  const m = val.match(/(\d+\.?\d*)\s*kW/);
+  return m?.[1] ? parseFloat(m[1]) : 7;
+}
+
+function parseDCWatts(val: string): number {
+  const m = val.match(/(\d+\.?\d*)\s*kW/);
+  return m?.[1] ? parseFloat(m[1]) : 50;
+}
 
 function formatDuration(hours: number): string {
   const h = Math.floor(hours);
@@ -22,14 +33,68 @@ function formatDuration(hours: number): string {
   return `${m} min`;
 }
 
+interface VariantOption {
+  id: string;
+  label: string;
+  battery: number;
+  range: number;
+  acCharging: string;
+  maxChargePower: string;
+}
+
+interface RawModel {
+  model: string;
+  segment: string;
+  variants: {
+    name: string;
+    battery: number;
+    range: number;
+    acCharging: string;
+    maxChargePower: string;
+  }[];
+}
+
+function flattenVariants(models: RawModel[]): VariantOption[] {
+  const list: VariantOption[] = [];
+  for (const m of models) {
+    for (const v of m.variants) {
+      list.push({
+        id: `${m.model.toLowerCase().replace(/\s+/g, "-")}-${v.name.toLowerCase().replace(/\s+/g, "-")}`,
+        label: `${m.model} ${v.name}`,
+        battery: v.battery,
+        range: v.range,
+        acCharging: v.acCharging,
+        maxChargePower: v.maxChargePower,
+      });
+    }
+  }
+  return list;
+}
+
 export default function ChargingEstimator() {
-  const [selectedId, setSelectedId] = useState(vehicles[0]!.id);
+  const [options, setOptions] = useState<VariantOption[]>([]);
+  const [selectedId, setSelectedId] = useState("");
   const [chargerKw, setChargerKw] = useState(7);
   const [fromPct, setFromPct] = useState(20);
   const [toPct, setToPct] = useState(80);
+  const [loading, setLoading] = useState(true);
 
   const trackRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<"from" | "to" | null>(null);
+
+  useEffect(() => {
+    fetch(VEHICLES_URL)
+      .then((r) => r.json())
+      .then((data: RawModel[]) => {
+        const flat = flattenVariants(data);
+        setOptions(flat);
+        if (flat.length > 0) setSelectedId(flat[0]!.id);
+      })
+      .catch(() => {
+        // fallback: keep empty
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const clampPct = useCallback((clientX: number): number => {
     const track = trackRef.current;
@@ -66,28 +131,45 @@ export default function ChargingEstimator() {
   }, []);
 
   const vehicle = useMemo(
-    () => vehicles.find((v) => v.id === selectedId)!,
-    [selectedId]
+    () => options.find((v) => v.id === selectedId),
+    [options, selectedId]
   );
 
   const selectedCharger = CHARGERS.find((c) => c.kw === chargerKw)!;
 
   const result = useMemo(() => {
     if (!vehicle) return null;
-    const isDc = selectedCharger.type.includes("DC");
-    const carLimit = isDc ? vehicle.maxChargeKw : (vehicle.acLimitKw ?? AC_LIMIT_KW_DEFAULT);
+    const isAc = selectedCharger.ac;
+    const carLimit = isAc
+      ? parseACKW(vehicle.acCharging)
+      : parseDCWatts(vehicle.maxChargePower);
     const effectivePower = Math.min(chargerKw, carLimit);
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
     const hours = effectivePower > 0 ? energyNeeded / effectivePower : 0;
-    const cost = energyNeeded * RATE_PER_KWH;
+    const costLow = energyNeeded * (isAc ? AC_RATE : DC_RATE_MIN);
+    const costHigh = isAc ? costLow : energyNeeded * DC_RATE_MAX;
     const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
-    return { energyNeeded, effectivePower, carLimit, isDc, hours, cost, kmRecouped };
+    return { energyNeeded, effectivePower, carLimit, isAc, hours, costLow, costHigh, kmRecouped };
   }, [vehicle, chargerKw, fromPct, toPct, selectedCharger]);
 
+  if (loading) {
+    return (
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
+        <div className="text-center text-white/40 text-sm py-8">Loading vehicle data…</div>
+      </div>
+    );
+  }
+
+  if (options.length === 0) {
+    return (
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
+        <div className="text-center text-white/40 text-sm py-8">Unable to load vehicle data.</div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6"
-    >
+    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
@@ -120,9 +202,9 @@ export default function ChargingEstimator() {
                   color: "var(--cz-text-80, #ddd)",
                 }}
               >
-                {vehicles.map((v) => (
+                {options.map((v) => (
                   <option key={v.id} value={v.id}>
-                    {v.name} — {v.battery} kWh
+                    {v.label}
                   </option>
                 ))}
               </select>
@@ -134,7 +216,7 @@ export default function ChargingEstimator() {
             <label className="block text-[11px] font-semibold uppercase tracking-wide text-white/40 mb-1.5">
               Charger Type
             </label>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
               {CHARGERS.map((c) => (
                 <button
                   key={c.kw}
@@ -196,9 +278,11 @@ export default function ChargingEstimator() {
                   }}
                   onPointerDown={handlePointerDown("from")}
                 >
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
-                    {fromPct}%
-                  </div>
+                  {dragRef.current === "from" && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                      {fromPct}%
+                    </div>
+                  )}
                 </div>
                 {/* Handle 2 (to) */}
                 <div
@@ -210,9 +294,11 @@ export default function ChargingEstimator() {
                   }}
                   onPointerDown={handlePointerDown("to")}
                 >
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
-                    {toPct}%
-                  </div>
+                  {dragRef.current === "to" && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                      {toPct}%
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-between text-[9px] text-white/20">
@@ -233,13 +319,13 @@ export default function ChargingEstimator() {
               border: "1px solid var(--cz-border, rgba(255,255,255,0.06))",
             }}
           >
-            {result && (
+            {result && vehicle && (
               <div className="space-y-3">
                 {/* Metric cards */}
                 <div className="grid grid-cols-2 gap-2">
                   <ResultBox
                     icon={<Battery size={13} />}
-                    label="Battery"
+                    label="Battery Capacity"
                     value={`${vehicle.battery} kWh`}
                   />
                   <ResultBox
@@ -249,8 +335,8 @@ export default function ChargingEstimator() {
                   />
                   <ResultBox
                     icon={<Car size={13} />}
-                    label="Car Limit"
-                    value={`${result.carLimit} kW ${result.isDc ? "DC" : "AC"}`}
+                    label="Car OBC Limit"
+                    value={`${result.carLimit} kW ${result.isAc ? "AC" : "DC"}`}
                   />
                   <ResultBox
                     icon={<Zap size={13} />}
@@ -259,20 +345,12 @@ export default function ChargingEstimator() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   <ResultBox
-                    icon={<DollarSign size={13} />}
-                    label="Est. Cost"
-                    value={`~RM${result.cost.toFixed(2)}`}
-                    sub={`@ RM${RATE_PER_KWH}/kWh`}
-                    color="cyan"
-                    highlight
-                  />
-                  <ResultBox
-                    icon={<Clock size={13} />}
-                    label="Charging Time"
-                    value={`~${formatDuration(result.hours)}`}
-                    sub={`${fromPct}% → ${toPct}% · ${result.energyNeeded.toFixed(1)} kWh`}
+                    icon={<Gauge size={13} />}
+                    label="Energy Recouped"
+                    value={`${result.energyNeeded.toFixed(1)} kWh`}
+                    sub={`${fromPct}% → ${toPct}%`}
                     highlight
                   />
                   <ResultBox
@@ -282,11 +360,34 @@ export default function ChargingEstimator() {
                     sub={`${vehicle.range} km full range`}
                     highlight
                   />
+                  <ResultBox
+                    icon={<DollarSign size={13} />}
+                    label="Est. Cost"
+                    value={
+                      result.isAc
+                        ? `~RM${result.costLow.toFixed(2)}`
+                        : `RM${result.costLow.toFixed(2)} – RM${result.costHigh.toFixed(2)}`
+                    }
+                    sub={
+                      result.isAc
+                        ? `@ RM${AC_RATE}/kWh`
+                        : `@ RM${DC_RATE_MIN}–${DC_RATE_MAX}/kWh`
+                    }
+                    color="cyan"
+                    highlight
+                  />
+                  <ResultBox
+                    icon={<Clock size={13} />}
+                    label="Charging Time"
+                    value={`~${formatDuration(result.hours)}`}
+                    sub={`${fromPct}% → ${toPct}%`}
+                    highlight
+                  />
                 </div>
 
                 {result.effectivePower < chargerKw && (
                   <p className="text-[10px] text-amber-400/60 text-center">
-                    Limited by vehicle&apos;s {result.isDc ? "max DC charge rate" : "onboard AC charger"} ({result.carLimit} kW)
+                    Limited by vehicle&apos;s {result.isAc ? "onboard AC charger" : "max DC charge rate"} ({result.carLimit} kW)
                   </p>
                 )}
               </div>

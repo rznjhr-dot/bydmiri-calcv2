@@ -120,7 +120,7 @@ export default function RootLayout({
              environment where _headers may not apply (e.g., dev server). */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-src https://www.google.com; connect-src 'self' https://script.google.com; form-action 'self' https://script.google.com"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-src https://www.google.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app; form-action 'self' https://script.google.com"
         />
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />

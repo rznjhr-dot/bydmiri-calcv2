@@ -114,15 +114,14 @@ const COLOR_MAP: Record<TierColor, {
 
 export default function WarrantyDetails() {
   return (
-    <div
-    >
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className="max-w-5xl mx-auto">
+      <div className="flex flex-wrap justify-center gap-3">
         {WARRANTY_TIERS.map((tier) => {
           const c = COLOR_MAP[tier.color];
           return (
             <div
               key={tier.title}
-              className={`rounded-xl border ${c.border} ${c.bg} p-4`}
+              className={`rounded-xl border ${c.border} ${c.bg} p-4 w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-0.75rem)]`}
             >
               {/* Header */}
               <div className="flex items-center gap-2 mb-2.5">
