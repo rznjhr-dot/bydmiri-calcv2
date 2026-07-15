@@ -10,7 +10,7 @@ import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
-import { calcCardMonthly, fmt } from "@/lib/finance";
+import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
 import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
@@ -123,16 +123,18 @@ export default function Home() {
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">From/mo</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">10%</th>
+                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-amber-400 uppercase tracking-wider">0%</th>
                   <th scope="col" className="px-2 py-2 text-[9px] md:text-xs w-6"></th>
                 </tr>
               </thead>
               <tbody>
                 {vehicles.map((v) => {
                   const monthly = calcCardMonthly(v.otr, v.rebate);
+                  const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
                   return (
                     <tr
                       key={v.id}
@@ -150,10 +152,11 @@ export default function Home() {
                           <span className="font-semibold text-theme-80 text-[10px] md:text-sm">{v.name}</span>
                         </div>
                       </td>
-                      <td className="px-2 py-2 font-mono text-theme-70 text-[10px] md:text-sm">RM{fmt(v.otr)}</td>
-                      <td className="px-2 py-2 font-mono text-red-400 font-semibold text-[10px] md:text-sm">-RM{fmt(v.rebate)}</td>
                       <td className="px-2 py-2 text-theme-50 text-[10px] md:text-sm hidden sm:table-cell">{v.range} km</td>
-                      <td className="px-2 py-2 font-mono font-bold text-emerald-400 text-[10px] md:text-sm">RM{fmt(monthly)}/mo</td>
+                      <td className="px-2 py-2 font-mono text-theme-70 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(v.otr)}</td>
+                      <td className="px-2 py-2 font-mono text-red-400 font-semibold text-[10px] md:text-sm whitespace-nowrap">-RM{fmt(v.rebate)}</td>
+                      <td className="px-2 py-2 font-mono font-bold text-emerald-400 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(monthly)}</td>
+                      <td className="px-2 py-2 font-mono font-bold text-amber-400 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(monthlyFull)}</td>
                       <td className="px-2 py-2">
                         <button
                           onClick={(e) => {

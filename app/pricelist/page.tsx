@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink, Zap, Calculator } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
-import { calcCardMonthly, fmt } from "@/lib/finance";
+import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 
 const REG_FEE = 60;
@@ -64,23 +64,25 @@ export default function PricelistPage() {
       <section className="relative px-6 pb-16 md:pb-24">
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-6xl mx-auto relative">
-          <div className="hidden md:block overflow-hidden rounded-2xl border border-white/[0.06]">
+          <div className="hidden md:block overflow-x-auto rounded-2xl border border-white/[0.06]">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider" colSpan={4}>Price Breakdown</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider" colSpan={5}>Price Breakdown</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR<br /><span className="text-[9px] font-normal lowercase">w/o ins.</span></th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Insurance</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold text-emerald-400 uppercase tracking-wider">/mo*</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-emerald-400 uppercase tracking-wider">10%</th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-amber-400 uppercase tracking-wider">0%</th>
                   <th scope="col" className="px-3 py-2.5 w-6"></th>
                 </tr>
               </thead>
               <tbody>
                 {vehicles.map((v) => {
                   const monthly = calcCardMonthly(v.otr, v.rebate);
+                  const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
                   const otrWO = calcOtrWithoutIns(v);
                   const insurance = v.otr - otrWO;
                   return (
@@ -150,7 +152,11 @@ export default function PricelistPage() {
                       {/* Monthly */}
                       <td className="px-3 py-2.5">
                         <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
-                        <div className="text-[9px] text-white/20">10% down, 9yr</div>
+                        <div className="text-[9px] text-white/20">10% down</div>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <div className="text-amber-400 font-bold font-mono text-sm">RM{fmt(monthlyFull)}</div>
+                        <div className="text-[9px] text-white/20">0% down</div>
                       </td>
                       <td className="px-3 py-2.5">
                         <button
@@ -172,6 +178,7 @@ export default function PricelistPage() {
           <div className="md:hidden space-y-3">
             {vehicles.map((v) => {
               const monthly = calcCardMonthly(v.otr, v.rebate);
+              const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
               const otrWO = calcOtrWithoutIns(v);
               const insurance = v.otr - otrWO;
               return (
@@ -192,8 +199,10 @@ export default function PricelistPage() {
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <div className="text-right">
-                        <div className="text-[10px] text-white/30">From</div>
-                        <div className="text-sm font-bold text-emerald-400 font-mono">RM{fmt(monthly)}/mo</div>
+                        <div className="text-[9px] text-emerald-400/60">10% <span className="text-white/20">·</span> <span className="text-amber-400/60">0%</span></div>
+                        <div className="text-sm font-bold font-mono">
+                          <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-white/20"> · </span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
+                        </div>
                       </div>
                       <button
                         onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
@@ -212,7 +221,7 @@ export default function PricelistPage() {
                     <div className="grid grid-cols-2 gap-x-2">
                       <div className="flex justify-between"><span className="text-white/30">Registration</span><span className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</span></div>
                       <div className="flex justify-between"><span className="text-white/30">EV Plate</span><span className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">Inspection</span><span className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</span></div>
+                      <div className="flex justify-between"><span className="text-white/30">B2 Inspection</span><span className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</span></div>
                       <div className="flex justify-between"><span className="text-white/30">OTR w/o Ins.</span><span className="text-white/70 font-mono">RM{fmt(otrWO)}</span></div>
                     </div>
                     <div className="grid grid-cols-2 gap-x-2">
@@ -232,7 +241,7 @@ export default function PricelistPage() {
           {/* Finance summary */}
           <div className="animate-fade-up rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-center">
             <p className="text-xs text-white/40 mb-3">
-              Monthly estimates are based on current rebates, 10% down, 9 years. Subject to bank approval T&amp;Cs.
+              Monthly estimates for 10% &amp; 0% down, 9 years, 2.3% rate. Subject to bank approval T&amp;Cs.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/#main-content" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-semibold hover:shadow-[0_0_30px_rgba(52,211,153,0.3)] transition-all">

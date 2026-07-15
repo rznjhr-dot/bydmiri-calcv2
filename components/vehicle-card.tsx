@@ -2,7 +2,7 @@
 
 import { Calculator } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
-import { calcCardMonthly, fmt } from "@/lib/finance";
+import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import { useInView } from "@/lib/use-in-view";
 
@@ -34,6 +34,7 @@ export default function VehicleCard({
   index,
 }: Props) {
   const monthly = calcCardMonthly(vehicle.otr, vehicle.rebate);
+  const monthlyFull = calcFullLoanMonthly(vehicle.otr, vehicle.rebate);
   const { ref, inView } = useInView<HTMLDivElement>();
 
   const handleClick = () => onSelect(vehicle.id);
@@ -72,9 +73,10 @@ export default function VehicleCard({
             <div className="text-[10px] text-theme-50 truncate leading-tight">
               {vehicle.name}
             </div>
-            <div className="text-[13px] font-bold text-emerald-400 tracking-tight">
-              from RM{fmt(monthly)}<span className="text-[11px] text-emerald-400/70 font-medium">/mo</span>
+            <div className="text-[13px] font-bold tracking-tight">
+              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
             </div>
+            <div className="text-[9px] text-white/20 leading-tight -mt-0.5">10% · 0% down</div>
           </div>
           <div className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/25 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/40 transition-all">
             <Calculator size={13} className="text-emerald-400" />

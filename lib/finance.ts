@@ -78,3 +78,10 @@ export function calcCardMonthly(otr: number, rebate: number): number {
   const totalRepayment = loanAmount + loanAmount * CARD_INTEREST_RATE * CARD_TENURE;
   return totalRepayment / (CARD_TENURE * MONTHS_PER_YEAR);
 }
+
+/** Monthly payment for 0% down (full loan): (OTR - rebate) × 100% loan × 2.3% flat × 9 years */
+export function calcFullLoanMonthly(otr: number, rebate: number): number {
+  const loanAmount = otr - rebate;
+  const totalRepayment = loanAmount + loanAmount * CARD_INTEREST_RATE * CARD_TENURE;
+  return totalRepayment / (CARD_TENURE * MONTHS_PER_YEAR);
+}

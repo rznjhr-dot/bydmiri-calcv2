@@ -66,7 +66,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "atto3ultra",
-    name: "Atto 3 Ultra (2026)",
+    name: "Atto 3 Ultra",
     category: "Electric SUV",
     otr: 132729.25,
     sumInsured: 129300,
@@ -87,7 +87,7 @@ export const vehicles: Vehicle[] = [
   },
   {
     id: "atto3premium",
-    name: "Atto 3 Premium (2026)",
+    name: "Atto 3 Premium",
     category: "Electric SUV",
     otr: 146227.90,
     sumInsured: 142300,
