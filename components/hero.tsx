@@ -3,6 +3,9 @@
 import { ArrowDown, Zap, Cpu, CircuitBoard, Radio } from "lucide-react";
 import Link from "next/link";
 import { Img } from "@/components/img";
+import { vehicles } from "@/lib/vehicles";
+
+const MAX_RANGE_KM = Math.max(...vehicles.map((v) => v.range));
 
 export default function Hero() {
   return (
@@ -127,30 +130,22 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Stats */}
+          {/* Stats — derived from vehicle data so they never go stale */}
           <div
-            className="animate-fade-up mt-10 mb-2"
+            className="animate-fade-up grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto mt-10"
             style={{ animationDelay: "0.6s" }}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/20 text-center">
-              BYD Miri by Ridzuan Jahari
-            </p>
-          </div>
-          <div
-            className="animate-fade-up grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-8 max-w-xl md:max-w-2xl mx-auto"
-            style={{ animationDelay: "0.7s" }}
-          >
             {[
-              { value: "9", label: "Models" },
+              { value: String(vehicles.length), label: "Models" },
               { value: "Fully Electric", label: "EV Lineup" },
-              { value: "Up to 650km", label: "Max Range" },
+              { value: `Up to ${MAX_RANGE_KM}km`, label: "Max Range" },
               { value: "0%", label: "Deposit Option" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-[11px] sm:text-xs md:text-xl font-semibold text-white/40 leading-tight">
+                <div className="text-sm sm:text-base md:text-xl font-semibold text-white/40 leading-tight">
                   {stat.value}
                 </div>
-                <div className="text-[9px] sm:text-[10px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
+                <div className="text-[10px] sm:text-[11px] md:text-xs text-white/20 mt-0.5 leading-tight">{stat.label}</div>
               </div>
             ))}
           </div>

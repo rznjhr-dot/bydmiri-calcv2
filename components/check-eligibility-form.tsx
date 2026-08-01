@@ -105,6 +105,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             <option value="Seal 6 Premium" className="bg-[#080808]">Seal 6 Premium</option>
             <option value="Atto 3 Ultra" className="bg-[#080808]">Atto 3 Ultra</option>
             <option value="Atto 3 Premium" className="bg-[#080808]">Atto 3 Premium</option>
+            <option value="Sealion 7 Dynamic" className="bg-[#080808]">Sealion 7 Dynamic</option>
             <option value="Sealion 7 Premium" className="bg-[#080808]">Sealion 7 Premium</option>
             <option value="Sealion 7 Performance" className="bg-[#080808]">Sealion 7 Performance</option>
             <option value="Seal Premium" className="bg-[#080808]">Seal Premium</option>

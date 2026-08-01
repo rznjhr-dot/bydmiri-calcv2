@@ -3,20 +3,21 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Zap, Gauge, Battery, CircleDot, Info, ClipboardCheck, ChevronDown } from "lucide-react";
+import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, ClipboardCheck, ChevronDown, MapPin, Clock } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
+import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
 import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
+import SectionHeader from "@/components/section-header";
 
 export default function Home() {
-  const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
   const [showEligibility, setShowEligibility] = useState(false);
@@ -86,10 +87,7 @@ export default function Home() {
               Calculator
             </button>
             <button onClick={() => document.getElementById("charging")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
-              Charge
-            </button>
-            <button onClick={() => document.getElementById("warranty")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
-              Warranty
+              Charging &amp; Warranty
             </button>
             <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
               Contact Us
@@ -105,78 +103,31 @@ export default function Home() {
       <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
         <div className="max-w-6xl mx-auto relative">
-          <div
-            className="text-center mb-6"
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide">
-              <Zap size={12} />
-              Complete BYD Lineup
-            </span>
-            <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1">
-              Discover the Lineup. 6 Models, 9 Choices.
-            </h2>
-            <p className="text-xs text-theme-50">Explore every model. OTR pricing &amp; monthly instalments below.</p>
-          </div>
+          <SectionHeader
+            icon={<Zap size={12} />}
+            label="Complete BYD Lineup"
+            title="Discover the Lineup. 6 Models, 10 Choices."
+            subtitle="Explore every model. OTR pricing & monthly instalments below."
+            className="mb-6"
+          />
 
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.06]">
+          <div className="overflow-x-auto rounded-2xl border border-white/[0.06] bg-white/[0.01]">
             <table className="w-full text-left text-xs md:text-sm">
               <thead>
-                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider hidden sm:table-cell">Range</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-emerald-400 uppercase tracking-wider">10%</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs font-semibold text-amber-400 uppercase tracking-wider">0%</th>
-                  <th scope="col" className="px-2 py-2 text-[9px] md:text-xs w-6"></th>
+                <tr className="border-b border-white/[0.08] bg-white/[0.03]">
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">OTR Price</th>
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Rebate</th>
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right">10% Down</th>
+                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right">0% Down</th>
+                  <th scope="col" className="px-2 py-3 w-6"></th>
                 </tr>
               </thead>
               <tbody>
-                {vehicles.map((v) => {
-                  const monthly = calcCardMonthly(v.otr, v.rebate);
-                  const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
-                  return (
-                    <tr
-                      key={v.id}
-                      onClick={() => router.push('/pricelist')}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); router.push('/pricelist'); } }}
-                      role="button"
-                      tabIndex={0}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer"
-                    >
-                      <td className="px-2 py-2">
-                        <div className="flex items-center gap-2">
-                          <div className="hidden sm:block w-12 h-7 md:w-16 md:h-9 rounded overflow-hidden bg-black/40 shrink-0">
-                            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
-                          </div>
-                          <span className="font-semibold text-theme-80 text-[10px] md:text-sm">{v.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-2 py-2 text-theme-50 text-[10px] md:text-sm hidden sm:table-cell">{v.range} km</td>
-                      <td className="px-2 py-2 font-mono text-theme-70 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(v.otr)}</td>
-                      <td className="px-2 py-2 font-mono text-red-400 font-semibold text-[10px] md:text-sm whitespace-nowrap">-RM{fmt(v.rebate)}</td>
-                      <td className="px-2 py-2 font-mono font-bold text-emerald-400 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(monthly)}</td>
-                      <td className="px-2 py-2 font-mono font-bold text-amber-400 text-[10px] md:text-sm whitespace-nowrap">RM{fmt(monthlyFull)}</td>
-                      <td className="px-2 py-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelect(v.id);
-                          }}
-                          className="flex items-center justify-center w-5 h-5 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
-                          aria-label={`Calculate monthly payment for ${v.name}`}
-                        >
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="4" y="2" width="16" height="20" rx="2" />
-                            <line x1="8" y1="6" x2="16" y2="6" />
-                            <line x1="8" y1="10" x2="16" y2="10" />
-                            <line x1="8" y1="14" x2="12" y2="14" />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {vehicles.map((v, i) => (
+                  <PricingTableRow key={v.id} v={v} onCalc={handleSelect} index={i} />
+                ))}
               </tbody>
             </table>
           </div>
@@ -188,6 +139,9 @@ export default function Home() {
             >
               View full details &rarr;
             </Link>
+            <p className="mt-2 text-[10px] md:text-xs text-white/30">
+              Monthly estimates: 10% or 0% down &middot; 9-year tenure &middot; 2.30% flat rate. Subject to bank approval T&amp;Cs.
+            </p>
           </div>
         </div>
       </section>
@@ -203,19 +157,13 @@ export default function Home() {
 
         <div className="max-w-6xl mx-auto relative">
           {/* Section header */}
-          <div className="text-center mb-8">
-            <span
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-4 border border-emerald-500/10"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Find Your Match
-            </span>
-            <h2
-              className="text-3xl md:text-4xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-0"
-            >
-              Calculate Your Monthly Payment
-            </h2>
-          </div>
+          <SectionHeader
+            icon={<span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+            label="Find Your Match"
+            title="Calculate Your Monthly Payment"
+            subtitle="Tap any model to open OTR pricing, specs & instant monthly estimates."
+            size="lg"
+          />
 
           {/* Parking Lot Grid */}
           <div className="flex flex-wrap justify-center -mx-1">
@@ -238,30 +186,12 @@ export default function Home() {
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-6xl mx-auto relative">
-          <div className="text-center mb-8">
-            <span
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                <line x1="6" y1="1" x2="6" y2="4" />
-                <line x1="10" y1="1" x2="10" y2="4" />
-                <line x1="14" y1="1" x2="14" y2="4" />
-              </svg>
-              Extras
-            </span>
-            <h2
-              className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-1"
-            >
-              Charging &amp; Warranty
-            </h2>
-            <p
-              className="text-sm text-theme-50"
-            >
-              Everything you need to know about charging and warranty coverage
-            </p>
-          </div>
+          <SectionHeader
+            icon={<BatteryCharging size={12} />}
+            label="Extras"
+            title="Charging & Warranty"
+            subtitle="Everything you need to know about charging and warranty coverage"
+          />
 
           {/* Charging Estimator */}
           <div className="mb-8">
@@ -280,27 +210,12 @@ export default function Home() {
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
         <div className="max-w-6xl mx-auto relative">
-          <div className="text-center mb-8">
-            <span
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              Our Location
-            </span>
-            <h2
-              className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-theme-90 mb-0"
-            >
-              Visit Our Showroom
-            </h2>
-            <p
-              className="text-sm text-theme-50"
-            >
-              Kah Progression Auto — Official BYD Dealer Miri
-            </p>
-          </div>
+          <SectionHeader
+            icon={<MapPin size={12} />}
+            label="Our Location"
+            title="Visit Our Showroom"
+            subtitle="Kah Progression Auto — Official BYD Dealer Miri"
+          />
 
           <div className="grid md:grid-cols-2 gap-4 items-stretch">
             {/* Map */}
@@ -384,16 +299,13 @@ export default function Home() {
           <div
             className="space-y-5"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Experience the Future
-            </span>
-            <h2 className="text-3xl md:text-4xl font-[family-name:var(--font-syne)] font-bold text-theme-90">
-              Schedule a Test Drive Today
-            </h2>
+            <SectionHeader
+              icon={<Clock size={12} />}
+              label="Experience the Future"
+              title="Schedule a Test Drive Today"
+              size="lg"
+              className="mb-0"
+            />
             <div className="space-y-1">
               <p className="text-sm md:text-base text-theme-50 max-w-md mx-auto">
                 Book your appointment with Ridzuan today.
@@ -651,5 +563,123 @@ export default function Home() {
               )}
       </Modal>
     </>
+  );
+}
+
+/* ── Pricing Table Row (stateful so Atto 3 promo pills update monthly instantly) ── */
+function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string) => void; index: number }) {
+  const router = useRouter();
+  const [promoIdx, setPromoIdx] = useState(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    return d !== undefined && d >= 0 ? d : 0;
+  });
+
+  // Reset promo selection if the row is reused for another vehicle
+  useEffect(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
+  }, [v]);
+
+  const rebate = v.promotionOptions
+    ? v.promotionOptions[promoIdx]!.rebate
+    : v.rebate;
+  const monthly = calcCardMonthly(v.otr, rebate);
+  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
+
+  return (
+    <tr
+      onClick={() => router.push("/pricelist")}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push("/pricelist");
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      className={`border-b border-white/[0.04] transition-colors cursor-pointer ${
+        index % 2 === 1 ? "bg-white/[0.015]" : ""
+      } hover:bg-white/[0.05]`}
+    >
+      <td className="px-3 py-2.5 md:py-3">
+        <div className="flex items-center gap-2.5">
+          <div className="hidden sm:block w-14 h-8 md:w-16 md:h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border border-white/[0.05]">
+            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
+          </div>
+          <div className="min-w-0">
+            <div className="font-semibold text-theme-90 text-[11px] md:text-sm leading-tight whitespace-nowrap">{v.name}</div>
+            <div className="hidden md:block text-[10px] text-white/35 truncate">{v.category}</div>
+          </div>
+        </div>
+      </td>
+      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap hidden sm:table-cell">
+        <span className="font-mono text-white/55 text-[10px] md:text-sm tabular-nums">{v.range}</span>
+        <span className="text-white/30 text-[9px] md:text-[11px]"> km</span>
+      </td>
+      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
+        <span className="font-mono text-theme-80 text-[10px] md:text-sm tabular-nums">RM{fmt(v.otr)}</span>
+      </td>
+      <td className="px-3 py-2.5 md:py-3 text-right">
+        {v.promotionOptions ? (
+          <div className="flex flex-col items-end gap-0.5">
+            {v.promotionOptions.map((opt, i) => {
+              const selected = i === promoIdx;
+              return (
+                <button
+                  key={opt.title}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPromoIdx(i);
+                  }}
+                  aria-pressed={selected}
+                  title={opt.title}
+                  className={`font-mono font-semibold text-[10px] md:text-sm whitespace-nowrap leading-tight transition-colors cursor-pointer tabular-nums ${
+                    selected ? "text-red-400" : "text-white/25 hover:text-white/70"
+                  }`}
+                >
+                  {i > 0 && !selected && <span className="text-white/20 font-normal text-[8px] md:text-[10px] mr-1">or</span>}
+                  -RM{fmt(opt.rebate)}
+                  {opt.freeGift && (
+                    <span className={selected ? "text-red-400/60" : "text-white/15"}>
+                      {" "}+ 6-Yr Service
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <span className="font-mono text-red-400 font-semibold text-[10px] md:text-sm whitespace-nowrap tabular-nums">
+            -RM{fmt(rebate)}
+          </span>
+        )}
+      </td>
+      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
+        <span className="font-mono font-bold text-emerald-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthly)}</span>
+        <span className="text-emerald-400/50 text-[8px] md:text-[10px] font-medium">/mo</span>
+      </td>
+      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
+        <span className="font-mono font-bold text-amber-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthlyFull)}</span>
+        <span className="text-amber-400/50 text-[8px] md:text-[10px] font-medium">/mo</span>
+      </td>
+      <td className="px-2 py-2.5 md:py-3">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onCalc(v.id);
+          }}
+          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
+          aria-label={`Calculate monthly payment for ${v.name}`}
+        >
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" />
+            <line x1="8" y1="6" x2="16" y2="6" />
+            <line x1="8" y1="10" x2="16" y2="10" />
+            <line x1="8" y1="14" x2="12" y2="14" />
+          </svg>
+        </button>
+      </td>
+    </tr>
   );
 }

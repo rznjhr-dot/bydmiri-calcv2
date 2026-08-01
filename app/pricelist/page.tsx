@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink, Zap, Calculator } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
+import PromoSelector from "@/components/promo-selector";
 
 const REG_FEE = 60;
 const EV_PLATE_FEE = 150;
@@ -17,7 +18,6 @@ function calcOtrWithoutIns(v: typeof vehicles[0]): number {
 }
 
 export default function PricelistPage() {
-  const router = useRouter();
   useEffect(() => {
     document.title = "Full Price List | BYD Miri";
   }, []);
@@ -51,7 +51,7 @@ export default function PricelistPage() {
               Complete BYD Lineup
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-[family-name:var(--font-syne)] font-bold tracking-tight leading-[1.1] mb-3 text-white/90">
-              Discover the Lineup. 6 Models, 9 Choices.
+              Discover the Lineup. 6 Models, 10 Choices.
             </h1>
             <p className="text-sm md:text-base text-white/50 max-w-3xl mx-auto">
               Explore every model. OTR pricing &amp; monthly instalments below.
@@ -80,162 +80,18 @@ export default function PricelistPage() {
                 </tr>
               </thead>
               <tbody>
-                {vehicles.map((v) => {
-                  const monthly = calcCardMonthly(v.otr, v.rebate);
-                  const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
-                  const otrWO = calcOtrWithoutIns(v);
-                  const insurance = v.otr - otrWO;
-                  return (
-                    <tr
-                      key={v.id}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
-                    >
-                      <td className="px-3 py-2.5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-20 h-11 rounded overflow-hidden bg-black/40 shrink-0">
-                            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
-                          </div>
-                          <div>
-                            <div className="font-semibold text-white/80 text-sm">{v.name}</div>
-                            <div className="text-[10px] text-white/30">{v.category}</div>
-                            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] transition-all mt-0.5">
-                              Brochure <ExternalLink size={9} />
-                            </a>
-                          </div>
-                        </div>
-                      </td>
-                      {/* Body Price */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/70 font-mono">RM{fmt(v.sumInsured)}</div>
-                        <div className="text-[9px] text-white/20">Body Price</div>
-                      </td>
-                      {/* Road Tax */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/50 font-mono">+RM{fmt(v.roadTax)}</div>
-                        <div className="text-[9px] text-white/20">Road Tax</div>
-                      </td>
-                      {/* Registration Fee */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</div>
-                        <div className="text-[9px] text-white/20">Registration</div>
-                      </td>
-                      {/* EV Plate */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</div>
-                        <div className="text-[9px] text-white/20">EV Plate</div>
-                      </td>
-                      {/* B2 Inspection */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</div>
-                        <div className="text-[9px] text-white/20">B2 Inspection</div>
-                      </td>
-                      {/* OTR w/o insurance (computed) */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/70 font-mono">RM{fmt(otrWO)}</div>
-                        <div className="text-[9px] text-white/20">Subtotal</div>
-                      </td>
-                      {/* Insurance */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white/50 font-mono">+RM{fmt(insurance)}</div>
-                        <div className="text-[9px] text-white/20">Est. Insurance</div>
-                      </td>
-                      {/* OTR Price */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</div>
-                        <div className="text-[9px] text-emerald-400/60 font-semibold">ON THE ROAD</div>
-                      </td>
-                      {/* Rebate */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-red-400 font-semibold font-mono">-RM{fmt(v.rebate)}</div>
-                        <div className="text-[9px] text-white/20">Rebate</div>
-                      </td>
-                      {/* Monthly */}
-                      <td className="px-3 py-2.5">
-                        <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
-                        <div className="text-[9px] text-white/20">10% down</div>
-                      </td>
-                      <td className="px-3 py-2.5">
-                        <div className="text-amber-400 font-bold font-mono text-sm">RM{fmt(monthlyFull)}</div>
-                        <div className="text-[9px] text-white/20">0% down</div>
-                      </td>
-                      <td className="px-3 py-2.5">
-                        <button
-                          onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
-                          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
-                          aria-label={`Calculate for ${v.name}`}
-                        >
-                          <Calculator size={11} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {vehicles.map((v) => (
+                  <PricelistRow key={v.id} v={v} />
+                ))}
               </tbody>
             </table>
           </div>
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-3">
-            {vehicles.map((v) => {
-              const monthly = calcCardMonthly(v.otr, v.rebate);
-              const monthlyFull = calcFullLoanMonthly(v.otr, v.rebate);
-              const otrWO = calcOtrWithoutIns(v);
-              const insurance = v.otr - otrWO;
-              return (
-                <div
-                  key={v.id}
-                  className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-20 h-12 rounded overflow-hidden bg-black/40 shrink-0">
-                      <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-white/80 truncate">{v.name}</div>
-                      <div className="text-[10px] text-white/30 truncate">{v.category}</div>
-                      <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all">
-                        Brochure <ExternalLink size={8} />
-                      </a>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div className="text-right">
-                        <div className="text-[9px] text-emerald-400/60">10% <span className="text-white/20">·</span> <span className="text-amber-400/60">0%</span></div>
-                        <div className="text-sm font-bold font-mono">
-                          <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-white/20"> · </span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
-                        className="flex items-center justify-center w-7 h-7 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
-                        aria-label={`Calculate for ${v.name}`}
-                      >
-                        <Calculator size={12} />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="space-y-1 text-xs pt-2 border-t border-white/[0.04]">
-                    <div className="grid grid-cols-2 gap-x-2">
-                      <div className="flex justify-between"><span className="text-white/30">Body Price</span><span className="text-white/70 font-mono">RM{fmt(v.sumInsured)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">Road Tax</span><span className="text-white/50 font-mono">+RM{fmt(v.roadTax)}</span></div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-2">
-                      <div className="flex justify-between"><span className="text-white/30">Registration</span><span className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">EV Plate</span><span className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">B2 Inspection</span><span className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">OTR w/o Ins.</span><span className="text-white/70 font-mono">RM{fmt(otrWO)}</span></div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-2">
-                      <div className="flex justify-between"><span className="text-white/30">Insurance</span><span className="text-white/50 font-mono">+RM{fmt(insurance)}</span></div>
-                      <div className="flex justify-between"><span className="text-emerald-400/60 font-semibold">OTR Price</span><span className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</span></div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-x-2 pt-1 border-t border-white/[0.04]">
-                      <div className="flex justify-between"><span className="text-white/30">Rebate</span><span className="text-red-400 font-semibold font-mono">-RM{fmt(v.rebate)}</span></div>
-                      <div className="flex justify-between"><span className="text-white/30">Range</span><span className="text-white/50">{v.range} km · {v.battery} kWh</span></div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {vehicles.map((v) => (
+              <PricelistCard key={v.id} v={v} />
+            ))}
           </div>
 
           {/* Finance summary */}
@@ -265,6 +121,208 @@ export default function PricelistPage() {
           <p className="text-xs text-white/20 mt-3">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+/* ── Desktop Row (stateful so Atto 3 promo pills update monthly instantly) ── */
+function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
+  const router = useRouter();
+  const [promoIdx, setPromoIdx] = useState(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    return d !== undefined && d >= 0 ? d : 0;
+  });
+
+  // Reset promo selection if the row is reused for another vehicle
+  useEffect(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
+  }, [v]);
+
+  const rebate = v.promotionOptions
+    ? v.promotionOptions[promoIdx]!.rebate
+    : v.rebate;
+  const monthly = calcCardMonthly(v.otr, rebate);
+  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
+  const otrWO = calcOtrWithoutIns(v);
+  const insurance = v.otr - otrWO;
+
+  return (
+    <tr className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+      <td className="px-3 py-2.5">
+        <div className="flex items-center gap-3">
+          <div className="w-20 h-11 rounded overflow-hidden bg-black/40 shrink-0">
+            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <div className="font-semibold text-white/80 text-sm">{v.name}</div>
+            <div className="text-[10px] text-white/30">{v.category}</div>
+            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] transition-all mt-0.5">
+              Brochure <ExternalLink size={9} />
+            </a>
+          </div>
+        </div>
+      </td>
+      {/* Body Price */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/70 font-mono">RM{fmt(v.sumInsured)}</div>
+        <div className="text-[9px] text-white/20">Body Price</div>
+      </td>
+      {/* Road Tax */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/50 font-mono">+RM{fmt(v.roadTax)}</div>
+        <div className="text-[9px] text-white/20">Road Tax</div>
+      </td>
+      {/* Registration Fee */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</div>
+        <div className="text-[9px] text-white/20">Registration</div>
+      </td>
+      {/* EV Plate */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</div>
+        <div className="text-[9px] text-white/20">EV Plate</div>
+      </td>
+      {/* B2 Inspection */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</div>
+        <div className="text-[9px] text-white/20">B2 Inspection</div>
+      </td>
+      {/* OTR w/o insurance (computed) */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/70 font-mono">RM{fmt(otrWO)}</div>
+        <div className="text-[9px] text-white/20">Subtotal</div>
+      </td>
+      {/* Insurance */}
+      <td className="px-3 py-2.5">
+        <div className="text-white/50 font-mono">+RM{fmt(insurance)}</div>
+        <div className="text-[9px] text-white/20">Est. Insurance</div>
+      </td>
+      {/* OTR Price */}
+      <td className="px-3 py-2.5">
+        <div className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</div>
+        <div className="text-[9px] text-emerald-400/60 font-semibold">ON THE ROAD</div>
+      </td>
+      {/* Rebate */}
+      <td className="px-3 py-2.5">
+        {v.promotionOptions ? (
+          <PromoSelector
+            options={v.promotionOptions}
+            selectedIndex={promoIdx}
+            onSelect={setPromoIdx}
+            size="xs"
+            className="min-w-[170px]"
+          />
+        ) : (
+          <>
+            <div className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</div>
+            <div className="text-[9px] text-white/20">Rebate</div>
+          </>
+        )}
+      </td>
+      {/* Monthly */}
+      <td className="px-3 py-2.5">
+        <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
+        <div className="text-[9px] text-white/20">10% down</div>
+      </td>
+      <td className="px-3 py-2.5">
+        <div className="text-amber-400 font-bold font-mono text-sm">RM{fmt(monthlyFull)}</div>
+        <div className="text-[9px] text-white/20">0% down</div>
+      </td>
+      <td className="px-3 py-2.5">
+        <button
+          onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+          aria-label={`Calculate for ${v.name}`}
+        >
+          <Calculator size={11} />
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+/* ── Mobile Card (stateful so Atto 3 promo pills update monthly instantly) ── */
+function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
+  const router = useRouter();
+  const [promoIdx, setPromoIdx] = useState(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    return d !== undefined && d >= 0 ? d : 0;
+  });
+
+  // Reset promo selection if the card is reused for another vehicle
+  useEffect(() => {
+    const d = v.promotionOptions?.findIndex((o) => o.default);
+    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
+  }, [v]);
+
+  const rebate = v.promotionOptions
+    ? v.promotionOptions[promoIdx]!.rebate
+    : v.rebate;
+  const monthly = calcCardMonthly(v.otr, rebate);
+  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
+  const otrWO = calcOtrWithoutIns(v);
+  const insurance = v.otr - otrWO;
+
+  return (
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-20 h-12 rounded overflow-hidden bg-black/40 shrink-0">
+          <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-semibold text-white/80 truncate">{v.name}</div>
+          <div className="text-[10px] text-white/30 truncate">{v.category}</div>
+          <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all">
+            Brochure <ExternalLink size={8} />
+          </a>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="text-right">
+            <div className="text-[9px] text-emerald-400/60">10% <span className="text-white/20">·</span> <span className="text-amber-400/60">0%</span></div>
+            <div className="text-sm font-bold font-mono">
+              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-white/20"> · </span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
+            </div>
+          </div>
+          <button
+            onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+            aria-label={`Calculate for ${v.name}`}
+          >
+            <Calculator size={12} />
+          </button>
+        </div>
+      </div>
+      <div className="space-y-1 text-xs pt-2 border-t border-white/[0.04]">
+        <div className="grid grid-cols-2 gap-x-2">
+          <div className="flex justify-between"><span className="text-white/30">Body Price</span><span className="text-white/70 font-mono">RM{fmt(v.sumInsured)}</span></div>
+          <div className="flex justify-between"><span className="text-white/30">Road Tax</span><span className="text-white/50 font-mono">+RM{fmt(v.roadTax)}</span></div>
+        </div>
+        <div className="grid grid-cols-2 gap-x-2">
+          <div className="flex justify-between"><span className="text-white/30">Registration</span><span className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</span></div>
+          <div className="flex justify-between"><span className="text-white/30">EV Plate</span><span className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</span></div>
+          <div className="flex justify-between"><span className="text-white/30">B2 Inspection</span><span className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</span></div>
+          <div className="flex justify-between"><span className="text-white/30">OTR w/o Ins.</span><span className="text-white/70 font-mono">RM{fmt(otrWO)}</span></div>
+        </div>
+        <div className="grid grid-cols-2 gap-x-2">
+          <div className="flex justify-between"><span className="text-white/30">Insurance</span><span className="text-white/50 font-mono">+RM{fmt(insurance)}</span></div>
+          <div className="flex justify-between"><span className="text-emerald-400/60 font-semibold">OTR Price</span><span className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</span></div>
+        </div>
+        {v.promotionOptions && (
+          <div className="pt-1">
+            <PromoSelector
+              options={v.promotionOptions}
+              selectedIndex={promoIdx}
+              onSelect={setPromoIdx}
+              size="xs"
+            />
+          </div>
+        )}
+        <div className="grid grid-cols-2 gap-x-2 pt-1 border-t border-white/[0.04]">
+          <div className="flex justify-between"><span className="text-white/30">Rebate</span><span className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</span></div>
+          <div className="flex justify-between"><span className="text-white/30">Range</span><span className="text-white/50">{v.range} km · {v.battery} kWh</span></div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ const OPTION_ORDER = [
   "seal-6-premium",
   "atto-3-ultra",
   "atto-3-premium",
+  "sealion-7-dynamic",
   "sealion-7-premium",
   "sealion-7-performance",
   "seal-premium",

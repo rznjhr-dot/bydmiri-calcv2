@@ -1,3 +1,10 @@
+export interface PromotionOption {
+  title: string;
+  rebate: number;
+  default?: boolean;
+  freeGift?: string;
+}
+
 export interface Vehicle {
   id: string;
   name: string;
@@ -7,6 +14,9 @@ export interface Vehicle {
   roadTax: number;
   rebate: number;
   cspRebate: number;
+  /** Mutually-exclusive promotion options (e.g. Atto 3). When present, the
+   *  pills ARE the rebate control — rebate/csp UI must derive from these. */
+  promotionOptions?: PromotionOption[];
   range: number;
   battery: number;
   maxChargeKw: number;
@@ -29,7 +39,7 @@ export const vehicles: Vehicle[] = [
     otr: 106353.00,
     sumInsured: 103500,
     roadTax: 120,
-    rebate: 11000,
+    rebate: 9000,
     cspRebate: 2000,
     acLimitKw: 7,
     range: 410,
@@ -71,8 +81,17 @@ export const vehicles: Vehicle[] = [
     otr: 132729.25,
     sumInsured: 129300,
     roadTax: 160,
-    rebate: 10000,
+    rebate: 14000,
     cspRebate: 0,
+    promotionOptions: [
+      { title: "RM14,000 Cash Rebate", rebate: 14000, default: true },
+      {
+        title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
+        rebate: 10000,
+        default: false,
+        freeGift: "6 Years Standard Service Package",
+      },
+    ],
     acLimitKw: 7,
     range: 480,
     battery: 60.48,
@@ -92,8 +111,17 @@ export const vehicles: Vehicle[] = [
     otr: 146227.90,
     sumInsured: 142300,
     roadTax: 335,
-    rebate: 10000,
+    rebate: 14000,
     cspRebate: 0,
+    promotionOptions: [
+      { title: "RM14,000 Cash Rebate", rebate: 14000, default: true },
+      {
+        title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
+        rebate: 10000,
+        default: false,
+        freeGift: "6 Years Standard Service Package",
+      },
+    ],
     acLimitKw: 11,
     range: 600,
     battery: 74.88,
@@ -107,21 +135,42 @@ export const vehicles: Vehicle[] = [
     url: "https://byd.simemotors.my/byd-atto-3",
   },
   {
+    id: "sealion7dynamic",
+    name: "Sealion 7 Dynamic",
+    category: "Performance Electric SUV",
+    otr: 171109.05,
+    sumInsured: 166800,
+    roadTax: 290,
+    rebate: 4000,
+    cspRebate: 0,
+    acLimitKw: 7,
+    range: 520,
+    battery: 71.8,
+    maxChargeKw: 110,
+    power: 170,
+    torque: 380,
+    acceleration: 7.3,
+    driveType: "RWD",
+    seats: 5,
+    image: "/images/sealion7-premium.jpg",
+    url: "https://byd.simemotors.my/models/byd-sealion-7.html",
+  },
+  {
     id: "sealion7premium",
     name: "Sealion 7 Premium",
     category: "Performance Electric SUV",
-    otr: 192115.85,
-    sumInsured: 187300,
+    otr: 197147.35,
+    sumInsured: 192300,
     roadTax: 335,
-    rebate: 7000,
-    cspRebate: 4000,
+    rebate: 3888,
+    cspRebate: 0,
     acLimitKw: 11,
-    range: 567,
-    battery: 82.5,
-    maxChargeKw: 150,
+    range: 650,
+    battery: 91.39,
+    maxChargeKw: 230,
     power: 230,
     torque: 380,
-    acceleration: 6.7,
+    acceleration: 6.9,
     driveType: "RWD",
     seats: 5,
     image: "/images/sealion7-premium.jpg",
@@ -131,15 +180,15 @@ export const vehicles: Vehicle[] = [
     id: "sealion7performance",
     name: "Sealion 7 Performance",
     category: "Performance Electric SUV",
-    otr: 209061.55,
-    sumInsured: 203300,
-    roadTax: 965,
-    rebate: 7000,
-    cspRebate: 4000,
+    otr: 213073.30,
+    sumInsured: 207900,
+    roadTax: 365,
+    rebate: 2888,
+    cspRebate: 0,
     acLimitKw: 11,
-    range: 542,
-    battery: 82.5,
-    maxChargeKw: 150,
+    range: 600,
+    battery: 91.39,
+    maxChargeKw: 230,
     power: 390,
     torque: 690,
     acceleration: 4.5,
@@ -210,5 +259,3 @@ export const vehicles: Vehicle[] = [
     url: "https://byd.simemotors.my/models/byd-m6.html",
   },
 ];
-
-

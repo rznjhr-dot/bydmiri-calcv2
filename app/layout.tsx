@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | BYD Miri",
   },
   description:
-    "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 9 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment.",
+    "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 10 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment.",
 
   // ── Keywords ──
   keywords: [
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BYD Miri by Ridzuan Jahari",
     description:
-      "Calculate BYD monthly financing instantly. Compare 9 models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari, BYD Miri.",
+      "Calculate BYD monthly financing instantly. Compare 10 models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari, BYD Miri.",
     url: baseUrl,
     siteName: "BYD Miri Loan Calculator",
     locale: "en_MY",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BYD Miri by Ridzuan Jahari",
     description:
-      "Calculate BYD monthly financing instantly. Compare 9 models, deposit, tenure & rates. Contact Ridzuan Jahari, BYD Miri.",
+      "Calculate BYD monthly financing instantly. Compare 10 models, deposit, tenure & rates. Contact Ridzuan Jahari, BYD Miri.",
     images: ["/byd-logo.png"],
   },
 
@@ -210,7 +210,7 @@ export default function RootLayout({
                   url: "https://bydmiri.com",
                   name: "BYD Miri Loan Calculator",
                   description:
-                    "Calculate your BYD monthly payment instantly. Compare 9 BYD models, deposit options, loan tenure, and interest rates.",
+                    "Calculate your BYD monthly payment instantly. Compare 10 BYD models, deposit options, loan tenure, and interest rates.",
                   publisher: { "@id": "https://bydmiri.com/#organization" },
                   inLanguage: "en-MY",
                   potentialAction: {

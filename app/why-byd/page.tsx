@@ -50,7 +50,7 @@ const advantages = [
     subtitle: "Peace of Mind, Standard",
     points: [
       "6 years or 150,000 km vehicle warranty",
-      "8 years or 200,000 km battery warranty",
+      "8 years or 160,000 km battery warranty",
       "Covers Blade Battery against defects and capacity loss",
       "Valid at any authorised BYD service centre nationwide",
       "Malaysia's most comprehensive EV warranty package",
@@ -416,7 +416,7 @@ export default function WhyBydPage() {
             </p>
             <div className="mt-5 max-w-xl mx-auto rounded-lg border border-amber-500/15 bg-amber-500/[0.04] p-3">
               <p className="text-[11px] text-amber-400/70 leading-relaxed">
-                <span className="font-semibold text-amber-400">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of July 2026.
+                <span className="font-semibold text-amber-400">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of August 2026.
               </p>
             </div>
           </div>
@@ -553,7 +553,7 @@ export default function WhyBydPage() {
             Back to Loan Calculator
           </Link>
           <p className="text-xs text-amber-400/50 mt-3 max-w-md mx-auto leading-relaxed">
-            All comparisons and estimates are for illustrative purposes only. Data as of July 2026. Subject to change. Verify with authorised BYD dealer.
+            All comparisons and estimates are for illustrative purposes only. Data as of August 2026. Subject to change. Verify with authorised BYD dealer.
           </p>
           <p className="text-xs text-white/20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
         </div>

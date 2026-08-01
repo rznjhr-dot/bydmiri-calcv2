@@ -1,10 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Calculator } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import { useInView } from "@/lib/use-in-view";
+import PromoSelector from "@/components/promo-selector";
 
 interface Props {
   vehicle: Vehicle;
@@ -33,8 +35,22 @@ export default function VehicleCard({
   onSelect,
   index,
 }: Props) {
-  const monthly = calcCardMonthly(vehicle.otr, vehicle.rebate);
-  const monthlyFull = calcFullLoanMonthly(vehicle.otr, vehicle.rebate);
+  const [promoIdx, setPromoIdx] = useState(() => {
+    const d = vehicle.promotionOptions?.findIndex((o) => o.default);
+    return d !== undefined && d >= 0 ? d : 0;
+  });
+
+  // Reset promo selection when the card switches to a different vehicle
+  useEffect(() => {
+    const d = vehicle.promotionOptions?.findIndex((o) => o.default);
+    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
+  }, [vehicle]);
+
+  const rebate = vehicle.promotionOptions
+    ? vehicle.promotionOptions[promoIdx]!.rebate
+    : vehicle.rebate;
+  const monthly = calcCardMonthly(vehicle.otr, rebate);
+  const monthlyFull = calcFullLoanMonthly(vehicle.otr, rebate);
   const { ref, inView } = useInView<HTMLDivElement>();
 
   const handleClick = () => onSelect(vehicle.id);
@@ -67,6 +83,18 @@ export default function VehicleCard({
         {/* Model Image */}
         <ModelImage src={vehicle.image} name={vehicle.name} />
 
+        {/* Promo selector (e.g. Atto 3) */}
+        {vehicle.promotionOptions && (
+          <div className="w-full mt-2">
+            <PromoSelector
+              options={vehicle.promotionOptions}
+              selectedIndex={promoIdx}
+              onSelect={setPromoIdx}
+              size="xs"
+            />
+          </div>
+        )}
+
         {/* Bottom banner: name, price, calculator */}
         <div className="w-full mt-2.5 px-3 py-2.5 rounded-lg bg-emerald-500/[0.04] border border-emerald-500/10 flex items-center justify-between gap-2 transition-all duration-200 hover:bg-emerald-500/[0.08] hover:border-emerald-500/25 group cursor-pointer">
           <div className="min-w-0">
@@ -74,7 +102,7 @@ export default function VehicleCard({
               {vehicle.name}
             </div>
             <div className="text-[13px] font-bold tracking-tight">
-              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
+              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span><span className="text-[9px] text-emerald-400/40 font-medium">/mo</span>
             </div>
             <div className="text-[9px] text-white/20 leading-tight -mt-0.5">10% · 0% down</div>
           </div>
