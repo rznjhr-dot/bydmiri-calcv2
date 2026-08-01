@@ -33,7 +33,7 @@ export default function PromoSelector({
     <div
       role="group"
       aria-label="Promotion option"
-      className={`grid gap-1.5 ${options.length > 2 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"} ${className}`}
+      className={`grid gap-1.5 ${options.length > 2 ? "grid-cols-1" : "grid-cols-2"} ${className}`}
     >
       {options.map((opt, i) => {
         const selected = i === selectedIndex;
@@ -48,7 +48,7 @@ export default function PromoSelector({
             aria-pressed={selected}
             className={
               isXs
-                ? `flex items-center justify-center gap-1 px-1.5 py-1 rounded-md border text-[8px] leading-tight font-semibold text-center transition-colors cursor-pointer ${
+                ? `flex items-center justify-center gap-1 px-2.5 py-2 rounded-md border text-[10px] sm:text-[11px] leading-tight font-semibold text-center transition-colors cursor-pointer min-h-[36px] ${
                     selected
                       ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300"
                       : "border-white/[0.08] text-white/50 hover:border-emerald-500/25 hover:text-white/70"
@@ -62,10 +62,10 @@ export default function PromoSelector({
           >
             <span
               className={`shrink-0 flex items-center justify-center rounded ${
-                isXs ? "w-2.5 h-2.5" : "w-4 h-4"
+                isXs ? "w-3.5 h-3.5" : "w-4 h-4"
               } ${selected ? "bg-emerald-500" : "bg-white/15"}`}
             >
-              {selected && <Check size={isXs ? 8 : 10} className="text-white" />}
+              {selected && <Check size={isXs ? 12 : 10} className="text-white" />}
             </span>
             <span>{isXs ? shortLabel(opt.title) : opt.title}</span>
           </button>

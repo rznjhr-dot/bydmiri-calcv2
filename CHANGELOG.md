@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.4.0] — 2026-08-01
+
+### Mobile / Responsive
+- **iOS zoom fix** — all form inputs/selects bumped to `text-base` (16px) so Safari no longer auto-zooms on focus
+- **44px touch targets** — nav hamburger, calculator buttons, modal close, finance CTAs, map/list buttons, back links, charging slider handles (44px invisible wrappers with `pointer-events-none` visible thumb)
+- **Hamburger navigation** below `sm` — 5 nav links replaced with a `Menu` toggle + dropdown (full-width `min-h-11` links) on mobile
+- **Parking grid** — single column below 400px (`w-full min-[400px]:w-1/2`), 2-up above
+- **Map buttons** — stack vertically below 420px (`flex-col min-[420px]:flex-row`)
+- **Charging results** — single column below `sm` (`grid-cols-1 sm:grid-cols-3`)
+- **Modal** — body scroll-lock while open, `max-h-[85dvh]`, close button 44px, callers own padding (calc `p-5 md:p-6`, legal `p-6`)
+- **Tiny-text pass** — no text below 10px anywhere except the intentional hero badge (`text-[9px]` mobile); footer links, warranty badges, promo pills, pricelist breakdown labels, charging labels all bumped
+- **Reduced motion** — `scroll-behavior: auto` added for `prefers-reduced-motion` users
+
+### SEO
+- **Fixed duplicate-canonical bug** — removed layout-level `alternates.canonical: "/"` which was leaking the root canonical onto every page
+- **New `lib/use-page-meta.ts` client hook** — sets per-page title, meta description, path-based canonical (`https://bydmiri.com/<path>`), and OG title/url/description after hydration (required because all pages are `"use client"`)
+- **Distinct meta** for Home, `/pricelist`, `/why-byd`
+- **Sitemap** — `lastmod` refreshed to 2026-08-01 for all 3 URLs
+
+### Security
+- **Audit confirmed strong** — HSTS preload, nosniff, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy, COOP verified in `public/_headers`; no changes needed
+- **External links** — verified 0 `target="_blank"` anchors missing `rel="noopener noreferrer"`
+
 ## [2.3.0] — 2026-07-09
 
 ### Added

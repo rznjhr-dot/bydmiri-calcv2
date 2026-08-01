@@ -68,6 +68,16 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
     }
   }, [open, closeRef]);
 
+  // Lock body scroll while open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   if (!render) return null;
 
   return (
@@ -83,7 +93,7 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
         aria-hidden="true"
       />
       <div
-        className={`relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl p-6 bg-[#080808] transition-all duration-200 ${
+        className={`relative w-full max-w-lg max-h-[85dvh] overflow-y-auto rounded-2xl bg-[#080808] transition-all duration-200 ${
           active
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-5"
@@ -95,10 +105,10 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
         <button
           ref={closeRef}
           onClick={onClose}
-          className="absolute top-3 right-3 p-1.5 rounded-lg text-theme-50 hover:text-theme-90 hover:bg-white/5 transition-colors z-10"
+          className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-lg text-theme-50 hover:text-theme-90 hover:bg-white/5 transition-colors z-10"
           aria-label={`Close ${label}`}
         >
-          <X size={18} />
+          <X size={22} />
         </button>
         {children}
       </div>

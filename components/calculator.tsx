@@ -108,7 +108,7 @@ export default function Calculator({ vehicle }: Props) {
                   selectedIndex={promoIdx}
                   onSelect={setPromoIdx}
                 />
-                <p className="text-[10px] text-theme-50/50 text-center leading-tight mt-0.5">
+                <p className="text-xs text-theme-50/50 text-center leading-tight mt-0.5">
                   Select a promotion option — effective price &amp; monthly update instantly.
                 </p>
                 {freeGift ? (
@@ -143,7 +143,7 @@ export default function Calculator({ vehicle }: Props) {
                 {/* Rebate toggle */}
                 <button
                   onClick={() => setRebateOn(!rebateOn)}
-                  className={`flex items-center justify-center gap-2.5 px-3.5 py-2 rounded-lg border transition-colors text-sm w-full ${
+                  className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
                     rebateOn
                       ? "border-emerald-500/40 text-emerald-400"
                       : "text-theme-50"
@@ -171,7 +171,7 @@ export default function Calculator({ vehicle }: Props) {
                   <>
                     <button
                       onClick={() => setCspOn(!cspOn)}
-                      className={`flex items-center justify-center gap-2.5 px-3.5 py-2 rounded-lg border transition-colors text-sm w-full ${
+                      className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
                         cspOn
                           ? "border-cyan-500/40 text-cyan-400"
                           : "text-theme-50"
@@ -193,7 +193,7 @@ export default function Calculator({ vehicle }: Props) {
                         RM{fmt(vehicle.cspRebate)} CSP/GSP/SSP*
                       </span>
                     </button>
-                    <p className="text-[10px] text-theme-50/50 text-center leading-tight mt-0.5">
+                    <p className="text-xs text-theme-50/50 text-center leading-tight mt-0.5">
                       *CSP/GSP/SSP = Corporate/Government/Student Support Program (Terms &amp; Conditions apply)
                     </p>
                   </>
@@ -221,7 +221,7 @@ export default function Calculator({ vehicle }: Props) {
                   <button
                     key={pct}
                     onClick={() => handleDepositPct(pct)}
-                    className="py-1.5 rounded-lg border text-xs font-medium transition-colors text-center"
+                    className="min-w-[44px] h-11 px-3 py-2.5 rounded-lg border text-xs font-medium transition-colors text-center"
                     style={{
                       backgroundColor: depositPct === pct && !showCustom ? "rgba(0,230,118,0.1)" : "transparent",
                       borderColor: depositPct === pct && !showCustom ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
@@ -250,7 +250,7 @@ export default function Calculator({ vehicle }: Props) {
                   placeholder="Custom"
                   min={0}
                   aria-label="Custom downpayment amount"
-                  className="w-full px-3 py-1.5 rounded-r-lg text-xs outline-none transition-colors placeholder:text-theme-30"
+                  className="w-full px-3 py-2.5 rounded-r-lg text-base outline-none transition-colors placeholder:text-theme-30"
                   style={{
                     backgroundColor: "var(--cz-input)",
                     border: "1px solid var(--cz-border)",
@@ -272,7 +272,7 @@ export default function Calculator({ vehicle }: Props) {
                     step="0.01"
                     min="0"
                     aria-label="Interest rate percentage"
-                    className="w-full px-2 py-1.5 rounded-lg text-xs outline-none transition-colors text-center pr-6"
+                    className="w-full px-2 py-2.5 rounded-lg text-base outline-none transition-colors text-center pr-6"
                     style={{
                       backgroundColor: "var(--cz-input)",
                       border: "1px solid var(--cz-border)",
@@ -289,7 +289,7 @@ export default function Calculator({ vehicle }: Props) {
                   <button
                     key={y}
                     onClick={() => setTenure(y)}
-                    className="px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors text-center"
+                    className="min-w-[44px] h-10 px-3 py-2.5 rounded-lg border text-xs font-medium transition-colors text-center"
                     style={{
                       backgroundColor: tenure === y ? "rgba(0,230,118,0.1)" : "transparent",
                       borderColor: tenure === y ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
@@ -338,7 +338,7 @@ export default function Calculator({ vehicle }: Props) {
                     <span className="text-theme-50">CSP/GSP/SSP :</span>
                     {hasPromoOptions ? (
                       freeGift ? (
-                        <span className="text-emerald-400 font-medium text-[10px] text-right leading-tight max-w-[180px]">
+                        <span className="text-emerald-400 font-medium text-xs text-right leading-tight max-w-[180px]">
                           6-Year Service Package*
                         </span>
                       ) : (
@@ -351,7 +351,7 @@ export default function Calculator({ vehicle }: Props) {
                         (-)&nbsp;{fmtDec(result.cspAmount)}
                       </span>
                     ) : (
-                      <span className="text-theme-40 font-medium text-[10px] text-right leading-tight max-w-[180px]">
+                      <span className="text-theme-40 font-medium text-xs text-right leading-tight max-w-[180px]">
                         RM0 (not applicable)
                       </span>
                     )}

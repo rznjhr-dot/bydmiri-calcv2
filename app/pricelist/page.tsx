@@ -8,6 +8,7 @@ import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import PromoSelector from "@/components/promo-selector";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const REG_FEE = 60;
 const EV_PLATE_FEE = 150;
@@ -18,9 +19,10 @@ function calcOtrWithoutIns(v: typeof vehicles[0]): number {
 }
 
 export default function PricelistPage() {
-  useEffect(() => {
-    document.title = "Full Price List | BYD Miri";
-  }, []);
+  usePageMeta(
+    "Full Price List | BYD Miri",
+    "Full BYD price list Malaysia 2026 — OTR prices, rebates, and monthly instalments for every BYD model. Transparent pricing from BYD Miri, Sarawak."
+  );
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#080808" }}>
@@ -70,7 +72,7 @@ export default function PricelistPage() {
                 <tr className="border-b border-white/[0.06] bg-white/[0.02]">
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Model</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider" colSpan={5}>Price Breakdown</th>
-                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR<br /><span className="text-[9px] font-normal lowercase">w/o ins.</span></th>
+                  <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR<br /><span className="text-[10px] font-normal lowercase">w/o ins.</span></th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Insurance</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">OTR Price</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-white/40 uppercase tracking-wider">Rebate</th>
@@ -100,10 +102,10 @@ export default function PricelistPage() {
               Monthly estimates for 10% &amp; 0% down, 9 years, 2.3% rate. Subject to bank approval T&amp;Cs.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/#main-content" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-semibold hover:shadow-[0_0_30px_rgba(52,211,153,0.3)] transition-all">
+              <Link href="/#main-content" className="inline-flex items-center gap-1.5 px-5 py-3 min-h-11 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-sm font-semibold hover:shadow-[0_0_30px_rgba(52,211,153,0.3)] transition-all">
                 Calculate My Payment
               </Link>
-              <Link href="/why-byd" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.12] text-white/50 text-xs font-semibold hover:bg-white/[0.04] hover:text-white transition-all">
+              <Link href="/why-byd" className="inline-flex items-center gap-1.5 px-5 py-3 min-h-11 rounded-full border border-white/[0.12] text-white/50 text-sm font-semibold hover:bg-white/[0.04] hover:text-white transition-all">
                 Why BYD?
               </Link>
             </div>
@@ -156,9 +158,9 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
           </div>
           <div>
             <div className="font-semibold text-white/80 text-sm">{v.name}</div>
-            <div className="text-[10px] text-white/30">{v.category}</div>
-            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[10px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] transition-all mt-0.5">
-              Brochure <ExternalLink size={9} />
+            <div className="text-[11px] text-white/30">{v.category}</div>
+            <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-1.5 min-h-9 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[11px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 hover:shadow-[0_0_12px_rgba(52,211,153,0.15)] transition-all mt-0.5">
+              Brochure <ExternalLink size={11} />
             </a>
           </div>
         </div>
@@ -166,42 +168,42 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
       {/* Body Price */}
       <td className="px-3 py-2.5">
         <div className="text-white/70 font-mono">RM{fmt(v.sumInsured)}</div>
-        <div className="text-[9px] text-white/20">Body Price</div>
+        <div className="text-[10px] text-white/20">Body Price</div>
       </td>
       {/* Road Tax */}
       <td className="px-3 py-2.5">
         <div className="text-white/50 font-mono">+RM{fmt(v.roadTax)}</div>
-        <div className="text-[9px] text-white/20">Road Tax</div>
+        <div className="text-[10px] text-white/20">Road Tax</div>
       </td>
       {/* Registration Fee */}
       <td className="px-3 py-2.5">
         <div className="text-white/50 font-mono">+RM{fmt(REG_FEE)}</div>
-        <div className="text-[9px] text-white/20">Registration</div>
+        <div className="text-[10px] text-white/20">Registration</div>
       </td>
       {/* EV Plate */}
       <td className="px-3 py-2.5">
         <div className="text-white/50 font-mono">+RM{fmt(EV_PLATE_FEE)}</div>
-        <div className="text-[9px] text-white/20">EV Plate</div>
+        <div className="text-[10px] text-white/20">EV Plate</div>
       </td>
       {/* B2 Inspection */}
       <td className="px-3 py-2.5">
         <div className="text-white/50 font-mono">+RM{fmt(INSPECTION_FEE)}</div>
-        <div className="text-[9px] text-white/20">B2 Inspection</div>
+        <div className="text-[10px] text-white/20">B2 Inspection</div>
       </td>
       {/* OTR w/o insurance (computed) */}
       <td className="px-3 py-2.5">
         <div className="text-white/70 font-mono">RM{fmt(otrWO)}</div>
-        <div className="text-[9px] text-white/20">Subtotal</div>
+        <div className="text-[10px] text-white/20">Subtotal</div>
       </td>
       {/* Insurance */}
       <td className="px-3 py-2.5">
         <div className="text-white/50 font-mono">+RM{fmt(insurance)}</div>
-        <div className="text-[9px] text-white/20">Est. Insurance</div>
+        <div className="text-[10px] text-white/20">Est. Insurance</div>
       </td>
       {/* OTR Price */}
       <td className="px-3 py-2.5">
         <div className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</div>
-        <div className="text-[9px] text-emerald-400/60 font-semibold">ON THE ROAD</div>
+        <div className="text-[10px] text-emerald-400/60 font-semibold">ON THE ROAD</div>
       </td>
       {/* Rebate */}
       <td className="px-3 py-2.5">
@@ -216,26 +218,26 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
         ) : (
           <>
             <div className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</div>
-            <div className="text-[9px] text-white/20">Rebate</div>
+            <div className="text-[10px] text-white/20">Rebate</div>
           </>
         )}
       </td>
       {/* Monthly */}
       <td className="px-3 py-2.5">
         <div className="text-emerald-400 font-bold font-mono text-sm">RM{fmt(monthly)}</div>
-        <div className="text-[9px] text-white/20">10% down</div>
+        <div className="text-[10px] text-white/20">10% down</div>
       </td>
       <td className="px-3 py-2.5">
         <div className="text-amber-400 font-bold font-mono text-sm">RM{fmt(monthlyFull)}</div>
-        <div className="text-[9px] text-white/20">0% down</div>
+        <div className="text-[10px] text-white/20">0% down</div>
       </td>
       <td className="px-3 py-2.5">
         <button
           onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
-          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+          className="flex items-center justify-center w-11 h-11 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
           aria-label={`Calculate for ${v.name}`}
         >
-          <Calculator size={11} />
+          <Calculator size={16} />
         </button>
       </td>
     </tr>
@@ -273,23 +275,23 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold text-white/80 truncate">{v.name}</div>
           <div className="text-[10px] text-white/30 truncate">{v.category}</div>
-          <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all">
-            Brochure <ExternalLink size={8} />
+          <a href={v.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-3 py-2 min-h-9 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[11px] font-semibold text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all">
+            Brochure <ExternalLink size={11} />
           </a>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <div className="text-right">
-            <div className="text-[9px] text-emerald-400/60">10% <span className="text-white/20">·</span> <span className="text-amber-400/60">0%</span></div>
+            <div className="text-[10px] text-emerald-400/60">10% <span className="text-white/20">·</span> <span className="text-amber-400/60">0%</span></div>
             <div className="text-sm font-bold font-mono">
               <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-white/20"> · </span><span className="text-amber-400">RM{fmt(monthlyFull)}</span>
             </div>
           </div>
           <button
             onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
-            className="flex items-center justify-center w-7 h-7 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
+            className="flex items-center justify-center w-11 h-11 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all cursor-pointer"
             aria-label={`Calculate for ${v.name}`}
           >
-            <Calculator size={12} />
+            <Calculator size={16} />
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   Shield,
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Img } from "@/components/img";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const advantages = [
   {
@@ -219,9 +220,10 @@ const salesPoints = [
 ];
 
 export default function WhyBydPage() {
-  useEffect(() => {
-    document.title = "Why BYD? | BYD Miri";
-  }, []);
+  usePageMeta(
+    "Why BYD? | BYD Miri",
+    "Why choose BYD? Blade Battery safety, 6+8 year warranty, V2L technology, and honest comparisons vs competitors. BYD Miri, Sarawak."
+  );
 
   const [showForm, setShowForm] = useState(false);
   return (
@@ -235,7 +237,7 @@ export default function WhyBydPage() {
           </Link>
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white/80 transition-colors"
+            className="flex items-center gap-1.5 py-2 px-2 -mr-2 text-xs text-white/50 hover:text-white/80 transition-colors"
           >
             <ArrowLeft size={14} />
             Back to Calculator

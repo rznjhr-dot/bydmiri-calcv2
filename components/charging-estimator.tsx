@@ -195,7 +195,7 @@ export default function ChargingEstimator() {
         </div>
         <div>
           <h3 className="text-sm font-bold text-white/80">Charging Time &amp; Cost</h3>
-          <p className="text-[10px] text-white/30">Estimate based on battery size and charger type</p>
+          <p className="text-xs text-white/30">Estimate based on battery size and charger type</p>
         </div>
       </div>
 
@@ -213,7 +213,7 @@ export default function ChargingEstimator() {
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
                 aria-label="Select vehicle model"
-                className="w-full pl-7 pr-3 py-2 rounded-lg text-sm outline-none transition-colors appearance-none"
+                className="w-full pl-7 pr-3 py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors appearance-none"
                 style={{
                   backgroundColor: "var(--cz-input, #111)",
                   border: "1px solid var(--cz-border, rgba(255,255,255,0.08))",
@@ -239,7 +239,7 @@ export default function ChargingEstimator() {
                 <button
                   key={c.kw}
                   onClick={() => setChargerKw(c.kw)}
-                  className="py-2 rounded-lg border text-xs font-medium transition-all text-center"
+                  className="py-2.5 min-h-11 rounded-lg border text-xs font-medium transition-all text-center"
                   style={{
                     backgroundColor:
                       chargerKw === c.kw
@@ -256,7 +256,7 @@ export default function ChargingEstimator() {
                   }}
                 >
                   <div className="font-semibold">{c.label}</div>
-                  <div className="text-[9px] opacity-60">{c.type}</div>
+                  <div className="text-[11px] opacity-60">{c.type}</div>
                 </button>
               ))}
             </div>
@@ -268,13 +268,13 @@ export default function ChargingEstimator() {
               Charge Range
             </label>
             <div className="space-y-1.5">
-              <div className="flex justify-between text-[10px] text-white/40">
+              <div className="flex justify-between text-xs text-white/40">
                 <span>From: {fromPct}%</span>
                 <span>To: {toPct}%</span>
               </div>
               <div
                 ref={trackRef}
-                className="relative h-8 flex items-center select-none touch-none"
+                className="relative h-8 mx-3 flex items-center select-none touch-none"
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
@@ -288,38 +288,44 @@ export default function ChargingEstimator() {
                 />
                 {/* Handle 1 (from) */}
                 <div
-                  className="absolute w-5 h-5 -translate-x-1/2 rounded-full shadow-sm z-10 cursor-grab active:cursor-grabbing bg-white border-2"
-                  style={{
-                    left: `${fromPct}%`,
-                    borderColor: "rgba(52,211,153,0.6)",
-                    boxShadow: "0 0 8px rgba(52,211,153,0.2)",
-                  }}
+                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center"
+                  style={{ left: `${fromPct}%` }}
                   onPointerDown={handlePointerDown("from")}
                 >
+                  <div
+                    className="w-5 h-5 rounded-full shadow-sm bg-white border-2 pointer-events-none"
+                    style={{
+                      borderColor: "rgba(52,211,153,0.6)",
+                      boxShadow: "0 0 8px rgba(52,211,153,0.2)",
+                    }}
+                  />
                   {dragRef.current === "from" && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
                       {fromPct}%
                     </div>
                   )}
                 </div>
                 {/* Handle 2 (to) */}
                 <div
-                  className="absolute w-5 h-5 -translate-x-1/2 rounded-full shadow-sm z-10 cursor-grab active:cursor-grabbing bg-white border-2"
-                  style={{
-                    left: `${toPct}%`,
-                    borderColor: "rgba(52,211,153,0.6)",
-                    boxShadow: "0 0 8px rgba(52,211,153,0.2)",
-                  }}
+                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center"
+                  style={{ left: `${toPct}%` }}
                   onPointerDown={handlePointerDown("to")}
                 >
+                  <div
+                    className="w-5 h-5 rounded-full shadow-sm bg-white border-2 pointer-events-none"
+                    style={{
+                      borderColor: "rgba(52,211,153,0.6)",
+                      boxShadow: "0 0 8px rgba(52,211,153,0.2)",
+                    }}
+                  />
                   {dragRef.current === "to" && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
                       {toPct}%
                     </div>
                   )}
                 </div>
               </div>
-              <div className="flex justify-between text-[9px] text-white/20">
+              <div className="flex justify-between text-[10px] text-white/20">
                 <span>0%</span>
                 <span>50%</span>
                 <span>100%</span>
@@ -363,7 +369,7 @@ export default function ChargingEstimator() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-1.5 overflow-hidden">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 overflow-hidden">
                   <ResultBox
                     icon={<Car size={13} />}
                     label="Range Recouped"
@@ -389,14 +395,14 @@ export default function ChargingEstimator() {
                 </div>
 
                 {result.effectivePower < chargerKw && (
-                  <p className="text-[10px] text-amber-400/60 text-center">
+                  <p className="text-xs text-amber-400/60 text-center">
                     Limited by vehicle&apos;s {result.isAc ? "onboard AC charger" : "max DC charge rate"} ({result.carLimit} kW)
                   </p>
                 )}
 
                 <div className="flex items-start gap-1.5 mt-3 pt-3 border-t border-white/[0.06]">
                   <Info size={11} className="shrink-0 mt-0.5 text-white/30" />
-                  <p className="text-[9px] text-white/30 leading-relaxed">
+                  <p className="text-[10px] text-white/30 leading-relaxed">
                     Charging costs are estimates only. Actual public DC charging fees vary by charging network and location.
                   </p>
                 </div>
@@ -440,14 +446,14 @@ function ResultBox({
     >
       <div className="flex items-center gap-1 text-white/40 mb-0.5">
         {icon}
-        <span className="text-[9px]">{label}</span>
+        <span className="text-[10px]">{label}</span>
       </div>
       <div
         className={`text-sm font-bold ${highlight ? hlText : "text-white/80"}`}
       >
         {value}
       </div>
-      {sub && <div className="text-[9px] text-white/30 mt-0.5">{sub}</div>}
+      {sub && <div className="text-[10px] text-white/30 mt-0.5">{sub}</div>}
     </div>
   );
 }

@@ -98,16 +98,16 @@ export default function VehicleCard({
         {/* Bottom banner: name, price, calculator */}
         <div className="w-full mt-2.5 px-3 py-2.5 rounded-lg bg-emerald-500/[0.04] border border-emerald-500/10 flex items-center justify-between gap-2 transition-all duration-200 hover:bg-emerald-500/[0.08] hover:border-emerald-500/25 group cursor-pointer">
           <div className="min-w-0">
-            <div className="text-[10px] text-theme-50 truncate leading-tight">
+            <div className="text-[11px] text-theme-50 truncate leading-tight">
               {vehicle.name}
             </div>
-            <div className="text-[13px] font-bold tracking-tight">
-              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span><span className="text-[9px] text-emerald-400/40 font-medium">/mo</span>
+            <div className="text-[13px] sm:text-sm font-bold tracking-tight whitespace-nowrap tabular-nums">
+              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span><span className="text-[10px] text-emerald-400/40 font-medium">/mo</span>
             </div>
-            <div className="text-[9px] text-white/20 leading-tight -mt-0.5">10% · 0% down</div>
+            <div className="text-[10px] text-white/20 leading-tight -mt-0.5 whitespace-nowrap">10% · 0% down</div>
           </div>
-          <div className="shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/25 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/40 transition-all">
-            <Calculator size={13} className="text-emerald-400" />
+          <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/25 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/40 transition-all">
+            <Calculator size={16} className="text-emerald-400" />
           </div>
         </div>
       </div>

@@ -140,12 +140,12 @@ export default function WarrantyDetails() {
               {/* Duration badges */}
               <div className="flex gap-2 mb-2.5">
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold ${c.badge}`}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold ${c.badge}`}
                 >
                   {tier.years}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold ${c.badge}`}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold ${c.badge}`}
                 >
                   {tier.km}
                 </span>
@@ -168,7 +168,7 @@ export default function WarrantyDetails() {
         })}
       </div>
 
-      <p className="text-[10px] text-white/30 text-center mt-3">
+      <p className="text-[11px] text-white/30 text-center mt-3">
         * All warranty periods are &ldquo;whichever comes first&rdquo; —
         either the year limit or the kilometre limit, whichever is reached first.
       </p>

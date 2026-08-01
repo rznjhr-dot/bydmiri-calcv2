@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, ClipboardCheck, ChevronDown, MapPin, Clock } from "lucide-react";
+import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, ClipboardCheck, ChevronDown, MapPin, Clock, Menu, X } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
@@ -13,17 +13,28 @@ import { vehicles } from "@/lib/vehicles";
 import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
+import { usePageMeta } from "@/lib/use-page-meta";
 import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 import SectionHeader from "@/components/section-header";
 
 export default function Home() {
+  usePageMeta(
+    "BYD Miri by Ridzuan Jahari",
+    "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 10 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment."
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
   const [showEligibility, setShowEligibility] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
 
   const calcCloseRef = useRef<HTMLButtonElement>(null);
   const legalCloseRef = useRef<HTMLButtonElement>(null);
+
+  const scrollToSection = useCallback((id: string) => {
+    setNavOpen(false);
+    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 50);
+  }, []);
 
   // Focus modal close button when modal opens
   useEffect(() => {
@@ -76,24 +87,68 @@ export default function Home() {
             <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
           </Link>
-          <div className="flex items-center gap-1 sm:gap-3 overflow-x-auto flex-nowrap scrollbar-none ml-auto">
-            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap">
+
+          {/* Desktop links */}
+          <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
+            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[11px] md:text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap">
               Home
             </Link>
-            <button onClick={() => document.getElementById("full-lineup")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("full-lineup")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Models
             </button>
-            <button onClick={() => document.getElementById("main-content")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("main-content")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Calculator
             </button>
-            <button onClick={() => document.getElementById("charging")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("charging")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Charging &amp; Warranty
             </button>
-            <button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[9px] sm:text-[11px] font-medium text-white/50 px-1.5 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("contact")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Contact Us
             </button>
           </div>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setNavOpen((o) => !o)}
+            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label={navOpen ? "Close menu" : "Open menu"}
+            aria-expanded={navOpen}
+          >
+            {navOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
+
+        {/* Mobile menu panel */}
+        {navOpen && (
+          <div className="sm:hidden border-t border-white/[0.06] bg-theme/95 backdrop-blur-xl">
+            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
+              <Link
+                href="/"
+                onClick={() => {
+                  setNavOpen(false);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                Home
+              </Link>
+              {[
+                { id: "full-lineup", label: "Models" },
+                { id: "main-content", label: "Calculator" },
+                { id: "charging", label: "Charging & Warranty" },
+                { id: "contact", label: "Contact Us" },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
@@ -115,12 +170,12 @@ export default function Home() {
             <table className="w-full text-left text-xs md:text-sm">
               <thead>
                 <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">OTR Price</th>
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Rebate</th>
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right">10% Down</th>
-                  <th scope="col" className="px-3 py-3 text-[9px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right">0% Down</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">OTR Price</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Rebate</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right">10% Down</th>
+                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right">0% Down</th>
                   <th scope="col" className="px-2 py-3 w-6"></th>
                 </tr>
               </thead>
@@ -135,11 +190,11 @@ export default function Home() {
           <div className="text-center mt-4">
             <Link
               href="/pricelist"
-              className="inline-flex items-center gap-1.5 text-xs text-emerald-400/60 hover:text-emerald-400 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-emerald-400/60 hover:text-emerald-400 transition-colors py-2 px-2"
             >
               View full details &rarr;
             </Link>
-            <p className="mt-2 text-[10px] md:text-xs text-white/30">
+            <p className="mt-2 text-xs md:text-xs text-white/30">
               Monthly estimates: 10% or 0% down &middot; 9-year tenure &middot; 2.30% flat rate. Subject to bank approval T&amp;Cs.
             </p>
           </div>
@@ -168,7 +223,7 @@ export default function Home() {
           {/* Parking Lot Grid */}
           <div className="flex flex-wrap justify-center -mx-1">
             {vehicles.map((v, i) => (
-              <div key={v.id} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 px-1 mb-5">
+              <div key={v.id} className="w-full min-[400px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 px-1 mb-5">
                 <VehicleCard
                   vehicle={v}
                   isSelected={selectedId === v.id}
@@ -252,12 +307,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col min-[420px]:flex-row gap-2">
                 <a
                   href="https://www.google.com/maps?q=4.4279602,114.0020263"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all whitespace-nowrap"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
@@ -273,7 +328,7 @@ export default function Home() {
                   href="https://www.waze.com/ul?ll=4.4279602,114.0020263&navigate=yes"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-theme-70 text-sm font-semibold hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl bg-white/[0.03] border border-white/[0.06] text-theme-70 text-sm font-semibold hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 transition-all whitespace-nowrap"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="#33CCFF"/>
@@ -365,16 +420,16 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="space-y-1.5">
             <p>&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
-            <div className="flex items-center justify-center gap-3 text-xs">
-              <button onClick={() => setModalType("privacy")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors">
+            <div className="flex items-center justify-center flex-wrap gap-x-3 gap-y-2 text-xs">
+              <button onClick={() => setModalType("privacy")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
                 Privacy Policy
               </button>
               <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("terms")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors">
+              <button onClick={() => setModalType("terms")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
                 Terms of Use
               </button>
               <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("disclaimer")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors">
+              <button onClick={() => setModalType("disclaimer")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
                 Disclaimer
               </button>
             </div>
@@ -388,7 +443,7 @@ export default function Home() {
         onClose={handleClose}
         label={selectedVehicle?.name ?? "Calculator"}
         closeRef={calcCloseRef}
-        className="max-w-2xl max-h-[90vh] p-5 md:p-6"
+        className="max-w-2xl p-5 md:p-6"
       >
         {selectedVehicle && (
           <>
@@ -436,7 +491,7 @@ export default function Home() {
                 href={selectedVehicle.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[10px] font-medium text-emerald-400/70 hover:text-emerald-400 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400/70 hover:text-emerald-400 transition-colors py-2"
               >
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -474,6 +529,7 @@ export default function Home() {
         onClose={() => setModalType(null)}
         label={modalType === "privacy" ? "Privacy Policy" : modalType === "terms" ? "Terms of Use" : "Disclaimer"}
         closeRef={legalCloseRef}
+        className="p-6"
       >
         {/* Content */}
         {modalType === "privacy" && (
@@ -613,11 +669,11 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
         </div>
       </td>
       <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap hidden sm:table-cell">
-        <span className="font-mono text-white/55 text-[10px] md:text-sm tabular-nums">{v.range}</span>
-        <span className="text-white/30 text-[9px] md:text-[11px]"> km</span>
+        <span className="font-mono text-white/55 text-xs md:text-sm tabular-nums">{v.range}</span>
+        <span className="text-white/30 text-[10px] md:text-[11px]"> km</span>
       </td>
       <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
-        <span className="font-mono text-theme-80 text-[10px] md:text-sm tabular-nums">RM{fmt(v.otr)}</span>
+        <span className="font-mono text-theme-80 text-xs md:text-sm tabular-nums">RM{fmt(v.otr)}</span>
       </td>
       <td className="px-3 py-2.5 md:py-3 text-right">
         {v.promotionOptions ? (
@@ -634,11 +690,11 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
                   }}
                   aria-pressed={selected}
                   title={opt.title}
-                  className={`font-mono font-semibold text-[10px] md:text-sm whitespace-nowrap leading-tight transition-colors cursor-pointer tabular-nums ${
+                  className={`font-mono font-semibold text-xs md:text-sm whitespace-nowrap leading-tight transition-colors cursor-pointer tabular-nums ${
                     selected ? "text-red-400" : "text-white/25 hover:text-white/70"
                   }`}
                 >
-                  {i > 0 && !selected && <span className="text-white/20 font-normal text-[8px] md:text-[10px] mr-1">or</span>}
+                  {i > 0 && !selected && <span className="text-white/20 font-normal text-[10px] md:text-[10px] mr-1">or</span>}
                   -RM{fmt(opt.rebate)}
                   {opt.freeGift && (
                     <span className={selected ? "text-red-400/60" : "text-white/15"}>
@@ -650,18 +706,18 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
             })}
           </div>
         ) : (
-          <span className="font-mono text-red-400 font-semibold text-[10px] md:text-sm whitespace-nowrap tabular-nums">
+          <span className="font-mono text-red-400 font-semibold text-xs md:text-sm whitespace-nowrap tabular-nums">
             -RM{fmt(rebate)}
           </span>
         )}
       </td>
       <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
         <span className="font-mono font-bold text-emerald-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthly)}</span>
-        <span className="text-emerald-400/50 text-[8px] md:text-[10px] font-medium">/mo</span>
+        <span className="text-emerald-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
       </td>
       <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
         <span className="font-mono font-bold text-amber-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthlyFull)}</span>
-        <span className="text-amber-400/50 text-[8px] md:text-[10px] font-medium">/mo</span>
+        <span className="text-amber-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
       </td>
       <td className="px-2 py-2.5 md:py-3">
         <button
@@ -669,10 +725,10 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
             e.stopPropagation();
             onCalc(v.id);
           }}
-          className="flex items-center justify-center w-6 h-6 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
+          className="flex items-center justify-center w-11 h-11 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
           aria-label={`Calculate monthly payment for ${v.name}`}
         >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="4" y="2" width="16" height="20" rx="2" />
             <line x1="8" y1="6" x2="16" y2="6" />
             <line x1="8" y1="10" x2="16" y2="10" />

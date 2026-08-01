@@ -79,7 +79,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             placeholder="Full name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
             required
           />
           <input
@@ -87,7 +87,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             placeholder="Phone number *"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
             required
           />
         </div>
@@ -95,7 +95,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           <select
             value={targetCar}
             onChange={(e) => setTargetCar(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors appearance-none"
+            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors appearance-none"
             required
           >
             <option value="" disabled className="bg-[#080808] text-white/30">
@@ -118,7 +118,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             placeholder="Monthly income (RM) *"
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
             required
           />
         </div>
@@ -128,7 +128,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-bold hover:shadow-[0_0_30px rgba(52,211,153,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-sm font-bold hover:shadow-[0_0_30px rgba(52,211,153,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-11"
         >
           {loading ? (
             <><Loader2 size={14} className="animate-spin" /> Submitting...</>

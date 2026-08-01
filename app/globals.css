@@ -180,6 +180,9 @@ a:focus-visible {
 /* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .animate-fade-up,
   .animate-fade-in,
   .animate-scale-in,

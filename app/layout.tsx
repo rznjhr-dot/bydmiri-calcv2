@@ -43,10 +43,10 @@ export const metadata: Metadata = {
   publisher: "Ridzuan Jahari",
 
   // ── Canonical ──
+  // NOTE: canonical is set per-page via lib/use-page-meta.ts (client pages
+  // cannot export static metadata). A layout-level canonical would incorrectly
+  // point every page at the root URL, so it is intentionally omitted here.
   metadataBase: new URL(baseUrl),
-  alternates: {
-    canonical: "/",
-  },
 
   // ── OpenGraph ──
   openGraph: {
