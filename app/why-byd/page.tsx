@@ -79,7 +79,7 @@ const advantages = [
     subtitle: "Global Leadership You Can Trust",
     points: [
       "Largest new energy vehicle maker in the world (2024–2025)",
-      "Over 8 million electrified vehicles sold globally",
+      "Over 17 million electrified vehicles sold globally",
       "Vertically integrated — batteries, motors, chips, in-house",
       "Second-largest EV battery maker worldwide (after CATL)",
       "Trusted by Warren Buffett's Berkshire Hathaway since 2008",
@@ -101,7 +101,7 @@ const comparisons = [
         "V2L standard — power your devices",
         "6+8 year warranty",
         "7.3s 0–100 km/h",
-        "1.7 million+ Atto 3s sold worldwide",
+        "1 million+ Atto 3s sold worldwide",
       ],
     },
     vs: {
@@ -117,7 +117,7 @@ const comparisons = [
       ],
     },
     verdict:
-      "Atto 3 offers more range, proven safety (3.8M Blade Batteries sold), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
+      "Atto 3 offers more range, proven safety (285.6 GWh Blade Battery installed in 2025), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
     gradient: "from-emerald-500/5 to-cyan-500/5",
   },
   {
@@ -282,9 +282,9 @@ export default function WhyBydPage() {
           >
             {[
               { value: "#1", label: "World's NEV Maker" },
-              { value: "8M+", label: "Electrified Vehicles Sold" },
-              { value: "3.8M+", label: "Blade Batteries Sold" },
-              { value: "100+", label: "Countries Worldwide" },
+              { value: "17.3M+", label: "Electrified Vehicles Sold" },
+              { value: "285.6 GWh", label: "Blade Battery Installed (2025)" },
+              { value: "121", label: "Countries & Regions" },
             ].map((stat) => (
               <div key={stat.label} className="bg-[#080808] p-5 text-center">
                 <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-300 text-gradient">

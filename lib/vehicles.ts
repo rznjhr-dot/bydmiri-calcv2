@@ -1,8 +1,6 @@
 export interface PromotionOption {
   title: string;
   rebate: number;
-  default?: boolean;
-  freeGift?: string;
 }
 
 export interface Vehicle {
@@ -15,10 +13,12 @@ export interface Vehicle {
   rebate: number;
   cspRebate: number;
   /** Mutually-exclusive promotion options (e.g. Atto 3). When present, the
-   *  pills ARE the rebate control — rebate/csp UI must derive from these. */
+   *  first option is the active rebate — rebate/csp UI must derive from these. */
   promotionOptions?: PromotionOption[];
   range: number;
   battery: number;
+  /** Energy consumption in kWh/100km (WLTP-derived base; calculator uses midpoint of base and base×1.2). */
+  consumption: number;
   maxChargeKw: number;
   /** On-board AC charger limit (kW). Falls back to 7 if not set. */
   acLimitKw?: number;
@@ -44,6 +44,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 7,
     range: 410,
     battery: 51.13,
+    consumption: 14.0,
     maxChargeKw: 82,
     power: 130,
     torque: 290,
@@ -65,6 +66,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 7,
     range: 485,
     battery: 56.64,
+    consumption: 13.2,
     maxChargeKw: 100,
     power: 160,
     torque: 330,
@@ -81,20 +83,18 @@ export const vehicles: Vehicle[] = [
     otr: 132729.25,
     sumInsured: 129300,
     roadTax: 160,
-    rebate: 14000,
+    rebate: 10000,
     cspRebate: 0,
     promotionOptions: [
-      { title: "RM14,000 Cash Rebate", rebate: 14000, default: true },
       {
         title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
         rebate: 10000,
-        default: false,
-        freeGift: "6 Years Standard Service Package",
       },
     ],
     acLimitKw: 7,
     range: 480,
     battery: 60.48,
+    consumption: 14.8,
     maxChargeKw: 110,
     power: 150,
     torque: 310,
@@ -111,20 +111,18 @@ export const vehicles: Vehicle[] = [
     otr: 146227.90,
     sumInsured: 142300,
     roadTax: 335,
-    rebate: 14000,
+    rebate: 10000,
     cspRebate: 0,
     promotionOptions: [
-      { title: "RM14,000 Cash Rebate", rebate: 14000, default: true },
       {
         title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
         rebate: 10000,
-        default: false,
-        freeGift: "6 Years Standard Service Package",
       },
     ],
     acLimitKw: 11,
     range: 600,
     battery: 74.88,
+    consumption: 14.8,
     maxChargeKw: 220,
     power: 230,
     torque: 380,
@@ -146,6 +144,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 7,
     range: 520,
     battery: 71.8,
+    consumption: 14.6,
     maxChargeKw: 110,
     power: 170,
     torque: 380,
@@ -167,6 +166,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 11,
     range: 650,
     battery: 91.39,
+    consumption: 14.6,
     maxChargeKw: 230,
     power: 230,
     torque: 380,
@@ -188,6 +188,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 11,
     range: 600,
     battery: 91.39,
+    consumption: 15.2,
     maxChargeKw: 230,
     power: 390,
     torque: 690,
@@ -208,6 +209,7 @@ export const vehicles: Vehicle[] = [
     cspRebate: 2000,
     range: 650,
     battery: 82.56,
+    consumption: 14.6,
     maxChargeKw: 150,
     power: 230,
     torque: 360,
@@ -228,6 +230,7 @@ export const vehicles: Vehicle[] = [
     cspRebate: 2000,
     range: 580,
     battery: 82.56,
+    consumption: 16.4,
     maxChargeKw: 150,
     power: 390,
     torque: 670,
@@ -249,6 +252,7 @@ export const vehicles: Vehicle[] = [
     acLimitKw: 7,
     range: 530,
     battery: 71.8,
+    consumption: 15.6,
     maxChargeKw: 115,
     power: 150,
     torque: 310,

@@ -13,6 +13,7 @@ import { vehicles } from "@/lib/vehicles";
 import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
+import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
 import { usePageMeta } from "@/lib/use-page-meta";
 import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
@@ -100,7 +101,7 @@ export default function Home() {
               Calculator
             </button>
             <button onClick={() => scrollToSection("charging")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
-              Charging &amp; Warranty
+              Charging, Savings &amp; Warranty
             </button>
             <button onClick={() => scrollToSection("contact")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Contact Us
@@ -135,7 +136,7 @@ export default function Home() {
               {[
                 { id: "full-lineup", label: "Models" },
                 { id: "main-content", label: "Calculator" },
-                { id: "charging", label: "Charging & Warranty" },
+                { id: "charging", label: "Charging, Savings & Warranty" },
                 { id: "contact", label: "Contact Us" },
               ].map((item) => (
                 <button
@@ -170,12 +171,12 @@ export default function Home() {
             <table className="w-full text-left text-xs md:text-sm">
               <thead>
                 <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">OTR Price</th>
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Rebate</th>
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right">10% Down</th>
-                  <th scope="col" className="px-3 py-3 text-[11px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right">0% Down</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right leading-tight">OTR Price<br /><span className="text-[9px] font-normal normal-case text-white/25">(Rebate)</span></th>
+                  <th scope="col" className="px-1.5 py-3 md:hidden text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Monthly</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right hidden md:table-cell">10% Down</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right hidden md:table-cell">0% Down</th>
                   <th scope="col" className="px-2 py-3 w-6"></th>
                 </tr>
               </thead>
@@ -244,13 +245,18 @@ export default function Home() {
           <SectionHeader
             icon={<BatteryCharging size={12} />}
             label="Extras"
-            title="Charging & Warranty"
-            subtitle="Everything you need to know about charging and warranty coverage"
+            title="Charging, Savings & Warranty"
+            subtitle="Everything you need to know about charging, savings and warranty coverage"
           />
 
           {/* Charging Estimator */}
           <div className="mb-8">
             <ChargingEstimator />
+          </div>
+
+          {/* Fuel Savings Calculator */}
+          <div className="mb-8">
+            <FuelSavingsCalculator />
           </div>
 
           {/* Warranty Details */}
@@ -622,23 +628,10 @@ export default function Home() {
   );
 }
 
-/* ── Pricing Table Row (stateful so Atto 3 promo pills update monthly instantly) ── */
+/* ── Pricing Table Row (default promo rebate drives monthly) ── */
 function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string) => void; index: number }) {
   const router = useRouter();
-  const [promoIdx, setPromoIdx] = useState(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    return d !== undefined && d >= 0 ? d : 0;
-  });
-
-  // Reset promo selection if the row is reused for another vehicle
-  useEffect(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
-  }, [v]);
-
-  const rebate = v.promotionOptions
-    ? v.promotionOptions[promoIdx]!.rebate
-    : v.rebate;
+  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
 
@@ -657,65 +650,44 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
         index % 2 === 1 ? "bg-white/[0.015]" : ""
       } hover:bg-white/[0.05]`}
     >
-      <td className="px-3 py-2.5 md:py-3">
+      <td className="px-2 py-2.5 md:px-3 md:py-3">
         <div className="flex items-center gap-2.5">
-          <div className="hidden sm:block w-14 h-8 md:w-16 md:h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border border-white/[0.05]">
+          <div className="w-12 h-7 sm:w-14 sm:h-8 md:w-16 md:h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border border-white/[0.05]">
             <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
           </div>
           <div className="min-w-0">
-            <div className="font-semibold text-theme-90 text-[11px] md:text-sm leading-tight whitespace-nowrap">{v.name}</div>
+            <div className="font-semibold text-theme-90 text-[11px] md:text-sm leading-snug">{v.name}</div>
             <div className="hidden md:block text-[10px] text-white/35 truncate">{v.category}</div>
           </div>
         </div>
       </td>
-      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap hidden sm:table-cell">
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden sm:table-cell">
         <span className="font-mono text-white/55 text-xs md:text-sm tabular-nums">{v.range}</span>
         <span className="text-white/30 text-[10px] md:text-[11px]"> km</span>
       </td>
-      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
-        <span className="font-mono text-theme-80 text-xs md:text-sm tabular-nums">RM{fmt(v.otr)}</span>
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
+        <div className="font-mono text-theme-80 text-xs md:text-sm tabular-nums leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
+        <div className="font-mono text-red-400/80 text-[10px] md:text-[11px] tabular-nums leading-tight whitespace-nowrap">(-RM{fmt(rebate)})</div>
       </td>
-      <td className="px-3 py-2.5 md:py-3 text-right">
-        {v.promotionOptions ? (
-          <div className="flex flex-col items-end gap-0.5">
-            {v.promotionOptions.map((opt, i) => {
-              const selected = i === promoIdx;
-              return (
-                <button
-                  key={opt.title}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPromoIdx(i);
-                  }}
-                  aria-pressed={selected}
-                  title={opt.title}
-                  className={`font-mono font-semibold text-xs md:text-sm whitespace-nowrap leading-tight transition-colors cursor-pointer tabular-nums ${
-                    selected ? "text-red-400" : "text-white/25 hover:text-white/70"
-                  }`}
-                >
-                  {i > 0 && !selected && <span className="text-white/20 font-normal text-[10px] md:text-[10px] mr-1">or</span>}
-                  -RM{fmt(opt.rebate)}
-                  {opt.freeGift && (
-                    <span className={selected ? "text-red-400/60" : "text-white/15"}>
-                      {" "}+ 6-Yr Service
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <span className="font-mono text-red-400 font-semibold text-xs md:text-sm whitespace-nowrap tabular-nums">
-            -RM{fmt(rebate)}
+      <td className="px-1.5 py-2.5 md:hidden text-right whitespace-nowrap">
+        <div className="flex flex-col items-end gap-0.5 leading-tight">
+          <span className="whitespace-nowrap">
+            <span className="text-[10px] text-emerald-400/50 font-medium mr-1">10%</span>
+            <span className="font-mono font-bold text-emerald-400 text-[11px] tabular-nums">RM{fmt(monthly)}</span>
+            <span className="text-emerald-400/50 text-[10px] font-medium">/mo</span>
           </span>
-        )}
+          <span className="whitespace-nowrap">
+            <span className="text-[10px] text-amber-400/50 font-medium mr-1">0%</span>
+            <span className="font-mono font-bold text-amber-400 text-[11px] tabular-nums">RM{fmt(monthlyFull)}</span>
+            <span className="text-amber-400/50 text-[10px] font-medium">/mo</span>
+          </span>
+        </div>
       </td>
-      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden md:table-cell">
         <span className="font-mono font-bold text-emerald-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthly)}</span>
         <span className="text-emerald-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
       </td>
-      <td className="px-3 py-2.5 md:py-3 text-right whitespace-nowrap">
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden md:table-cell">
         <span className="font-mono font-bold text-amber-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthlyFull)}</span>
         <span className="text-amber-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
       </td>

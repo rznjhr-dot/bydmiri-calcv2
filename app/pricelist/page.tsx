@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink, Zap, Calculator } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
-import PromoSelector from "@/components/promo-selector";
 import { usePageMeta } from "@/lib/use-page-meta";
 
 const REG_FEE = 60;
@@ -130,20 +128,7 @@ export default function PricelistPage() {
 /* ── Desktop Row (stateful so Atto 3 promo pills update monthly instantly) ── */
 function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
   const router = useRouter();
-  const [promoIdx, setPromoIdx] = useState(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    return d !== undefined && d >= 0 ? d : 0;
-  });
-
-  // Reset promo selection if the row is reused for another vehicle
-  useEffect(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
-  }, [v]);
-
-  const rebate = v.promotionOptions
-    ? v.promotionOptions[promoIdx]!.rebate
-    : v.rebate;
+  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
   const otrWO = calcOtrWithoutIns(v);
@@ -207,20 +192,8 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
       </td>
       {/* Rebate */}
       <td className="px-3 py-2.5">
-        {v.promotionOptions ? (
-          <PromoSelector
-            options={v.promotionOptions}
-            selectedIndex={promoIdx}
-            onSelect={setPromoIdx}
-            size="xs"
-            className="min-w-[170px]"
-          />
-        ) : (
-          <>
-            <div className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</div>
-            <div className="text-[10px] text-white/20">Rebate</div>
-          </>
-        )}
+        <div className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</div>
+        <div className="text-[10px] text-white/20">Rebate</div>
       </td>
       {/* Monthly */}
       <td className="px-3 py-2.5">
@@ -247,20 +220,7 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
 /* ── Mobile Card (stateful so Atto 3 promo pills update monthly instantly) ── */
 function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
   const router = useRouter();
-  const [promoIdx, setPromoIdx] = useState(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    return d !== undefined && d >= 0 ? d : 0;
-  });
-
-  // Reset promo selection if the card is reused for another vehicle
-  useEffect(() => {
-    const d = v.promotionOptions?.findIndex((o) => o.default);
-    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
-  }, [v]);
-
-  const rebate = v.promotionOptions
-    ? v.promotionOptions[promoIdx]!.rebate
-    : v.rebate;
+  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
   const otrWO = calcOtrWithoutIns(v);
@@ -310,16 +270,6 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
           <div className="flex justify-between"><span className="text-white/30">Insurance</span><span className="text-white/50 font-mono">+RM{fmt(insurance)}</span></div>
           <div className="flex justify-between"><span className="text-emerald-400/60 font-semibold">OTR Price</span><span className="text-white-90 font-semibold font-mono">RM{fmt(v.otr)}</span></div>
         </div>
-        {v.promotionOptions && (
-          <div className="pt-1">
-            <PromoSelector
-              options={v.promotionOptions}
-              selectedIndex={promoIdx}
-              onSelect={setPromoIdx}
-              size="xs"
-            />
-          </div>
-        )}
         <div className="grid grid-cols-2 gap-x-2 pt-1 border-t border-white/[0.04]">
           <div className="flex justify-between"><span className="text-white/30">Rebate</span><span className="text-red-400 font-semibold font-mono">-RM{fmt(rebate)}</span></div>
           <div className="flex justify-between"><span className="text-white/30">Range</span><span className="text-white/50">{v.range} km · {v.battery} kWh</span></div>

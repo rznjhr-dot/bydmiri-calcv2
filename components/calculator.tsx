@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Check, MousePointerClick, ClipboardCheck } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
 import { generateWhatsAppUrl, generateWhatsAppBookingUrl } from "@/lib/whatsapp";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
-import PromoSelector from "@/components/promo-selector";
 
 interface Props {
   vehicle: Vehicle;
@@ -19,10 +18,6 @@ const DEFAULT_INTEREST = 2.3;
 export default function Calculator({ vehicle }: Props) {
   const [rebateOn, setRebateOn] = useState(true);
   const [cspOn, setCspOn] = useState(false);
-  const [promoIdx, setPromoIdx] = useState(() => {
-    const d = vehicle.promotionOptions?.findIndex((o) => o.default);
-    return d !== undefined && d >= 0 ? d : 0;
-  });
   const [depositPct, setDepositPct] = useState(10);
   const [customDeposit, setCustomDeposit] = useState("");
   const [tenure, setTenure] = useState(9);
@@ -31,17 +26,7 @@ export default function Calculator({ vehicle }: Props) {
 
   const hasPromoOptions =
     !!vehicle.promotionOptions && vehicle.promotionOptions.length > 0;
-  const activePromo = hasPromoOptions
-    ? vehicle.promotionOptions![promoIdx]
-    : null;
-  const effectiveRebate = activePromo ? activePromo.rebate : vehicle.rebate;
-  const freeGift = activePromo?.freeGift;
-
-  // Reset promo selection when the modal switches to a different vehicle
-  useEffect(() => {
-    const d = vehicle.promotionOptions?.findIndex((o) => o.default);
-    setPromoIdx(d !== undefined && d >= 0 ? d : 0);
-  }, [vehicle]);
+  const effectiveRebate = vehicle.promotionOptions?.[0]?.rebate ?? vehicle.rebate;
 
   const result = useMemo(() => {
     const rate = parseFloat(interestRate) || 0;
@@ -49,7 +34,7 @@ export default function Calculator({ vehicle }: Props) {
     return calculateFinance({
       otr: vehicle.otr,
       rebate: effectiveRebate,
-      rebateEnabled: hasPromoOptions ? true : rebateOn,
+      rebateEnabled: rebateOn,
       cspEnabled: cspOn,
       cspRebate: vehicle.cspRebate,
       depositPercent: depositPct,
@@ -57,7 +42,7 @@ export default function Calculator({ vehicle }: Props) {
       tenure,
       interestRate: rate,
     });
-  }, [vehicle, rebateOn, cspOn, promoIdx, hasPromoOptions, effectiveRebate, depositPct, customDeposit, tenure, interestRate]);
+  }, [vehicle, rebateOn, cspOn, hasPromoOptions, effectiveRebate, depositPct, customDeposit, tenure, interestRate]);
 
   const whatsappUrl = useMemo(
     () =>
@@ -100,118 +85,78 @@ export default function Calculator({ vehicle }: Props) {
       <div className="grid md:grid-cols-2 gap-6">
           {/* ---- Inputs ---- */}
           <div className="space-y-4 text-center">
-            {/* Rebate / Promotion */}
-            {hasPromoOptions ? (
-              <div className="space-y-2">
-                <PromoSelector
-                  options={vehicle.promotionOptions!}
-                  selectedIndex={promoIdx}
-                  onSelect={setPromoIdx}
-                />
-                <p className="text-xs text-theme-50/50 text-center leading-tight mt-0.5">
-                  Select a promotion option — effective price &amp; monthly update instantly.
-                </p>
-                {freeGift ? (
-                  <div
-                    className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg border text-sm w-full"
-                    style={{
-                      backgroundColor: "rgba(0,230,118,0.1)",
-                      borderColor: "rgba(0,230,118,0.4)",
-                    }}
-                  >
-                    <Check size={14} className="text-emerald-400 shrink-0" />
-                    <span className="font-medium text-emerald-400">
-                      FREE {freeGift} included
-                    </span>
-                  </div>
-                ) : (
-                  <div
-                    className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg border text-sm w-full text-theme-50"
-                    style={{
-                      backgroundColor: "var(--cz-input)",
-                      borderColor: "var(--cz-border)",
-                    }}
-                  >
-                    <span className="font-medium">
-                      CSP/GSP/SSP : RM0 (replaced by cash rebate)
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {/* Rebate toggle */}
-                <button
-                  onClick={() => setRebateOn(!rebateOn)}
-                  className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
-                    rebateOn
-                      ? "border-emerald-500/40 text-emerald-400"
-                      : "text-theme-50"
+            {/* Rebate toggle */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setRebateOn(!rebateOn)}
+                className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
+                  rebateOn
+                    ? "border-emerald-500/40 text-emerald-400"
+                    : "text-theme-50"
+                }`}
+                style={{
+                  backgroundColor: rebateOn ? "rgba(0,230,118,0.1)" : "transparent",
+                  borderColor: rebateOn ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
+                }}
+              >
+                <div
+                  className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
+                    rebateOn ? "bg-emerald-500" : ""
                   }`}
+                  style={{ backgroundColor: rebateOn ? undefined : "var(--cz-text-30)" }}
+                >
+                  {rebateOn && <Check size={10} className="text-white" />}
+                </div>
+                <span className="font-medium">
+                  RM{fmt(hasPromoOptions ? effectiveRebate : vehicle.rebate)} Rebate
+                </span>
+              </button>
+
+              {/* CSP/GSP/SSP toggle or static note */}
+              {vehicle.cspRebate > 0 ? (
+                <>
+                  <button
+                    onClick={() => setCspOn(!cspOn)}
+                    className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
+                      cspOn
+                        ? "border-cyan-500/40 text-cyan-400"
+                        : "text-theme-50"
+                    }`}
+                    style={{
+                      backgroundColor: cspOn ? "rgba(0,206,209,0.1)" : "transparent",
+                      borderColor: cspOn ? "rgba(0,206,209,0.4)" : "var(--cz-border)",
+                    }}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
+                        cspOn ? "bg-cyan-500" : ""
+                      }`}
+                      style={{ backgroundColor: cspOn ? undefined : "var(--cz-text-30)" }}
+                    >
+                      {cspOn && <Check size={10} className="text-white" />}
+                    </div>
+                    <span className="font-medium">
+                      RM{fmt(vehicle.cspRebate)} CSP/GSP/SSP*
+                    </span>
+                  </button>
+                  <p className="text-xs text-theme-50/50 text-center leading-tight mt-0.5">
+                    *CSP/GSP/SSP = Corporate/Government/Student Support Program (Terms &amp; Conditions apply)
+                  </p>
+                </>
+              ) : (
+                <div
+                  className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg border text-sm w-full text-theme-50"
                   style={{
-                    backgroundColor: rebateOn ? "rgba(0,230,118,0.1)" : "transparent",
-                    borderColor: rebateOn ? "rgba(0,230,118,0.4)" : "var(--cz-border)",
+                    backgroundColor: "var(--cz-input)",
+                    borderColor: "var(--cz-border)",
                   }}
                 >
-                  <div
-                    className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
-                      rebateOn ? "bg-emerald-500" : ""
-                    }`}
-                    style={{ backgroundColor: rebateOn ? undefined : "var(--cz-text-30)" }}
-                  >
-                    {rebateOn && <Check size={10} className="text-white" />}
-                  </div>
                   <span className="font-medium">
-                    RM{fmt(vehicle.rebate)} Rebate
+                    CSP/GSP/SSP : RM0 {hasPromoOptions ? "(replaced by cash rebate)" : "(not applicable for this model)"}
                   </span>
-                </button>
-
-                {/* CSP/GSP/SSP toggle or static note */}
-                {vehicle.cspRebate > 0 ? (
-                  <>
-                    <button
-                      onClick={() => setCspOn(!cspOn)}
-                      className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
-                        cspOn
-                          ? "border-cyan-500/40 text-cyan-400"
-                          : "text-theme-50"
-                      }`}
-                      style={{
-                        backgroundColor: cspOn ? "rgba(0,206,209,0.1)" : "transparent",
-                        borderColor: cspOn ? "rgba(0,206,209,0.4)" : "var(--cz-border)",
-                      }}
-                    >
-                      <div
-                        className={`w-4 h-4 rounded flex items-center justify-center transition-colors shrink-0 ${
-                          cspOn ? "bg-cyan-500" : ""
-                        }`}
-                        style={{ backgroundColor: cspOn ? undefined : "var(--cz-text-30)" }}
-                      >
-                        {cspOn && <Check size={10} className="text-white" />}
-                      </div>
-                      <span className="font-medium">
-                        RM{fmt(vehicle.cspRebate)} CSP/GSP/SSP*
-                      </span>
-                    </button>
-                    <p className="text-xs text-theme-50/50 text-center leading-tight mt-0.5">
-                      *CSP/GSP/SSP = Corporate/Government/Student Support Program (Terms &amp; Conditions apply)
-                    </p>
-                  </>
-                ) : (
-                  <div
-                    className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg border text-sm w-full text-theme-50"
-                    style={{
-                      backgroundColor: "var(--cz-input)",
-                      borderColor: "var(--cz-border)",
-                    }}
-                  >
-                    <span className="font-medium">
-                      CSP/GSP/SSP : RM0 (not applicable for this model)
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
 
             {/* Downpayment */}
             <div>
@@ -333,26 +278,16 @@ export default function Calculator({ vehicle }: Props) {
                 )}
 
                 {/* CSP/GSP/SSP */}
-                {(cspOn || hasPromoOptions || vehicle.cspRebate === 0) && (
+                {(cspOn || vehicle.cspRebate === 0) && (
                   <div className="flex justify-between items-center">
                     <span className="text-theme-50">CSP/GSP/SSP :</span>
-                    {hasPromoOptions ? (
-                      freeGift ? (
-                        <span className="text-emerald-400 font-medium text-xs text-right leading-tight max-w-[180px]">
-                          6-Year Service Package*
-                        </span>
-                      ) : (
-                        <span className="text-theme-40 font-medium tabular-nums">
-                          RM0
-                        </span>
-                      )
-                    ) : vehicle.cspRebate > 0 ? (
+                    {vehicle.cspRebate > 0 ? (
                       <span className="text-cyan-400 font-medium tabular-nums">
                         (-)&nbsp;{fmtDec(result.cspAmount)}
                       </span>
                     ) : (
                       <span className="text-theme-40 font-medium text-xs text-right leading-tight max-w-[180px]">
-                        RM0 (not applicable)
+                        RM0 {hasPromoOptions ? "(replaced by cash rebate)" : "(not applicable)"}
                       </span>
                     )}
                   </div>
