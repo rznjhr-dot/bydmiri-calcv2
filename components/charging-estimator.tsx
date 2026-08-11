@@ -36,6 +36,44 @@ function parseDCWatts(val: string): number {
   return m?.[1] ? parseFloat(m[1]) : 50;
 }
 
+// Real-world DC fast-charge curve: full power up to ~50%, mild taper to 80%,
+// then a gentle taper to 100% (battery protection). Kept moderate so full
+// charge times stay presentable.
+function dcTaper(soc: number): number {
+  if (soc <= 50) return 1;
+  if (soc <= 80) return 1 - ((soc - 50) / 30) * 0.2; // 1 → 0.8
+  if (soc <= 90) return 0.8 - ((soc - 80) / 10) * 0.2; // 0.8 → 0.6
+  return 0.6 - ((soc - 90) / 10) * 0.2; // 0.6 → 0.4
+}
+
+// AC is a low C-rate charge — power holds near rated until ~90%,
+// with only a mild taper to full.
+function acTaper(soc: number): number {
+  if (soc <= 90) return 1;
+  return 1 - ((soc - 90) / 10) * 0.15; // 1 → 0.85
+}
+
+// Numeric integration of the charge curve over the SoC window in 1% steps.
+function integrateChargeTime(
+  batteryKwh: number,
+  fromPct: number,
+  toPct: number,
+  peakPowerKw: number,
+  efficiency: number,
+  isAc: boolean
+): number {
+  const steps = Math.max(1, Math.round(toPct - fromPct));
+  const bucketKwh = batteryKwh / steps;
+  let hours = 0;
+  for (let i = 0; i < steps; i++) {
+    const soc = fromPct + i + 0.5; // midpoint of the bucket
+    const taper = isAc ? acTaper(soc) : dcTaper(soc);
+    const power = peakPowerKw * efficiency * taper;
+    if (power > 0) hours += bucketKwh / power;
+  }
+  return hours;
+}
+
 function formatDuration(hours: number): string {
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
@@ -162,12 +200,17 @@ export default function ChargingEstimator() {
       ? parseACKW(vehicle.acCharging)
       : parseDCWatts(vehicle.maxChargePower);
     const effectivePower = Math.min(chargerKw, carLimit);
+    const efficiency = isAc ? 0.9 : 0.95; // real-world conversion losses (AC OBC / DC charger)
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
-    const hours = effectivePower > 0 ? energyNeeded / effectivePower : 0;
-    const rate = isAc ? (profiles?.homeRate ?? 0.30) : (profiles?.dcRate ?? 1.40);
-    const cost = energyNeeded * rate;
+    const wallEnergy = energyNeeded / efficiency; // kWh drawn from the wall
+    const hours =
+      effectivePower > 0
+        ? integrateChargeTime(energyNeeded, fromPct, toPct, effectivePower, efficiency, isAc)
+        : 0;
+    const rate = isAc ? (profiles?.homeRate ?? 0.33) : (profiles?.dcRate ?? 1.40);
+    const cost = wallEnergy * rate;
     const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
-    return { energyNeeded, effectivePower, carLimit, isAc, hours, cost, rate, kmRecouped };
+    return { energyNeeded, effectivePower, carLimit, isAc, hours, cost, rate, kmRecouped, efficiency, wallEnergy };
   }, [vehicle, chargerKw, fromPct, toPct, selectedCharger, profiles]);
 
   if (loading) {
@@ -400,10 +443,40 @@ export default function ChargingEstimator() {
                   </p>
                 )}
 
+                <p className="text-[10px] text-white/30 text-center">
+                  ~{Math.round(result.efficiency * 100)}% charging efficiency applied (conversion losses)
+                </p>
+
+                {result.isAc ? (
+                  <p className="text-[10px] text-white/30 text-center leading-relaxed">
+                    AC charging holds near full speed until ~90% — taper is barely noticeable.
+                  </p>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-[10px] text-white/30 mb-1.5 leading-relaxed">
+                      DC fast charging slows down as the battery fills — the last 20% often takes as
+                      long as the first 30%.
+                    </p>
+                    <div className="flex h-2 rounded-full overflow-hidden max-w-[260px] mx-auto">
+                      <div className="bg-emerald-500/80" style={{ width: "37.5%" }} />
+                      <div className="bg-emerald-400/50" style={{ width: "37.5%" }} />
+                      <div className="bg-amber-400/80" style={{ width: "12.5%" }} />
+                      <div className="bg-red-400/70" style={{ width: "12.5%" }} />
+                    </div>
+                    <div className="flex max-w-[260px] mx-auto text-[9px] text-white/30 mt-1">
+                      <span className="w-[37.5%] text-left">Full speed</span>
+                      <span className="w-[37.5%] text-center">Easing off</span>
+                      <span className="w-[12.5%] text-center">Slow</span>
+                      <span className="w-[12.5%] text-right">Slower</span>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-start gap-1.5 mt-3 pt-3 border-t border-white/[0.06]">
                   <Info size={11} className="shrink-0 mt-0.5 text-white/30" />
                   <p className="text-[10px] text-white/30 leading-relaxed">
-                    Charging costs are estimates only. Actual public DC charging fees vary by charging network and location.
+                    Charging times &amp; costs are estimates and already account for slower DC charging
+                    above ~80%. Actual public DC charging fees vary by charging network and location.
                   </p>
                 </div>
               </div>

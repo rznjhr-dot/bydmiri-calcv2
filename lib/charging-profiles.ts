@@ -8,7 +8,7 @@ const CHARGING_URL = "https://bydmiri-data.netlify.app/data/charging.json";
 
 function parseRate(str: string): number {
   const m = str.match(/RM(\d+\.?\d*)/);
-  return m?.[1] ? parseFloat(m[1]) : 0.30;
+  return m?.[1] ? parseFloat(m[1]) : 0.33;
 }
 
 function parseMaxDcRate(str: string): number {

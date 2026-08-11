@@ -6,7 +6,7 @@ import { vehicles } from "@/lib/vehicles";
 import { fmt } from "@/lib/finance";
 
 const TARIFFS = [
-  { key: "sarawak-above-1300", label: "Sarawak - Above 1300 kWh", rate: 0.32 },
+  { key: "sarawak-above-1300", label: "Sarawak - Above 1300 kWh", rate: 0.33 },
   { key: "west-peninsular-below-1500", label: "West / Peninsular Malaysia - Below 1500 kWh", rate: 0.44 },
   { key: "west-peninsular-above-1500", label: "West / Peninsular Malaysia - Above 1500 kWh", rate: 0.54 },
   { key: "sabah-above-1500", label: "Sabah - Above 1500 kWh", rate: 0.6 },
