@@ -2,6 +2,7 @@
 
 import { Calculator } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
+import { activeRebate } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import { useInView } from "@/lib/use-in-view";
@@ -33,7 +34,7 @@ export default function VehicleCard({
   onSelect,
   index,
 }: Props) {
-  const rebate = vehicle.promotionOptions?.[0]?.rebate ?? vehicle.rebate;
+  const rebate = activeRebate(vehicle);
   const monthly = calcCardMonthly(vehicle.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(vehicle.otr, rebate);
   const { ref, inView } = useInView<HTMLDivElement>();

@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { Zap, Battery, Clock, DollarSign, Cable, Car, Info } from "lucide-react";
 import { fetchChargingProfiles, type ChargingProfiles } from "@/lib/charging-profiles";
+import { ResultBox } from "@/components/result-box";
 
 const CHARGERS = [
   { kw: 7, label: "7 kW", type: "Wallbox (Home Charger)", ac: true },
@@ -130,6 +131,9 @@ export default function ChargingEstimator() {
 
   const trackRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<"from" | "to" | null>(null);
+  // Mirror of dragRef for render: which handle is being dragged right now.
+  // (Refs must not be read during render; state drives the value tooltips.)
+  const [dragging, setDragging] = useState<"from" | "to" | null>(null);
 
   useEffect(() => {
     fetch(VEHICLES_URL)
@@ -164,6 +168,7 @@ export default function ChargingEstimator() {
     (handle: "from" | "to") => (e: React.PointerEvent) => {
       e.preventDefault();
       dragRef.current = handle;
+      setDragging(handle);
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
     },
     []
@@ -184,6 +189,7 @@ export default function ChargingEstimator() {
 
   const handlePointerUp = useCallback(() => {
     dragRef.current = null;
+    setDragging(null);
   }, []);
 
   const vehicle = useMemo(
@@ -342,7 +348,7 @@ export default function ChargingEstimator() {
                       boxShadow: "0 0 8px rgba(52,211,153,0.2)",
                     }}
                   />
-                  {dragRef.current === "from" && (
+                  {dragging === "from" && (
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
                       {fromPct}%
                     </div>
@@ -361,7 +367,7 @@ export default function ChargingEstimator() {
                       boxShadow: "0 0 8px rgba(52,211,153,0.2)",
                     }}
                   />
-                  {dragRef.current === "to" && (
+                  {dragging === "to" && (
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
                       {toPct}%
                     </div>
@@ -484,49 +490,6 @@ export default function ChargingEstimator() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function ResultBox({
-  icon,
-  label,
-  value,
-  sub,
-  highlight,
-  color,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  sub?: string;
-  highlight?: boolean;
-  color?: "cyan";
-}) {
-  const isCyan = color === "cyan";
-  const hlColor = isCyan ? "rgba(0,206,209,0.08)" : "rgba(0,230,118,0.08)";
-  const hlBorder = isCyan ? "rgba(0,206,209,0.15)" : "rgba(0,230,118,0.15)";
-  const hlText = isCyan ? "text-cyan-400" : "text-emerald-400";
-  return (
-    <div
-      className="rounded-lg p-2.5"
-      style={{
-        backgroundColor: highlight ? hlColor : "rgba(255,255,255,0.03)",
-        border: highlight
-          ? `1px solid ${hlBorder}`
-          : "1px solid rgba(255,255,255,0.05)",
-      }}
-    >
-      <div className="flex items-center gap-1 text-white/40 mb-0.5">
-        {icon}
-        <span className="text-[10px]">{label}</span>
-      </div>
-      <div
-        className={`text-sm font-bold ${highlight ? hlText : "text-white/80"}`}
-      >
-        {value}
-      </div>
-      {sub && <div className="text-[10px] text-white/30 mt-0.5">{sub}</div>}
     </div>
   );
 }

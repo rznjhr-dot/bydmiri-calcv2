@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink, Zap, Calculator } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
+import { activeRebate } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import { usePageMeta } from "@/lib/use-page-meta";
@@ -128,7 +129,7 @@ export default function PricelistPage() {
 /* ── Desktop Row (stateful so Atto 3 promo pills update monthly instantly) ── */
 function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
   const router = useRouter();
-  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
+  const rebate = activeRebate(v);
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
   const otrWO = calcOtrWithoutIns(v);
@@ -220,7 +221,7 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
 /* ── Mobile Card (stateful so Atto 3 promo pills update monthly instantly) ── */
 function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
   const router = useRouter();
-  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
+  const rebate = activeRebate(v);
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
   const otrWO = calcOtrWithoutIns(v);

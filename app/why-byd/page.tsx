@@ -520,7 +520,7 @@ export default function WhyBydPage() {
             {/* Eligibility check — visible CTA */}
             <div className="pt-6 border-t border-white/[0.06]">
               <p className="text-xs text-white/30 mb-3">
-                Not sure if you're eligible? Let us check for you.
+                Not sure if you&apos;re eligible? Let us check for you.
               </p>
               <button
                 onClick={() => setShowForm(!showForm)}

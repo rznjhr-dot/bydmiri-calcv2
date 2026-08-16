@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Fuel, Car, Zap, DollarSign, Info, TrendingDown, Route } from "lucide-react";
 import { vehicles } from "@/lib/vehicles";
 import { fmt } from "@/lib/finance";
+import { ResultBox } from "@/components/result-box";
 
 const TARIFFS = [
   { key: "sarawak-above-1300", label: "Sarawak - Above 1300 kWh", rate: 0.33 },
@@ -26,6 +27,8 @@ const labelCls = "block text-[11px] font-semibold uppercase tracking-wide text-w
 const fieldCls =
   "w-full py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors focus:border-emerald-500/40";
 
+const VEHICLES_BY_ID = new Map(vehicles.map((v) => [v.id, v]));
+
 export default function FuelSavingsCalculator() {
   const [selectedId, setSelectedId] = useState(vehicles[0]!.id);
   const [dailyWorkKm, setDailyWorkKm] = useState("30");
@@ -36,11 +39,12 @@ export default function FuelSavingsCalculator() {
   const [customElecPrice, setCustomElecPrice] = useState("");
   const [calculated, setCalculated] = useState(false);
 
-  const vehicle = vehicles.find((v) => v.id === selectedId) ?? vehicles[0]!;
+  // Static lookup built once at module scope.
+  const vehicle = VEHICLES_BY_ID.get(selectedId) ?? vehicles[0]!;
   const selectedTariff = TARIFFS.find((t) => t.key === tariffKey)!;
 
-  const lPer100 =
-    parseFloat(iceKmPerL) > 0 ? 100 / parseFloat(iceKmPerL) : NaN;
+  const kmPerL = parseFloat(iceKmPerL);
+  const lPer100 = kmPerL > 0 ? 100 / kmPerL : null;
 
   const result = useMemo(() => {
     const daily = parseFloat(dailyWorkKm) || 0;
@@ -283,7 +287,7 @@ export default function FuelSavingsCalculator() {
                     inputMode="decimal"
                     min="0"
                     step="0.1"
-                    value={Number.isFinite(lPer100) ? lPer100.toFixed(1) : ""}
+                    value={lPer100 !== null ? lPer100.toFixed(1) : ""}
                     onChange={(e) => {
                       const v = parseFloat(e.target.value);
                       if (v > 0) setIceKmPerL(String(100 / v));
@@ -424,44 +428,6 @@ export default function FuelSavingsCalculator() {
             home rates shown here. Fuel prices and electricity tariffs are subject to change.
           </p>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function ResultBox({
-  icon,
-  label,
-  value,
-  highlight,
-  color,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  highlight?: boolean;
-  color?: "cyan";
-}) {
-  const isCyan = color === "cyan";
-  const hlColor = isCyan ? "rgba(0,206,209,0.08)" : "rgba(0,230,118,0.08)";
-  const hlBorder = isCyan ? "rgba(0,206,209,0.15)" : "rgba(0,230,118,0.15)";
-  const hlText = isCyan ? "text-cyan-400" : "text-emerald-400";
-  return (
-    <div
-      className="rounded-lg p-2.5"
-      style={{
-        backgroundColor: highlight ? hlColor : "rgba(255,255,255,0.03)",
-        border: highlight
-          ? `1px solid ${hlBorder}`
-          : "1px solid rgba(255,255,255,0.05)",
-      }}
-    >
-      <div className="flex items-center gap-1 text-white/40 mb-0.5">
-        {icon}
-        <span className="text-[10px]">{label}</span>
-      </div>
-      <div className={`text-sm font-bold ${highlight ? hlText : "text-white/80"}`}>
-        {value}
       </div>
     </div>
   );

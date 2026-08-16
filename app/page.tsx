@@ -10,6 +10,7 @@ import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
+import { activeRebate } from "@/lib/vehicles";
 import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
@@ -28,8 +29,6 @@ export default function Home() {
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
   const [showEligibility, setShowEligibility] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-
-  const calcCloseRef = useRef<HTMLButtonElement>(null);
   const legalCloseRef = useRef<HTMLButtonElement>(null);
 
   const scrollToSection = useCallback((id: string) => {
@@ -64,15 +63,17 @@ export default function Home() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [handleClose]);
 
-  // Handle ?calc=vehicle-id from pricelist page
+  // Handle ?calc=vehicle-id from pricelist page — read once after mount,
+  // clean the URL, and defer the modal-open state to avoid a sync setState
+  // inside the effect (react-hooks/set-state-in-effect).
+  const calcCloseRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const calcId = params.get("calc");
-    if (calcId && vehicles.some((v) => v.id === calcId)) {
-      setSelectedId(calcId);
-      // Clean URL without reload
-      window.history.replaceState(null, "", "/");
-    }
+    if (!calcId || !vehicles.some((v) => v.id === calcId)) return;
+    window.history.replaceState(null, "", "/");
+    const frame = requestAnimationFrame(() => setSelectedId(calcId));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const selectedVehicle = selectedId
@@ -396,7 +397,7 @@ export default function Home() {
             className="mt-6 pt-6 border-t border-white/[0.06]"
           >
             <p className="text-xs text-theme-50 mb-3">
-              Not sure if you're eligible? Let us check for you.
+              Not sure if you&apos;re eligible? Let us check for you.
             </p>
             <button
               onClick={() => setShowEligibility(!showEligibility)}
@@ -631,7 +632,7 @@ export default function Home() {
 /* ── Pricing Table Row (default promo rebate drives monthly) ── */
 function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string) => void; index: number }) {
   const router = useRouter();
-  const rebate = v.promotionOptions?.[0]?.rebate ?? v.rebate;
+  const rebate = activeRebate(v);
   const monthly = calcCardMonthly(v.otr, rebate);
   const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
 

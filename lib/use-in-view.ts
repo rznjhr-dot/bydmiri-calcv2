@@ -12,6 +12,11 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
 ) {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
+  // Sync latest options into a ref inside an effect (never during render).
+  const optionsRef = useRef(options);
+  useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
 
   useEffect(() => {
     const el = ref.current;
@@ -24,7 +29,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
           observer.unobserve(el);
         }
       },
-      { threshold: 0.1, ...options }
+      { threshold: 0.1, ...optionsRef.current }
     );
 
     observer.observe(el);

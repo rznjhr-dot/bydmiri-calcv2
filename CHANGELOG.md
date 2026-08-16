@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.5.0] — 2026-08-17
+
+### Pricing (Master DB sync — August 2026 rebate campaign)
+- **Atto 3 Ultra & Premium** — rebate RM10,000 → **RM14,000** (new default); second option "RM10,000 + FREE 6 Years Standard Service Package" retained as alternative
+- **Sealion 7 Dynamic** — OTR RM171,109 → **RM171,519**; road tax RM290 → **RM200**; sum insured RM166,800 → **RM167,300**
+- **Sealion 7 Premium** — rebate RM3,888 → **RM7,000**
+- **Sealion 7 Performance** — rebate RM2,888 → **RM6,000**; road tax RM365 → **RM965**
+- **JSON-LD** — dealer `priceRange` corrected to `RM106,000–RM213,000`
+- All monthly instalments (home pricing table, vehicle cards, pricelist, calculator) auto-recalculated from the updated data; OTR-less-insurance math now matches Master DB `otrWithoutInsurance` for all 10 variants
+
+### Fixed (pre-existing lint errors & latent bugs)
+- **Modal** (`components/modal.tsx`) — removed synchronous setState-in-effect (`react-hooks/set-state-in-effect`); mount state now derived (`open || render`) with rAF-driven fade-out
+- **Deep-link modal** (`app/page.tsx`) — `?calc=` handler defers `setSelectedId` to a `requestAnimationFrame`, avoiding cascading-render lint error; URL cleanup unchanged
+- **Charging slider tooltips** (`components/charging-estimator.tsx`) — handle value bubbles read a ref during render (never re-rendered, so tooltips never appeared). Now driven by `dragging` state; tooltips work
+- **`useInView`** (`lib/use-in-view.ts`) — options synced via ref-in-effect; observer no longer re-created per render (`react-hooks/exhaustive-deps` resolved)
+- **Unescaped entities** — `you're` → `you&apos;re` in eligibility CTAs (`app/page.tsx`, `app/why-byd/page.tsx`)
+- **Eligibility form** (`components/check-eligibility-form.tsx`) — removed fake `loading` state that toggled synchronously (spinner never rendered); submit is honest fire-and-forget
+
+### Refactoring
+- **`activeRebate(vehicle)` helper** (`lib/vehicles.ts`) — single source for "first promotion option else flat rebate", replacing 5 duplicated derivations across `vehicle-card`, `calculator`, `page`, `pricelist`
+- **Shared `ResultBox`** (`components/result-box.tsx`) — extracted identical component from `charging-estimator` & `fuel-savings-calculator`
+- **Calculator** — WhatsApp enquiry/booking `useMemo`s share one payload object; redundant `hasPromoOptions` in dep array removed; redundant ternary in rebate label removed
+- **Hero avatar** — uses `priority` prop instead of raw `loading`/`fetchPriority` attrs
+- **Fuel savings** — vehicle lookup via module-scope `Map` instead of per-render `find`; `lPer100` null-check cleanup
+
+### Verification
+- `tsc --noEmit` clean · `eslint` clean (was 6 errors / 3 warnings) · `next build` static export success
+- Built HTML regression-checked: new OTR/rebates/monthlies present on `/` and `/pricelist`; modal fade, slider drag handlers and tooltip markup confirmed in client bundle
+
 ## [2.4.0] — 2026-08-01
 
 ### Mobile / Responsive

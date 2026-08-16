@@ -163,8 +163,7 @@ export default function Hero() {
               src="/ridzuan.jpg"
               alt="Ridzuan Jahari"
               className="w-20 h-20 rounded-full object-cover ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-500/20"
-              loading="eager"
-              fetchPriority="high"
+              priority
             />
 
             {/* Details */}

@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { Check, MousePointerClick, ClipboardCheck } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
+import { activeRebate } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
 import { generateWhatsAppUrl, generateWhatsAppBookingUrl } from "@/lib/whatsapp";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
@@ -26,7 +27,7 @@ export default function Calculator({ vehicle }: Props) {
 
   const hasPromoOptions =
     !!vehicle.promotionOptions && vehicle.promotionOptions.length > 0;
-  const effectiveRebate = vehicle.promotionOptions?.[0]?.rebate ?? vehicle.rebate;
+  const effectiveRebate = activeRebate(vehicle);
 
   const result = useMemo(() => {
     const rate = parseFloat(interestRate) || 0;
@@ -42,34 +43,29 @@ export default function Calculator({ vehicle }: Props) {
       tenure,
       interestRate: rate,
     });
-  }, [vehicle, rebateOn, cspOn, hasPromoOptions, effectiveRebate, depositPct, customDeposit, tenure, interestRate]);
+  }, [vehicle, rebateOn, cspOn, effectiveRebate, depositPct, customDeposit, tenure, interestRate]);
 
-  const whatsappUrl = useMemo(
-    () =>
-      generateWhatsAppUrl({
-        model: vehicle.name,
-        price: fmt(vehicle.otr),
-        deposit: fmt(result.depositAmount),
-        loan: fmt(result.loanAmount),
-        tenure: String(tenure),
-        interest: (parseFloat(interestRate) || 0).toFixed(2),
-        monthly: fmt(result.monthly),
-      }),
+  const whatsappData = useMemo(
+    () => ({
+      model: vehicle.name,
+      price: fmt(vehicle.otr),
+      deposit: fmt(result.depositAmount),
+      loan: fmt(result.loanAmount),
+      tenure: String(tenure),
+      interest: (parseFloat(interestRate) || 0).toFixed(2),
+      monthly: fmt(result.monthly),
+    }),
     [vehicle, result, tenure, interestRate]
   );
 
+  const whatsappUrl = useMemo(
+    () => generateWhatsAppUrl(whatsappData),
+    [whatsappData]
+  );
+
   const whatsappBookingUrl = useMemo(
-    () =>
-      generateWhatsAppBookingUrl({
-        model: vehicle.name,
-        price: fmt(vehicle.otr),
-        deposit: fmt(result.depositAmount),
-        loan: fmt(result.loanAmount),
-        tenure: String(tenure),
-        interest: (parseFloat(interestRate) || 0).toFixed(2),
-        monthly: fmt(result.monthly),
-      }),
-    [vehicle, result, tenure, interestRate]
+    () => generateWhatsAppBookingUrl(whatsappData),
+    [whatsappData]
   );
 
   const handleDepositPct = useCallback((pct: number) => {
@@ -108,7 +104,7 @@ export default function Calculator({ vehicle }: Props) {
                   {rebateOn && <Check size={10} className="text-white" />}
                 </div>
                 <span className="font-medium">
-                  RM{fmt(hasPromoOptions ? effectiveRebate : vehicle.rebate)} Rebate
+                  RM{fmt(effectiveRebate)} Rebate
                 </span>
               </button>
 

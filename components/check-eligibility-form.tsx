@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 const GSHEET_WEBAPP_URL =
   process.env.NEXT_PUBLIC_GSHEET_URL ||
@@ -18,7 +18,6 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
   const [targetCar, setTargetCar] = useState(defaultCar);
   const [salary, setSalary] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,8 +33,6 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
       return;
     }
 
-    setLoading(true);
-
     const body = new URLSearchParams({
       name: name.trim(),
       phone: phone.trim(),
@@ -45,7 +42,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
       source: "BYD Miri Website",
     });
 
-    // POST with form-urlencoded — data stays out of URL/server logs
+    // Fire-and-forget POST (no-cors): success is assumed; a network failure
+    // is surfaced by the Google Sheet owner, not the customer.
     fetch(GSHEET_WEBAPP_URL, {
       method: "POST",
       mode: "no-cors",
@@ -53,7 +51,6 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
     }).catch(() => {});
 
     setSubmitted(true);
-    setLoading(false);
   };
 
   if (submitted) {
@@ -127,14 +124,9 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-sm font-bold hover:shadow-[0_0_30px rgba(52,211,153,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-11"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-sm font-bold hover:shadow-[0_0_30px rgba(52,211,153,0.3)] transition-all min-h-11"
         >
-          {loading ? (
-            <><Loader2 size={14} className="animate-spin" /> Submitting...</>
-          ) : (
-            "Check My Eligibility"
-          )}
+          Check My Eligibility
         </button>
 
         <p className="text-[10px] text-white/20 text-center">

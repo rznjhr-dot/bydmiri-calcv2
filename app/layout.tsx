@@ -163,7 +163,7 @@ export default function RootLayout({
                     addressCountry: "MY",
                   },
                   telephone: "+6011-31933930",
-                  priceRange: "RM100,000–RM210,000",
+                  priceRange: "RM106,000–RM213,000",
                   currenciesAccepted: "MYR",
                   knowsLanguage: ["en", "ms"],
                   contactPoint: {

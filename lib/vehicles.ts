@@ -31,6 +31,12 @@ export interface Vehicle {
   url: string;
 }
 
+/** Active rebate for display/card math: the first promotion option when the
+ *  model has mutually-exclusive promo choices, otherwise the flat rebate. */
+export function activeRebate(vehicle: Vehicle): number {
+  return vehicle.promotionOptions?.[0]?.rebate ?? vehicle.rebate;
+}
+
 export const vehicles: Vehicle[] = [
   {
     id: "atto2",
@@ -83,9 +89,13 @@ export const vehicles: Vehicle[] = [
     otr: 132729.25,
     sumInsured: 129300,
     roadTax: 160,
-    rebate: 10000,
+    rebate: 14000,
     cspRebate: 0,
     promotionOptions: [
+      {
+        title: "RM14,000 Cash Rebate",
+        rebate: 14000,
+      },
       {
         title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
         rebate: 10000,
@@ -111,9 +121,13 @@ export const vehicles: Vehicle[] = [
     otr: 146227.90,
     sumInsured: 142300,
     roadTax: 335,
-    rebate: 10000,
+    rebate: 14000,
     cspRebate: 0,
     promotionOptions: [
+      {
+        title: "RM14,000 Cash Rebate",
+        rebate: 14000,
+      },
       {
         title: "RM10,000 Cash Rebate + FREE 6 Years Standard Service Package",
         rebate: 10000,
@@ -136,9 +150,9 @@ export const vehicles: Vehicle[] = [
     id: "sealion7dynamic",
     name: "Sealion 7 Dynamic",
     category: "Performance Electric SUV",
-    otr: 171109.05,
-    sumInsured: 166800,
-    roadTax: 290,
+    otr: 171519.05,
+    sumInsured: 167300,
+    roadTax: 200,
     rebate: 4000,
     cspRebate: 0,
     acLimitKw: 7,
@@ -161,7 +175,7 @@ export const vehicles: Vehicle[] = [
     otr: 197147.35,
     sumInsured: 192300,
     roadTax: 335,
-    rebate: 3888,
+    rebate: 7000,
     cspRebate: 0,
     acLimitKw: 11,
     range: 650,
@@ -181,9 +195,9 @@ export const vehicles: Vehicle[] = [
     name: "Sealion 7 Performance",
     category: "Performance Electric SUV",
     otr: 213073.30,
-    sumInsured: 207900,
-    roadTax: 365,
-    rebate: 2888,
+    sumInsured: 207300,
+    roadTax: 965,
+    rebate: 6000,
     cspRebate: 0,
     acLimitKw: 11,
     range: 600,

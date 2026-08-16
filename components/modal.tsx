@@ -17,16 +17,25 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      setRender(true);
-      const frame = requestAnimationFrame(() => setActive(true));
-      return () => cancelAnimationFrame(frame);
-    } else {
-      setActive(false);
-      const timer = setTimeout(() => setRender(false), 200);
-      return () => clearTimeout(timer);
-    }
+    if (!open) return;
+    // Mount immediately (open flipped this render), then animate in on the next frame.
+    const frame = requestAnimationFrame(() => setActive(true));
+    return () => cancelAnimationFrame(frame);
   }, [open]);
+
+  useEffect(() => {
+    if (open) return;
+    // Fade out, then unmount after the transition duration.
+    const frame = requestAnimationFrame(() => setActive(false));
+    const timer = setTimeout(() => setRender(false), 200);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [open]);
+
+  // Derive mount state without a synchronous setState in effect.
+  const shouldRender = open || render;
 
   // Focus trap
   const handleKeyDown = useCallback(
@@ -78,7 +87,7 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
     };
   }, [open]);
 
-  if (!render) return null;
+  if (!shouldRender) return null;
 
   return (
     <div
