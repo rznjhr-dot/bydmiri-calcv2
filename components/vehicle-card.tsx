@@ -17,11 +17,14 @@ interface Props {
 /* ── Model Image ── */
 function ModelImage({ src, name }: { src: string; name: string }) {
   return (
-    <div className="w-full rounded-lg overflow-hidden bg-black/30" style={{ aspectRatio: "2572/1200" }}>
+    <div
+      className="w-full rounded-lg overflow-hidden"
+      style={{ aspectRatio: "2572/1200", backgroundColor: "var(--cz-input)" }}
+    >
       <Img
         src={src}
         alt={name}
-        className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+        className="w-full h-full object-contain"
       />
     </div>
   );
@@ -51,13 +54,8 @@ export default function VehicleCard({
   return (
     <div
       ref={ref}
-      className="flex flex-col items-center w-full"
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(20px)",
-        transition: `opacity 0.4s ease-out, transform 0.4s ease-out`,
-        transitionDelay: `${index * 0.05}s`,
-      }}
+      className={`reveal ${inView ? "is-visible" : ""}`}
+      style={{ transitionDelay: `${Math.min(index, 8) * 50}ms` }}
     >
       <div
         onClick={handleClick}
@@ -70,18 +68,21 @@ export default function VehicleCard({
         <ModelImage src={vehicle.image} name={vehicle.name} />
 
         {/* Bottom banner: name, price, calculator */}
-        <div className="w-full mt-2.5 px-3 py-2.5 rounded-lg bg-emerald-500/[0.04] border border-emerald-500/10 flex items-center justify-between gap-2 transition-all duration-200 hover:bg-emerald-500/[0.08] hover:border-emerald-500/25 group cursor-pointer">
+        <div
+          className="spot-banner w-full mt-2.5 px-3 py-2.5 rounded-lg flex items-center justify-between gap-2 cursor-pointer min-w-0"
+        >
           <div className="min-w-0">
             <div className="text-[11px] text-theme-50 truncate leading-tight">
               {vehicle.name}
             </div>
-            <div className="text-[13px] sm:text-sm font-bold tracking-tight whitespace-nowrap tabular-nums">
-              <span className="text-emerald-400">RM{fmt(monthly)}</span><span className="text-[10px] text-emerald-400/50">/</span><span className="text-amber-400">RM{fmt(monthlyFull)}</span><span className="text-[10px] text-emerald-400/40 font-medium">/mo</span>
+            {/* Figures never wrap — the name truncates instead */}
+            <div className="font-data text-[13px] sm:text-sm font-semibold tracking-tight whitespace-nowrap">
+              <span className="text-accent">RM{fmt(monthly)}</span><span className="text-theme-30">/</span><span className="text-counter">RM{fmt(monthlyFull)}</span><span className="text-[10px] text-theme-40 font-medium">/mo</span>
             </div>
-            <div className="text-[10px] text-white/20 leading-tight -mt-0.5 whitespace-nowrap">10% · 0% down</div>
+            <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 whitespace-nowrap">10% · 0% down</div>
           </div>
-          <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/25 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/40 transition-all">
-            <Calculator size={16} className="text-emerald-400" />
+          <div className="spot-icon shrink-0 flex items-center justify-center w-9 h-9 rounded-lg">
+            <Calculator size={16} className="text-accent" />
           </div>
         </div>
       </div>

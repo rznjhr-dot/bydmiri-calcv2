@@ -3,6 +3,13 @@
 # These headers are applied at the CDN edge, not by a server.
 # ─────────────────────────────────────────────────────────────
 
+# ── CSP (Content-Security-Policy) ──
+# Allows: self + Google Maps embed + YouTube embeds (why-byd page).
+# youtube-nocookie = privacy-enhanced domain (no tracking cookies until play).
+# i.ytimg.com/img.youtube.com = YouTube thumbnails served by the embed.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://img.youtube.com; font-src 'self' data:; frame-src https://www.google.com https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app
+
 # ── CORE SECURITY HEADERS (applied to all paths) ──
 /*
   # Strict-Transport-Security (HSTS)

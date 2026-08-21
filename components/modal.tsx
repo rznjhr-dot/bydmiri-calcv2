@@ -102,11 +102,16 @@ export function Modal({ open, onClose, children, label, closeRef, className = ""
         aria-hidden="true"
       />
       <div
-        className={`relative w-full max-w-lg max-h-[85dvh] overflow-y-auto rounded-2xl bg-[#080808] transition-all duration-200 ${
+        className={`relative w-full max-w-lg max-h-[85dvh] overflow-y-auto rounded-2xl bg-theme-card transition-all ${
           active
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-5"
         } ${className}`}
+        style={{
+          transitionDuration: "var(--dur-short)",
+          transitionTimingFunction: "var(--ease-out)",
+          border: "1px solid var(--cz-border)",
+        }}
         role="dialog"
         aria-modal="true"
         aria-label={label}

@@ -1,12 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Syne } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const baseUrl = "https://bydmiri.com";
 
-const syne = Syne({
+/* Direction 01 · Minimal — the 2+1 pairing, canonical:
+   Geist display/body + Geist Mono as the data outlier.
+   Premium comes from weight contrast (300 vs 600), not decoration. */
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-syne",
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-geist",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -101,8 +112,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1512" },
+    { media: "(prefers-color-scheme: light)", color: "#f7faf8" },
   ],
 };
 
@@ -112,15 +123,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-theme="dark" className={`h-full antialiased ${syne.variable}`}>
+    <html lang="en" suppressHydrationWarning data-theme="dark" className={`h-full antialiased ${geist.variable} ${geistMono.variable}`}>
       <head>
+        {/* ── Body font — Geist 400 base; light display cuts handled in CSS ── */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `body{font-family:var(--font-geist),ui-sans-serif,system-ui,sans-serif;font-weight:400;}`,
+          }}
+        />
         {/* ── Security Headers (meta tags) ── */}
         {/* These supplement the Netlify _headers file for defense-in-depth.
              The _headers file is the primary mechanism — these catch any
              environment where _headers may not apply (e.g., dev server). */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-src https://www.google.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app; form-action 'self' https://script.google.com"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://img.youtube.com; font-src 'self' data:; frame-src https://www.google.com https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app"
         />
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />

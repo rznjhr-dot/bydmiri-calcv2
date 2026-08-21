@@ -213,6 +213,8 @@ export default function ChargingEstimator() {
       effectivePower > 0
         ? integrateChargeTime(energyNeeded, fromPct, toPct, effectivePower, efficiency, isAc)
         : 0;
+    /* Both AC (home tariff) and DC (public networks) bill per kWh.
+       Cost = energy drawn from the wall × rate. */
     const rate = isAc ? (profiles?.homeRate ?? 0.33) : (profiles?.dcRate ?? 1.40);
     const cost = wallEnergy * rate;
     const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
@@ -221,30 +223,30 @@ export default function ChargingEstimator() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
-        <div className="text-center text-white/40 text-sm py-8">Loading vehicle data…</div>
+      <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
+        <div className="text-center text-theme-40 text-sm py-8">Loading vehicle data…</div>
       </div>
     );
   }
 
   if (options.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
-        <div className="text-center text-white/40 text-sm py-8">Unable to load vehicle data.</div>
+      <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
+        <div className="text-center text-theme-40 text-sm py-8">Unable to load vehicle data.</div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
+    <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-          <Zap size={15} className="text-emerald-400" />
+        <div className="w-8 h-8 rounded-lg border flex items-center justify-center" style={{ backgroundColor: "var(--cz-accent-soft)", borderColor: "var(--cz-accent-line)" }}>
+          <Zap size={15} className="text-accent" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-white/80">Charging Time &amp; Cost</h3>
-          <p className="text-xs text-white/30">Estimate based on battery size and charger type</p>
+          <h3 className="text-sm font-bold text-theme-80">Charging Time &amp; Cost</h3>
+          <p className="text-xs text-theme-30">Estimate based on battery size and charger type</p>
         </div>
       </div>
 
@@ -253,11 +255,11 @@ export default function ChargingEstimator() {
         <div className="space-y-4">
           {/* Vehicle selector */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-wide text-white/40 mb-1.5">
+            <label className="block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5">
               Vehicle
             </label>
             <div className="relative">
-              <Car size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+              <Car size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
@@ -280,7 +282,7 @@ export default function ChargingEstimator() {
 
           {/* Charger type */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-wide text-white/40 mb-1.5">
+            <label className="block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5">
               Charger Type
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
@@ -292,15 +294,15 @@ export default function ChargingEstimator() {
                   style={{
                     backgroundColor:
                       chargerKw === c.kw
-                        ? "rgba(0,230,118,0.1)"
+                        ? "var(--cz-accent-soft)"
                         : "transparent",
                     borderColor:
                       chargerKw === c.kw
-                        ? "rgba(0,230,118,0.4)"
+                        ? "var(--cz-accent-line)"
                         : "var(--cz-border, rgba(255,255,255,0.08))",
                     color:
                       chargerKw === c.kw
-                        ? "#34D399"
+                        ? "var(--cz-accent)"
                         : "var(--cz-text-50, rgba(255,255,255,0.5))",
                   }}
                 >
@@ -313,11 +315,11 @@ export default function ChargingEstimator() {
 
           {/* Charge range slider */}
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-wide text-white/40 mb-1.5">
+            <label className="block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5">
               Charge Range
             </label>
             <div className="space-y-1.5">
-              <div className="flex justify-between text-xs text-white/40">
+              <div className="flex justify-between text-xs text-theme-40">
                 <span>From: {fromPct}%</span>
                 <span>To: {toPct}%</span>
               </div>
@@ -329,11 +331,15 @@ export default function ChargingEstimator() {
                 onPointerCancel={handlePointerUp}
               >
                 {/* Track bg */}
-                <div className="absolute w-full h-1.5 rounded-full bg-white/[0.06] pointer-events-none" />
+                <div className="absolute w-full h-1.5 rounded-full pointer-events-none" style={{ backgroundColor: "var(--cz-border)" }} />
                 {/* Filled track */}
                 <div
-                  className="absolute h-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 pointer-events-none"
-                  style={{ left: `${fromPct}%`, width: `${toPct - fromPct}%` }}
+                  className="absolute h-1.5 rounded-full pointer-events-none"
+                  style={{
+                    left: `${fromPct}%`,
+                    width: `${toPct - fromPct}%`,
+                    backgroundColor: "var(--cz-accent)",
+                  }}
                 />
                 {/* Handle 1 (from) */}
                 <div
@@ -342,14 +348,11 @@ export default function ChargingEstimator() {
                   onPointerDown={handlePointerDown("from")}
                 >
                   <div
-                    className="w-5 h-5 rounded-full shadow-sm bg-white border-2 pointer-events-none"
-                    style={{
-                      borderColor: "rgba(52,211,153,0.6)",
-                      boxShadow: "0 0 8px rgba(52,211,153,0.2)",
-                    }}
+                    className="w-5 h-5 rounded-full bg-white border-2 pointer-events-none"
+                    style={{ borderColor: "var(--cz-accent)" }}
                   />
                   {dragging === "from" && (
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-accent whitespace-nowrap pointer-events-none">
                       {fromPct}%
                     </div>
                   )}
@@ -361,20 +364,17 @@ export default function ChargingEstimator() {
                   onPointerDown={handlePointerDown("to")}
                 >
                   <div
-                    className="w-5 h-5 rounded-full shadow-sm bg-white border-2 pointer-events-none"
-                    style={{
-                      borderColor: "rgba(52,211,153,0.6)",
-                      boxShadow: "0 0 8px rgba(52,211,153,0.2)",
-                    }}
+                    className="w-5 h-5 rounded-full bg-white border-2 pointer-events-none"
+                    style={{ borderColor: "var(--cz-accent)" }}
                   />
                   {dragging === "to" && (
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-emerald-400 whitespace-nowrap pointer-events-none">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-accent whitespace-nowrap pointer-events-none">
                       {toPct}%
                     </div>
                   )}
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] text-white/20">
+              <div className="flex justify-between text-[10px] text-theme-20">
                 <span>0%</span>
                 <span>50%</span>
                 <span>100%</span>
@@ -388,8 +388,8 @@ export default function ChargingEstimator() {
           <div
             className="rounded-xl p-4 h-full flex flex-col justify-center"
             style={{
-              backgroundColor: "var(--cz-ledger, rgba(255,255,255,0.03))",
-              border: "1px solid var(--cz-border, rgba(255,255,255,0.06))",
+              backgroundColor: "var(--cz-ledger)",
+              border: "1px solid var(--cz-border)",
             }}
           >
             {result && vehicle && (
@@ -438,38 +438,38 @@ export default function ChargingEstimator() {
                     label="Est. Cost"
                     value={`~RM${result.cost.toFixed(2)}`}
                     sub={`@ RM${result.rate.toFixed(2)}/kWh`}
-                    color="cyan"
+                    color="counter"
                     highlight
                   />
                 </div>
 
                 {result.effectivePower < chargerKw && (
-                  <p className="text-xs text-amber-400/60 text-center">
+                  <p className="text-xs text-counter text-center">
                     Limited by vehicle&apos;s {result.isAc ? "onboard AC charger" : "max DC charge rate"} ({result.carLimit} kW)
                   </p>
                 )}
 
-                <p className="text-[10px] text-white/30 text-center">
+                <p className="text-[10px] text-theme-30 text-center">
                   ~{Math.round(result.efficiency * 100)}% charging efficiency applied (conversion losses)
                 </p>
 
                 {result.isAc ? (
-                  <p className="text-[10px] text-white/30 text-center leading-relaxed">
+                  <p className="text-[10px] text-theme-30 text-center leading-relaxed">
                     AC charging holds near full speed until ~90% — taper is barely noticeable.
                   </p>
                 ) : (
                   <div className="text-center">
-                    <p className="text-[10px] text-white/30 mb-1.5 leading-relaxed">
+                    <p className="text-[10px] text-theme-30 mb-1.5 leading-relaxed">
                       DC fast charging slows down as the battery fills — the last 20% often takes as
                       long as the first 30%.
                     </p>
                     <div className="flex h-2 rounded-full overflow-hidden max-w-[260px] mx-auto">
-                      <div className="bg-emerald-500/80" style={{ width: "37.5%" }} />
-                      <div className="bg-emerald-400/50" style={{ width: "37.5%" }} />
-                      <div className="bg-amber-400/80" style={{ width: "12.5%" }} />
-                      <div className="bg-red-400/70" style={{ width: "12.5%" }} />
+                      <div style={{ width: "37.5%", backgroundColor: "var(--cz-accent)" }} />
+                      <div style={{ width: "37.5%", backgroundColor: "var(--cz-accent)", opacity: 0.5 }} />
+                      <div style={{ width: "12.5%", backgroundColor: "var(--cz-counter)" }} />
+                      <div style={{ width: "12.5%", backgroundColor: "var(--cz-counter)", opacity: 0.7 }} />
                     </div>
-                    <div className="flex max-w-[260px] mx-auto text-[9px] text-white/30 mt-1">
+                    <div className="flex max-w-[260px] mx-auto text-[10px] text-theme-30 mt-1">
                       <span className="w-[37.5%] text-left">Full speed</span>
                       <span className="w-[37.5%] text-center">Easing off</span>
                       <span className="w-[12.5%] text-center">Slow</span>
@@ -478,11 +478,11 @@ export default function ChargingEstimator() {
                   </div>
                 )}
 
-                <div className="flex items-start gap-1.5 mt-3 pt-3 border-t border-white/[0.06]">
-                  <Info size={11} className="shrink-0 mt-0.5 text-white/30" />
-                  <p className="text-[10px] text-white/30 leading-relaxed">
+                <div className="flex items-start gap-1.5 mt-3 pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
+                  <Info size={11} className="shrink-0 mt-0.5 text-theme-30" />
+                  <p className="text-[10px] text-theme-30 leading-relaxed">
                     Charging times &amp; costs are estimates and already account for slower DC charging
-                    above ~80%. Actual public DC charging fees vary by charging network and location.
+                    above ~80%. Public DC rates vary by charging network and location.
                   </p>
                 </div>
               </div>

@@ -20,6 +20,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Img } from "@/components/img";
+import VideoEmbed from "@/components/video-embed";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 import { usePageMeta } from "@/lib/use-page-meta";
 
@@ -34,16 +35,11 @@ const advantages = [
       "Cell-to-pack design — higher density, better cooling",
       "Over 500,000 km battery life expectancy",
     ],
-    link: {
-      text: "Watch the Blade Battery puncture test →",
-      url: "https://www.youtube.com/watch?v=CGQwqWqzkNA",
-    },
+    videoId: "CGQwqWqzkNA",
     link2: {
       text: "BYD Blade Battery official page →",
       url: "https://byd.simemotors.my/byd-blade-battery",
     },
-    gradient: "from-emerald-500/20 to-emerald-600/5",
-    accent: "emerald",
   },
   {
     icon: BadgeCheck,
@@ -56,8 +52,6 @@ const advantages = [
       "Valid at any authorised BYD service centre nationwide",
       "Malaysia's most comprehensive EV warranty package",
     ],
-    gradient: "from-cyan-500/20 to-blue-600/5",
-    accent: "cyan",
   },
   {
     icon: Cable,
@@ -70,8 +64,6 @@ const advantages = [
       "Perfect for outdoor adventures, tailgating, emergencies",
       "Turn your car into a mobile power station on the go",
     ],
-    gradient: "from-emerald-500/20 to-cyan-600/5",
-    accent: "emerald",
   },
   {
     icon: Zap,
@@ -84,8 +76,6 @@ const advantages = [
       "Second-largest EV battery maker worldwide (after CATL)",
       "Trusted by Warren Buffett's Berkshire Hathaway since 2008",
     ],
-    gradient: "from-blue-500/20 to-emerald-600/5",
-    accent: "blue",
   },
 ];
 
@@ -118,7 +108,8 @@ const comparisons = [
     },
     verdict:
       "Atto 3 offers more range, proven safety (285.6 GWh Blade Battery installed in 2025), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
-    gradient: "from-emerald-500/5 to-cyan-500/5",
+    bydImage: "/images/atto3-ultra.jpg",
+    bydImageAlt: "BYD Atto 3 Ultra",
   },
   {
     title: "BYD Seal vs Tesla Model 3",
@@ -146,7 +137,8 @@ const comparisons = [
     },
     verdict:
       "Seal delivers superior range and a comprehensive warranty at a competitive price point with V2L included as standard.",
-    gradient: "from-cyan-500/5 to-blue-500/5",
+    bydImage: "/images/seal-premium.jpg",
+    bydImageAlt: "BYD Seal Premium",
   },
   {
     title: "BYD M6 — The Only EV MPV Under RM150k",
@@ -176,7 +168,8 @@ const comparisons = [
     },
     verdict:
       "M6 stands alone as the only 7-seat EV MPV under RM150,000 in Malaysia — ideal for families who need space and range.",
-    gradient: "from-purple-500/5 to-emerald-500/5",
+    bydImage: "/images/m6.jpg",
+    bydImageAlt: "BYD M6 Extended — 7-seat EV MPV",
   },
 ];
 
@@ -185,37 +178,31 @@ const salesPoints = [
     icon: Zap,
     title: "Savings",
     desc: "Charge from as low as RM0.04/km — ~90% less than petrol. No fuel price volatility. Lower maintenance costs (fewer moving parts).",
-    accent: "emerald",
   },
   {
     icon: Car,
     title: "Comfort",
     desc: "Silent, smooth, spacious. Every ride feels first-class.",
-    accent: "cyan",
   },
   {
     icon: Smartphone,
     title: "Technology",
     desc: "Rotating touchscreen, app control, OTA updates, voice commands.",
-    accent: "emerald",
   },
   {
     icon: VolumeX,
     title: "Silence",
     desc: "Zero engine noise. Enjoy your music, your conversation, your drive.",
-    accent: "cyan",
   },
   {
     icon: Users,
     title: "Family Usability",
     desc: "Spacious cabins, ISOFIX standard, V2L for family outings.",
-    accent: "emerald",
   },
   {
     icon: Heart,
     title: "Instant Pickup",
     desc: "Instant torque. 0–100 km/h from 3.8s (Seal AWD). Thrill without fuel.",
-    accent: "cyan",
   },
 ];
 
@@ -227,17 +214,17 @@ export default function WhyBydPage() {
 
   const [showForm, setShowForm] = useState(false);
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#080808" }}>
+    <div className="min-h-screen" style={{  }}>
       {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06]">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-theme/80 backdrop-blur-xl border-b border-[color:var(--cz-border)]">
         <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-white" aria-label="BYD Miri Home">
+          <Link href="/" className="flex items-center gap-1.5 text-sm text-theme" aria-label="BYD Miri Home">
             <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
-            <span className="font-[family-name:var(--font-syne)] font-bold text-lg tracking-[0.12em] ml-2">| MIRI</span>
+            <span className="font-wordmark text-[11px] ml-2">| MIRI</span>
           </Link>
           <Link
             href="/"
-            className="flex items-center gap-1.5 py-2 px-2 -mr-2 text-xs text-white/50 hover:text-white/80 transition-colors"
+            className="flex items-center gap-1.5 py-2 px-2 -mr-2 text-xs text-theme-50 hover:text-theme-80 transition-colors"
           >
             <ArrowLeft size={14} />
             Back to Calculator
@@ -245,28 +232,20 @@ export default function WhyBydPage() {
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-emerald-500 rounded-full opacity-[0.06] blur-[150px]" />
-          <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-cyan-500 rounded-full opacity-[0.04] blur-[120px]" />
-        </div>
-        <div className="absolute inset-0 circuit-grid opacity-40" />
+      {/* ── Hero — Minimal: pure paper, no decoration ── */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-theme">
         <div className="relative max-w-4xl mx-auto px-6 text-center">
-          <div
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide mb-4">
+          <div>
+            <span className="label-mono justify-center mb-5">
               <BadgeCheck size={12} />
               Why Choose BYD?
             </span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-[family-name:var(--font-syne)] font-bold tracking-tight leading-[1.1] mb-4">
-              <span className="text-white/90">The Smart Switch.</span>
+            <h1 className="font-display text-[40px] sm:text-5xl md:text-6xl mb-5">
+              <span className="text-theme-90">The smart switch,</span>
               <br />
-              <span className="bg-gradient-to-r from-emerald-400 via-cyan-300 to-blue-400 text-gradient">
-                The Clear Choice.
-              </span>
+              <strong className="text-accent">the clear choice.</strong>
             </h1>
-            <p className="text-base md:text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-theme-50 max-w-2xl mx-auto leading-relaxed">
               From the world&apos;s safest EV battery to the most comprehensive warranty in Malaysia —
               discover why BYD is Malaysia&apos;s fastest-growing automotive brand.
             </p>
@@ -278,7 +257,7 @@ export default function WhyBydPage() {
       <section className="relative px-6 pb-12">
         <div className="max-w-5xl mx-auto">
           <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/[0.06] bg-white/[0.04]"
+            className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-[color:var(--cz-border)] bg-theme-alt"
           >
             {[
               { value: "#1", label: "World's NEV Maker" },
@@ -286,11 +265,11 @@ export default function WhyBydPage() {
               { value: "285.6 GWh", label: "Blade Battery Installed (2025)" },
               { value: "121", label: "Countries & Regions" },
             ].map((stat) => (
-              <div key={stat.label} className="bg-[#080808] p-5 text-center">
-                <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-300 text-gradient">
+              <div key={stat.label} className="bg-theme-card p-5 text-center">
+                <div className="font-data text-2xl md:text-3xl font-semibold text-theme-90">
                   {stat.value}
                 </div>
-                <div className="text-xs text-white/40 mt-1">{stat.label}</div>
+                <div className="text-xs text-theme-40 mt-1">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -302,10 +281,10 @@ export default function WhyBydPage() {
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
         <div className="max-w-5xl mx-auto relative">
           <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-white/90">
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
               Engineered to Outperform
             </h2>
-            <p className="text-sm text-white/40 mt-2">
+            <p className="text-sm text-theme-40 mt-2">
               Every BYD is built on years of R&D, vertical integration, and millions of real-world kilometres.
             </p>
           </div>
@@ -314,50 +293,50 @@ export default function WhyBydPage() {
             {advantages.map((adv) => (
               <div
                 key={adv.title}
-                className={`rounded-2xl border border-white/[0.06] bg-gradient-to-br ${adv.gradient} p-5 md:p-6`}
+                className="rounded-2xl border p-5 md:p-6"
+                style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
               >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-xl bg-${adv.accent}-500/10 flex items-center justify-center shrink-0`}>
-                    <adv.icon size={20} className={`text-${adv.accent}-400`} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-bold text-white/90">{adv.title}</h3>
-                    <p className="text-xs text-white/50 mb-3">{adv.subtitle}</p>
-                    <ul className="space-y-1.5">
+                <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
+                  {/* Media column — ONLY the Blade Battery test video.
+                      Other topics get no media: a random car photo next to
+                      "Warranty" is decoration, not information. */}
+                  {adv.videoId ? (
+                    <div className="w-full md:w-2/5 shrink-0">
+                      <VideoEmbed videoId={adv.videoId} title={`${adv.title} — official test video`} />
+                    </div>
+                  ) : null}
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)", color: "var(--cz-accent)" }}>
+                        <adv.icon size={18} />
+                      </div>
+                      <div>
+                        <h3 className="text-base md:text-lg font-bold text-theme-90 leading-tight">{adv.title}</h3>
+                        <p className="text-xs text-theme-40">{adv.subtitle}</p>
+                      </div>
+                    </div>
+                    <ul className="space-y-1.5 mt-3">
                       {adv.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2 text-sm text-white/60">
-                          <CheckCircle2 size={14} className={`text-${adv.accent}-400 shrink-0 mt-0.5`} />
+                        <li key={point} className="flex items-start gap-2 text-sm text-theme-60">
+                          <CheckCircle2 size={14} className="text-accent shrink-0 mt-0.5" />
                           {point}
                         </li>
                       ))}
                     </ul>
-                    {(() => {
-                      if (!adv.link) return null;
-                      return (
-                        <div className="mt-3 flex flex-wrap gap-3">
-                          <a
-                            href={adv.link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400/70 hover:text-emerald-400 transition-colors"
-                          >
-                            <ExternalLink size={11} />
-                            {adv.link.text}
-                          </a>
-                          {adv.link2 && (
-                            <a
-                              href={adv.link2.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs font-medium text-white/40 hover:text-white/60 transition-colors"
-                            >
-                              <ExternalLink size={11} />
-                              {adv.link2.text}
-                            </a>
-                          )}
-                        </div>
-                      );
-                    })()}
+                    {adv.link2 && (
+                      <div className="mt-3">
+                        <a
+                          href={adv.link2.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 min-h-9 py-2 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
+                        >
+                          <ExternalLink size={11} />
+                          {adv.link2.text}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -368,18 +347,18 @@ export default function WhyBydPage() {
 
       {/* ── What We Sell (Sales Rules) ── */}
       <section className="relative px-6 pb-16 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
-        <div className="absolute top-1/2 left-1/3 w-[400px] h-[400px] bg-emerald-500 rounded-full opacity-[0.03] blur-[120px]" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
+        
         <div className="max-w-5xl mx-auto relative">
           <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide mb-3">
+            <span className="label-mono justify-center mb-3">
               <Heart size={12} />
-              It&apos;s Not About Specs
+              It&rsquo;s Not About Specs
             </span>
-            <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-white/90">
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
               What You Actually Gain
             </h2>
-            <p className="text-sm text-white/40 mt-2 max-w-xl mx-auto">
+            <p className="text-sm text-theme-40 mt-2 max-w-xl mx-auto">
               We don&apos;t sell kilowatts. We sell what matters — how it feels, how it fits your life, what you save.
             </p>
           </div>
@@ -388,13 +367,16 @@ export default function WhyBydPage() {
             {salesPoints.map((pt) => (
               <div
                 key={pt.title}
-                className={`rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.02] to-white/[0.01] p-4`}
+                className="rounded-xl border p-4"
+                style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
               >
-                <div className={`w-8 h-8 rounded-lg bg-${pt.accent}-500/10 flex items-center justify-center mb-3`}>
-                  <pt.icon size={16} className={`text-${pt.accent}-400`} />
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)", color: "var(--cz-accent)" }}>
+                    <pt.icon size={16} />
+                  </div>
+                  <h3 className="text-sm font-bold text-theme-80">{pt.title}</h3>
                 </div>
-                <h3 className="text-sm font-bold text-white/80 mb-1">{pt.title}</h3>
-                <p className="text-xs text-white/50 leading-relaxed">{pt.desc}</p>
+                <p className="text-xs text-theme-50 leading-relaxed">{pt.desc}</p>
               </div>
             ))}
           </div>
@@ -406,19 +388,19 @@ export default function WhyBydPage() {
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-5xl mx-auto relative">
           <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/15 uppercase tracking-wide mb-3">
+            <span className="label-mono justify-center mb-3">
               <Gauge size={12} />
               How We Compare
             </span>
-            <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-syne)] font-bold text-white/90">
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
               BYD vs The Rest
             </h2>
-            <p className="text-sm text-white/40 mt-2">
+            <p className="text-sm text-theme-40 mt-2">
               Honest, real-world comparisons. See where BYD leads and why it matters to you.
             </p>
-            <div className="mt-5 max-w-xl mx-auto rounded-lg border border-amber-500/15 bg-amber-500/[0.04] p-3">
-              <p className="text-[11px] text-amber-400/70 leading-relaxed">
-                <span className="font-semibold text-amber-400">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of August 2026.
+            <div className="mt-5 max-w-xl mx-auto rounded-lg border bg-counter-soft border-counter-line  p-3">
+              <p className="text-[11px] text-counter leading-relaxed">
+                <span className="font-semibold text-counter">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of August 2026.
               </p>
             </div>
           </div>
@@ -427,22 +409,34 @@ export default function WhyBydPage() {
             {comparisons.map((cmp) => (
               <div
                 key={cmp.title}
-                className={`rounded-2xl border border-white/[0.06] bg-gradient-to-br ${cmp.gradient} p-5 md:p-6`}
+                className="rounded-2xl border p-5 md:p-6"
+                style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
               >
-                <h3 className="text-base md:text-lg font-bold text-white/80 mb-4">{cmp.title}</h3>
+                <h3 className="text-base md:text-lg font-bold text-theme-80 mb-4">{cmp.title}</h3>
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  {/* BYD side */}
-                  <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      <span className="text-emerald-400 text-xs font-bold uppercase tracking-wide">BYD</span>
+                  {/* BYD side — model image + spec list */}
+                  <div className="rounded-xl border border-[color:var(--cz-accent-line)] bg-accent-soft p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      <span className="text-accent text-xs font-bold uppercase tracking-wide">BYD</span>
                     </div>
-                    <div className="text-white/90 font-bold text-sm mb-1">{cmp.byd.name}</div>
-                    <div className="text-[11px] text-emerald-400/60 mb-2">{cmp.byd.tag}</div>
+                    <div
+                      className="rounded-lg overflow-hidden border mb-3"
+                      style={{ borderColor: "var(--cz-accent-line)", backgroundColor: "var(--cz-input)" }}
+                    >
+                      <Img
+                        src={cmp.bydImage}
+                        alt={cmp.bydImageAlt}
+                        className="w-full object-contain"
+                        style={{ aspectRatio: "2572/1200" }}
+                      />
+                    </div>
+                    <div className="text-theme-90 font-bold text-sm mb-1">{cmp.byd.name}</div>
+                    <div className="text-[11px] text-accent mb-2">{cmp.byd.tag}</div>
                     <ul className="space-y-1">
                       {cmp.byd.items.map((item) => (
-                        <li key={item} className="flex items-start gap-1.5 text-xs text-white/60">
-                          <CheckCircle2 size={11} className="text-emerald-400 shrink-0 mt-0.5" />
+                        <li key={item} className="flex items-start gap-1.5 text-xs text-theme-60">
+                          <CheckCircle2 size={11} className="text-accent shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
@@ -450,17 +444,17 @@ export default function WhyBydPage() {
                   </div>
 
                   {/* VS side */}
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+                  <div className="rounded-xl border border-[color:var(--cz-border)] bg-theme-card p-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                      <span className="text-white/30 text-xs font-bold uppercase tracking-wide">{cmp.vs.name}</span>
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--cz-text-20)" }} />
+                      <span className="text-theme-30 text-xs font-bold uppercase tracking-wide">{cmp.vs.name}</span>
                     </div>
-                    <div className="text-white/50 font-bold text-sm mb-1">{cmp.vs.name}</div>
-                    <div className="text-[11px] text-white/20 mb-2">{cmp.vs.tag}</div>
+                    <div className="text-theme-50 font-bold text-sm mb-1">{cmp.vs.name}</div>
+                    <div className="text-[11px] text-theme-20 mb-2">{cmp.vs.tag}</div>
                     <ul className="space-y-1">
                       {cmp.vs.items.map((item) => (
-                        <li key={item} className="flex items-start gap-1.5 text-xs text-white/40">
-                          <span className="text-white/20 shrink-0 mt-0.5">—</span>
+                        <li key={item} className="flex items-start gap-1.5 text-xs text-theme-40">
+                          <span className="text-theme-20 shrink-0 mt-0.5">—</span>
                           {item}
                         </li>
                       ))}
@@ -469,10 +463,10 @@ export default function WhyBydPage() {
                 </div>
 
                 {/* Verdict */}
-                <div className="rounded-lg bg-emerald-500/[0.04] border border-emerald-500/10 p-3">
+                <div className="rounded-lg bg-accent-soft border p-3" style={{ borderColor: "var(--cz-accent-line)" }}>
                   <div className="flex items-start gap-2">
-                    <BadgeCheck size={14} className="text-emerald-400 shrink-0 mt-0.5" />
-                    <p className="text-sm text-white/70 leading-relaxed">{cmp.verdict}</p>
+                    <BadgeCheck size={14} className="text-accent shrink-0 mt-0.5" />
+                    <p className="text-sm text-theme-70 leading-relaxed">{cmp.verdict}</p>
                   </div>
                 </div>
               </div>
@@ -483,24 +477,25 @@ export default function WhyBydPage() {
 
       {/* ── CTA ── */}
       <section className="relative px-6 pb-16 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
-        <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-emerald-500 rounded-full opacity-[0.04] blur-[150px]" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
+        
         <div className="max-w-3xl mx-auto relative text-center">
           <div className="space-y-5 animate-fade-up">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/15 uppercase tracking-wide">
+            <span className="label-mono justify-center">
               <Car size={12} />
               Ready to Go Electric?
             </span>
-            <h2 className="text-3xl md:text-4xl font-[family-name:var(--font-syne)] font-bold text-white/90">
+            <h2 className="text-3xl md:text-4xl font-semibold text-theme-90">
               Own Your BYD. Find Your Monthly Payment.
             </h2>
-            <p className="text-sm md:text-base text-white/50 max-w-lg mx-auto">
+            <p className="text-sm md:text-base text-theme-50 max-w-lg mx-auto">
               Use our calculator to see your monthly payment in seconds. No registration required.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
               <Link
                 href="/#main-content"
-                className="group relative inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-300 hover:shadow-[0_0_50px_rgba(52,211,153,0.4)] hover:scale-105 active:scale-95"
+                className="hero-cta inline-flex items-center gap-2.5 bg-accent px-8 py-3.5 rounded-full font-bold text-sm"
+                style={{ color: "var(--cz-accent-ink)" }}
               >
                 <span className="relative z-10">Browse BYD Models</span>
               </Link>
@@ -508,7 +503,7 @@ export default function WhyBydPage() {
                 href="https://wa.me/601131933930?text=Saya%20berminat%20dengan%20BYD!%20Boleh%20bantu%20saya%20dengan%20maklumat%20lanjut%3F%20Terima%20kasih!"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-white/[0.12] text-white/70 text-sm font-semibold hover:bg-white/[0.04] hover:text-white transition-all"
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-[color:var(--cz-border-strong)] text-theme-70 text-sm font-semibold hover:bg-theme-alt hover:text-theme transition-all"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -518,19 +513,19 @@ export default function WhyBydPage() {
             </div>
 
             {/* Eligibility check — visible CTA */}
-            <div className="pt-6 border-t border-white/[0.06]">
-              <p className="text-xs text-white/30 mb-3">
+            <div className="pt-6 border-t border-[color:var(--cz-border)]">
+              <p className="text-xs text-theme-30 mb-3">
                 Not sure if you&apos;re eligible? Let us check for you.
               </p>
               <button
                 onClick={() => setShowForm(!showForm)}
-                className="w-full group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-emerald-500/25 text-emerald-400/80 text-sm font-semibold hover:bg-emerald-500/[0.06] hover:border-emerald-500/40 hover:text-emerald-300 transition-all"
+                className="cta-outline w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold"
               >
                 <ClipboardCheck size={14} className="transition-transform group-hover:scale-110" />
                 <span>
                   {showForm ? "Close" : "Check My Eligibility — Free & No Obligation"}
                 </span>
-                <ChevronDown size={12} className={`transition-transform duration-200 ${showForm ? "rotate-180" : ""}`} />
+                <ChevronDown size={12} className={`transition-transform ${showForm ? "rotate-180" : ""}`} style={{ transitionDuration: "var(--dur-short)" }} />
               </button>
               {showForm && (
                 <div
@@ -545,19 +540,19 @@ export default function WhyBydPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] py-8 px-6 text-center">
+      <footer className="border-t border-[color:var(--cz-border)] py-8 px-6 text-center">
         <div className="max-w-6xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-theme-30 hover:text-theme-60 transition-colors"
           >
             <ArrowLeft size={12} />
             Back to Loan Calculator
           </Link>
-          <p className="text-xs text-amber-400/50 mt-3 max-w-md mx-auto leading-relaxed">
+          <p className="text-xs text-counter mt-3 max-w-md mx-auto leading-relaxed">
             All comparisons and estimates are for illustrative purposes only. Data as of August 2026. Subject to change. Verify with authorised BYD dealer.
           </p>
-          <p className="text-xs text-white/20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
+          <p className="text-xs text-theme-20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -87,24 +87,24 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between gap-2">
           <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-1 text-sm text-white shrink-0" aria-label="BYD Miri Home">
             <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
-            <span className="font-[family-name:var(--font-syne)] font-bold text-sm sm:text-lg tracking-[0.08em] sm:tracking-[0.12em] ml-1 sm:ml-2">| MIRI</span>
+            <span className="font-wordmark text-[11px] sm:text-xs ml-2">/ MIRI</span>
           </Link>
 
           {/* Desktop links */}
           <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
-            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-white/90 transition-colors shrink-0 text-[11px] md:text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap">
+            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
               Home
             </Link>
-            <button onClick={() => scrollToSection("full-lineup")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("full-lineup")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Models
             </button>
-            <button onClick={() => scrollToSection("main-content")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("main-content")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Calculator
             </button>
-            <button onClick={() => scrollToSection("charging")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("charging")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Charging, Savings &amp; Warranty
             </button>
-            <button onClick={() => scrollToSection("contact")} className="hover:text-white/90 transition-colors shrink-0 text-[11px] font-medium text-white/50 px-2 py-3 whitespace-nowrap cursor-pointer">
+            <button onClick={() => scrollToSection("contact")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Contact Us
             </button>
           </div>
@@ -112,7 +112,7 @@ export default function Home() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setNavOpen((o) => !o)}
-            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
             aria-label={navOpen ? "Close menu" : "Open menu"}
             aria-expanded={navOpen}
           >
@@ -122,7 +122,7 @@ export default function Home() {
 
         {/* Mobile menu panel */}
         {navOpen && (
-          <div className="sm:hidden border-t border-white/[0.06] bg-theme/95 backdrop-blur-xl">
+          <div className="sm:hidden border-t bg-theme/95 backdrop-blur-xl" style={{ borderColor: "var(--cz-border)" }}>
             <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
               <Link
                 href="/"
@@ -130,7 +130,7 @@ export default function Home() {
                   setNavOpen(false);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
               >
                 Home
               </Link>
@@ -143,7 +143,7 @@ export default function Home() {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   {item.label}
                 </button>
@@ -158,26 +158,34 @@ export default function Home() {
 
       {/* ── Full Price List ── */}
       <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden scroll-mt-24">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
+        <div className="absolute inset-0 bg-theme" />
         <div className="max-w-6xl mx-auto relative">
           <SectionHeader
             icon={<Zap size={12} />}
             label="Complete BYD Lineup"
             title="Discover the Lineup. 6 Models, 10 Choices."
             subtitle="Explore every model. OTR pricing & monthly instalments below."
+            align="start"
             className="mb-6"
           />
 
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.06] bg-white/[0.01]">
+          {/* Mobile (< md): card list — every value visible, no horizontal scroll.
+              Desktop (md+): the full comparison table. */}
+          <div className="md:hidden space-y-2">
+            {vehicles.map((v) => (
+              <PricingCardMobile key={v.id} v={v} onCalc={handleSelect} />
+            ))}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto rounded-2xl border bg-theme-card" style={{ borderColor: "var(--cz-border)" }}>
             <table className="w-full text-left text-xs md:text-sm">
               <thead>
-                <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right hidden sm:table-cell">Range</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right leading-tight">OTR Price<br /><span className="text-[9px] font-normal normal-case text-white/25">(Rebate)</span></th>
-                  <th scope="col" className="px-1.5 py-3 md:hidden text-[11px] md:text-[11px] font-bold text-white/45 uppercase tracking-wider text-right">Monthly</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-emerald-400/90 uppercase tracking-wider text-right hidden md:table-cell">10% Down</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] md:text-[11px] font-bold text-amber-400/90 uppercase tracking-wider text-right hidden md:table-cell">0% Down</th>
+                <tr className="border-b bg-theme-alt" style={{ borderColor: "var(--cz-border-strong)" }}>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider">Model</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider text-right">Range</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider text-right leading-tight">OTR Price<br /><span className="text-[10px] font-normal normal-case text-theme-30">(Rebate)</span></th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-accent uppercase tracking-wider text-right">10% Down</th>
+                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-counter uppercase tracking-wider text-right">0% Down</th>
                   <th scope="col" className="px-2 py-3 w-6"></th>
                 </tr>
               </thead>
@@ -192,11 +200,11 @@ export default function Home() {
           <div className="text-center mt-4">
             <Link
               href="/pricelist"
-              className="inline-flex items-center gap-1.5 text-xs text-emerald-400/60 hover:text-emerald-400 transition-colors py-2 px-2"
+              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline underline-offset-2 transition-colors py-2 px-2"
             >
               View full details &rarr;
             </Link>
-            <p className="mt-2 text-xs md:text-xs text-white/30">
+            <p className="mt-2 text-xs text-theme-40">
               Monthly estimates: 10% or 0% down &middot; 9-year tenure &middot; 2.30% flat rate. Subject to bank approval T&amp;Cs.
             </p>
           </div>
@@ -206,20 +214,23 @@ export default function Home() {
       {/* ── Vehicle Section — Parking Lot Style ── */}
       <section
         id="main-content"
-        className="relative px-6 pt-8 md:pt-10 pb-0 scroll-mt-24"
-        style={{ backgroundColor: "#080808" }}
+        className="relative px-6 pt-8 md:pt-10 pb-0 scroll-mt-24 bg-theme"
       >
         <div className="absolute inset-0 parking-lot-bg opacity-30" />
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#080808] to-transparent" />
+        <div
+          className="absolute top-0 left-0 right-0 h-32"
+          style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, transparent 100%)" }}
+        />
 
         <div className="max-w-6xl mx-auto relative">
           {/* Section header */}
           <SectionHeader
-            icon={<span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+            icon={<span className="w-1.5 h-1.5 rounded-full bg-accent" />}
             label="Find Your Match"
             title="Calculate Your Monthly Payment"
             subtitle="Tap any model to open OTR pricing, specs & instant monthly estimates."
             size="lg"
+            align="start"
           />
 
           {/* Parking Lot Grid */}
@@ -239,8 +250,8 @@ export default function Home() {
       </section>
 
       {/* ── Extras: Charging & Warranty ── */}
-      <section id="charging" className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
+      <section id="charging" className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24 bg-theme">
+        <div className="absolute inset-0 bg-theme-alt" />
         <div className="absolute inset-0 parking-lot-bg opacity-15" />
         <div className="max-w-6xl mx-auto relative">
           <SectionHeader
@@ -248,6 +259,7 @@ export default function Home() {
             label="Extras"
             title="Charging, Savings & Warranty"
             subtitle="Everything you need to know about charging, savings and warranty coverage"
+            align="start"
           />
 
           {/* Charging Estimator */}
@@ -268,8 +280,7 @@ export default function Home() {
       </section>
 
       {/* ── Map & Location ── */}
-      <section className="relative px-6 py-12 md:py-16 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 50%, #080808 100%)" }} />
+      <section className="relative px-6 py-12 md:py-16 overflow-hidden bg-theme">
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
         <div className="max-w-6xl mx-auto relative">
           <SectionHeader
@@ -277,17 +288,19 @@ export default function Home() {
             label="Our Location"
             title="Visit Our Showroom"
             subtitle="Kah Progression Auto — Official BYD Dealer Miri"
+            align="start"
           />
 
           <div className="grid md:grid-cols-2 gap-4 items-stretch">
             {/* Map */}
             <div
-              className="rounded-2xl overflow-hidden border border-white/[0.06] bg-black/40 min-h-[300px] md:min-h-[320px]"
+              className="rounded-2xl overflow-hidden border bg-theme-card min-h-[300px] md:min-h-[320px]"
+              style={{ borderColor: "var(--cz-border)" }}
             >
               <iframe
                 src="https://www.google.com/maps?q=4.4279602,114.0020263&output=embed"
                 className="w-full h-full"
-                style={{ minHeight: "300px", filter: "invert(0.88) hue-rotate(180deg)" }}
+                style={{ minHeight: "300px", filter: "invert(0.88) hue-rotate(160deg) saturate(0.7)" }}
                 loading="lazy"
                 allowFullScreen
                 title="BYD Kah Progression Auto Miri"
@@ -298,16 +311,16 @@ export default function Home() {
             <div
               className="flex flex-col justify-center gap-1.5"
             >
-              <div className="rounded-xl p-3 bg-white/[0.03] border border-white/[0.06]">
+              <div className="rounded-xl p-3 bg-theme-card border" style={{ borderColor: "var(--cz-border)" }}>
                 <div className="flex items-start gap-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-emerald-400">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-accent">
                     <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                   <div>
                     <h4 className="text-sm font-bold text-theme-90">BYD Kah Progression Auto</h4>
                     <p className="text-xs text-theme-50">Official BYD Dealer · Sales · Service</p>
-                    <p className="text-xs text-theme-60 mt-1">
+                    <p className="text-xs text-theme-50 mt-1">
                       Lot 1829, Jalan Krokop Utama, 98000 Miri, Sarawak
                     </p>
                   </div>
@@ -319,7 +332,7 @@ export default function Home() {
                   href="https://www.google.com/maps?q=4.4279602,114.0020263"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold hover:bg-emerald-500/20 hover:border-emerald-500/40 transition-all whitespace-nowrap"
+                  className="cta-outline flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold whitespace-nowrap"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
@@ -335,7 +348,7 @@ export default function Home() {
                   href="https://www.waze.com/ul?ll=4.4279602,114.0020263&navigate=yes"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl bg-white/[0.03] border border-white/[0.06] text-theme-70 text-sm font-semibold hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20 transition-all whitespace-nowrap"
+                  className="cta-outline flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold whitespace-nowrap"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="#33CCFF"/>
@@ -352,15 +365,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Schedule a Test Drive ── */}
-      <section id="contact" className="relative px-6 py-16 md:py-20 overflow-hidden scroll-mt-24">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #080808 0%, #0c0c0c 50%, #080808 100%)" }} />
-        <div className="absolute inset-0 parking-lot-bg opacity-15" />
-        <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] bg-emerald-500 rounded-full opacity-[0.04] blur-[120px]" />
-        <div className="max-w-3xl mx-auto relative text-center">
-          <div
-            className="space-y-5"
-          >
+      {/* ── Schedule a Test Drive — Minimal: pure paper ── */}
+      <section id="contact" className="relative px-6 py-16 md:py-20 overflow-hidden scroll-mt-24 bg-theme">
+        <div className="max-w-2xl mx-auto relative text-center">
+          <div className="space-y-5">
             <SectionHeader
               icon={<Clock size={12} />}
               label="Experience the Future"
@@ -380,9 +388,9 @@ export default function Home() {
               href="https://wa.me/601131933930?text=Saya%20nak%20jadualkan%20test%20drive%20untuk%20BYD!%20Boleh%20bantu%20saya%20tentang%20masa%20dan%20model%20yang%20tersedia%3F%20Terima%20kasih!"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-3.5 rounded-full font-bold text-base transition-all duration-300 hover:shadow-[0_0_50px_rgba(52,211,153,0.4)] hover:scale-105 active:scale-95"
+              className="hero-cta relative inline-flex items-center gap-3 bg-accent px-8 py-3.5 rounded-full font-bold text-base"
+              style={{ color: "var(--cz-accent-ink)" }}
             >
-              <div className="absolute inset-[-4px] rounded-full bg-gradient-to-r from-emerald-400/20 to-emerald-500/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <span className="relative z-10 flex items-center gap-2.5">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -393,23 +401,20 @@ export default function Home() {
           </div>
 
           {/* Check Eligibility — bottom CTA */}
-          <div
-            className="mt-6 pt-6 border-t border-white/[0.06]"
-          >
+          <div className="mt-6 pt-6 border-t" style={{ borderColor: "var(--cz-border)" }}>
             <p className="text-xs text-theme-50 mb-3">
               Not sure if you&apos;re eligible? Let us check for you.
             </p>
             <button
               onClick={() => setShowEligibility(!showEligibility)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-emerald-500/20 text-emerald-400/70 text-sm font-semibold hover:bg-emerald-500/[0.06] hover:border-emerald-500/30 hover:text-emerald-300 transition-all"
+              className="cta-outline inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
             >
               <ClipboardCheck size={14} />
               Check My Eligibility — Free & No Obligation
               <ChevronDown
                 size={14}
-                className={`transition-transform duration-200 ${
-                  showEligibility ? "rotate-180" : ""
-                }`}
+                className={`transition-transform ${showEligibility ? "rotate-180" : ""}`}
+                style={{ transitionDuration: "var(--dur-short)" }}
               />
             </button>
 
@@ -428,15 +433,15 @@ export default function Home() {
           <div className="space-y-1.5">
             <p>&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
             <div className="flex items-center justify-center flex-wrap gap-x-3 gap-y-2 text-xs">
-              <button onClick={() => setModalType("privacy")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
+              <button onClick={() => setModalType("privacy")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
                 Privacy Policy
               </button>
               <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("terms")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
+              <button onClick={() => setModalType("terms")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
                 Terms of Use
               </button>
               <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("disclaimer")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors py-2 px-1">
+              <button onClick={() => setModalType("disclaimer")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
                 Disclaimer
               </button>
             </div>
@@ -456,7 +461,7 @@ export default function Home() {
           <>
             {/* Header */}
             <div className="mb-3 text-center">
-              <h3 id="calc-modal-title" className="text-lg font-[family-name:var(--font-syne)] font-bold text-theme-90">
+              <h3 id="calc-modal-title" className="text-lg text-theme-90 font-semibold">
                 {selectedVehicle.name}
               </h3>
               <p className="text-xs text-theme-50 mt-0.5">
@@ -498,7 +503,7 @@ export default function Home() {
                 href={selectedVehicle.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400/70 hover:text-emerald-400 transition-colors py-2"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline hover:decoration-from-font transition-colors py-2"
               >
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -518,8 +523,8 @@ export default function Home() {
 
             {/* Loan Calculator heading */}
             <h3
-              className="text-xl font-[family-name:var(--font-syne)] font-bold text-center text-theme-90 mb-3 tracking-wide"
-              style={{ letterSpacing: "0.05em" }}
+              className="font-display text-xl text-center text-theme-90 mb-3"
+              style={{ fontWeight: 600, letterSpacing: "-0.025em" }}
             >
               Loan Calculator
             </h3>
@@ -541,7 +546,7 @@ export default function Home() {
         {/* Content */}
         {modalType === "privacy" && (
                 <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg font-[family-name:var(--font-syne)] font-bold text-theme-90">Privacy Policy</h3>
+                  <h3 className="text-lg text-theme-90 font-semibold">Privacy Policy</h3>
                   <p>
                     BYD Miri values your privacy. This calculator does not store,
                     collect, or share any personal information you enter. All
@@ -553,7 +558,7 @@ export default function Home() {
                   </p>
                   <p>
                     For inquiries, contact Ridzuan Jahari at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-emerald-400 underline underline-offset-2">
+                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
                       011 3193 3930
                     </a>.
                   </p>
@@ -562,7 +567,7 @@ export default function Home() {
 
               {modalType === "terms" && (
                 <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg font-[family-name:var(--font-syne)] font-bold text-theme-90">Terms of Use</h3>
+                  <h3 className="text-lg text-theme-90 font-semibold">Terms of Use</h3>
                   <p>
                     The monthly instalment estimates provided are for preliminary
                     reference only and do not constitute a formal financing offer.
@@ -579,7 +584,7 @@ export default function Home() {
                   </p>
                   <p>
                     For a formal quotation, please contact Ridzuan Jahari at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-emerald-400 underline underline-offset-2">
+                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
                       011 3193 3930
                     </a>.
                   </p>
@@ -588,7 +593,7 @@ export default function Home() {
 
               {modalType === "disclaimer" && (
                 <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg font-[family-name:var(--font-syne)] font-bold text-theme-90">Disclaimer</h3>
+                  <h3 className="text-lg text-theme-90 font-semibold">Disclaimer</h3>
                   <p className="flex items-center gap-1.5 font-semibold text-theme-80">
                     <Info size={15} className="shrink-0" />
                     Monthly instalment estimates shown are for preliminary reference only.
@@ -603,7 +608,7 @@ export default function Home() {
                     CCRIS/CTOS records, current financial commitments, and applicable
                     financing rates at the time of application.
                   </p>
-                  <p className="flex items-center gap-1.5 font-semibold text-theme-80 pt-2 border-t border-white/[0.06]">
+                  <p className="flex items-center gap-1.5 font-semibold text-theme-80 pt-2 border-t" style={{ borderColor: "var(--cz-border)" }}>
                     <Info size={15} className="shrink-0" />
                     Charging estimates
                   </p>
@@ -618,7 +623,7 @@ export default function Home() {
                   <p>
                     For a more accurate assessment based on your financial profile, please
                     contact Ridzuan at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-emerald-400 underline underline-offset-2">
+                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
                       011 3193 3930
                     </a>.
                   </p>
@@ -629,7 +634,87 @@ export default function Home() {
   );
 }
 
-/* ── Pricing Table Row (default promo rebate drives monthly) ── */
+/* ── Pricing Card (mobile) — every figure on-screen, stacked rows,
+      no horizontal scroll. Card navigates to pricelist; the calc
+      button stops propagation and opens the calculator modal. ── */
+function PricingCardMobile({ v, onCalc }: { v: Vehicle; onCalc: (id: string) => void }) {
+  const router = useRouter();
+  const rebate = activeRebate(v);
+  const monthly = calcCardMonthly(v.otr, rebate);
+  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => router.push("/pricelist")}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push("/pricelist");
+        }
+      }}
+      className="rounded-xl border bg-theme-card p-3 cursor-pointer transition-colors hover:bg-theme-alt"
+      style={{ borderColor: "var(--cz-border)" }}
+    >
+      {/* Row 1: image + name + calc button */}
+      <div className="flex items-center gap-3">
+        <div
+          className="w-16 h-10 rounded-md overflow-hidden bg-black/40 shrink-0 border"
+          style={{ borderColor: "var(--cz-border)" }}
+        >
+          <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-theme-90 text-sm leading-snug truncate">{v.name}</div>
+          <div className="text-[11px] text-theme-40 leading-tight">{v.range} km range</div>
+        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onCalc(v.id);
+          }}
+          className="calc-btn flex items-center justify-center w-11 h-11 rounded-md shrink-0"
+          aria-label={`Calculate monthly payment for ${v.name}`}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" />
+            <line x1="8" y1="6" x2="16" y2="6" />
+            <line x1="8" y1="10" x2="16" y2="10" />
+            <line x1="8" y1="14" x2="12" y2="14" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Row 2: figures — OTR left, monthly pair right. Figures NEVER wrap;
+          labels yield space first (truncate) so RM values stay kemas. */}
+      <div
+        className="flex items-end justify-between gap-3 mt-3 pt-3 border-t"
+        style={{ borderColor: "var(--cz-border)" }}
+      >
+        <div className="min-w-0">
+          <div className="text-[10px] text-theme-30 uppercase tracking-wide truncate">OTR (Rebate)</div>
+          <div className="font-data text-theme-80 text-sm leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
+          <div className="font-data text-counter text-[11px] leading-tight whitespace-nowrap">−RM{fmt(rebate)}</div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="whitespace-nowrap">
+            <span className="text-[10px] text-accent mr-1">10%</span>
+            <span className="font-data font-semibold text-accent text-sm whitespace-nowrap">RM{fmt(monthly)}</span>
+            <span className="text-accent text-[10px]">/mo</span>
+          </div>
+          <div className="whitespace-nowrap mt-0.5">
+            <span className="text-[10px] text-counter mr-1">0%</span>
+            <span className="font-data font-semibold text-counter text-sm whitespace-nowrap">RM{fmt(monthlyFull)}</span>
+            <span className="text-counter text-[10px]">/mo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Pricing Table Row (desktop only, md+) ── */
 function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string) => void; index: number }) {
   const router = useRouter();
   const rebate = activeRebate(v);
@@ -647,50 +732,37 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
       }}
       role="button"
       tabIndex={0}
-      className={`border-b border-white/[0.04] transition-colors cursor-pointer ${
-        index % 2 === 1 ? "bg-white/[0.015]" : ""
-      } hover:bg-white/[0.05]`}
+      className={`border-b transition-colors cursor-pointer ${
+        index % 2 === 1 ? "bg-theme-alt" : ""
+      } hover:bg-white/[0.04]`}
+      style={{ borderColor: "var(--cz-border)" }}
     >
       <td className="px-2 py-2.5 md:px-3 md:py-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-12 h-7 sm:w-14 sm:h-8 md:w-16 md:h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border border-white/[0.05]">
+          <div className="w-16 h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border" style={{ borderColor: "var(--cz-border)" }}>
             <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
           </div>
           <div className="min-w-0">
-            <div className="font-semibold text-theme-90 text-[11px] md:text-sm leading-snug">{v.name}</div>
-            <div className="hidden md:block text-[10px] text-white/35 truncate">{v.category}</div>
+            <div className="font-medium text-theme-90 text-sm leading-snug">{v.name}</div>
+            <div className="text-[10px] text-theme-30 truncate">{v.category}</div>
           </div>
         </div>
       </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden sm:table-cell">
-        <span className="font-mono text-white/55 text-xs md:text-sm tabular-nums">{v.range}</span>
-        <span className="text-white/30 text-[10px] md:text-[11px]"> km</span>
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
+        <span className="font-data text-theme-50 text-sm">{v.range}</span>
+        <span className="text-theme-30 text-[11px]"> km</span>
       </td>
       <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
-        <div className="font-mono text-theme-80 text-xs md:text-sm tabular-nums leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
-        <div className="font-mono text-red-400/80 text-[10px] md:text-[11px] tabular-nums leading-tight whitespace-nowrap">(-RM{fmt(rebate)})</div>
+        <div className="font-data text-theme-80 text-sm leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
+        <div className="font-data text-counter text-[11px] leading-tight whitespace-nowrap">(-RM{fmt(rebate)})</div>
       </td>
-      <td className="px-1.5 py-2.5 md:hidden text-right whitespace-nowrap">
-        <div className="flex flex-col items-end gap-0.5 leading-tight">
-          <span className="whitespace-nowrap">
-            <span className="text-[10px] text-emerald-400/50 font-medium mr-1">10%</span>
-            <span className="font-mono font-bold text-emerald-400 text-[11px] tabular-nums">RM{fmt(monthly)}</span>
-            <span className="text-emerald-400/50 text-[10px] font-medium">/mo</span>
-          </span>
-          <span className="whitespace-nowrap">
-            <span className="text-[10px] text-amber-400/50 font-medium mr-1">0%</span>
-            <span className="font-mono font-bold text-amber-400 text-[11px] tabular-nums">RM{fmt(monthlyFull)}</span>
-            <span className="text-amber-400/50 text-[10px] font-medium">/mo</span>
-          </span>
-        </div>
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
+        <span className="font-data font-semibold text-accent text-[15px]">RM{fmt(monthly)}</span>
+        <span className="text-accent text-[11px] font-medium">/mo</span>
       </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden md:table-cell">
-        <span className="font-mono font-bold text-emerald-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthly)}</span>
-        <span className="text-emerald-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
-      </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap hidden md:table-cell">
-        <span className="font-mono font-bold text-amber-400 text-[11px] md:text-[15px] tabular-nums">RM{fmt(monthlyFull)}</span>
-        <span className="text-amber-400/50 text-[11px] md:text-[11px] font-medium">/mo</span>
+      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
+        <span className="font-data font-semibold text-counter text-[15px]">RM{fmt(monthlyFull)}</span>
+        <span className="text-counter text-[11px] font-medium">/mo</span>
       </td>
       <td className="px-2 py-2.5 md:py-3">
         <button
@@ -698,7 +770,7 @@ function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string
             e.stopPropagation();
             onCalc(v.id);
           }}
-          className="flex items-center justify-center w-11 h-11 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400/60 hover:bg-amber-400/20 hover:text-amber-400 hover:border-amber-400/40 transition-all"
+          className="calc-btn flex items-center justify-center w-11 h-11 rounded-md"
           aria-label={`Calculate monthly payment for ${v.name}`}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

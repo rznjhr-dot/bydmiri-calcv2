@@ -8,6 +8,14 @@
 
 html {
   scroll-behavior: smooth;
+  /* Industry-standard defense (WCAG/Hallmark gate 34): a stray wide
+     element should never create page-level horizontal scrolling.
+     "clip" (not "hidden") so no scroll is possible programmatically. */
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -20,56 +28,119 @@ input[type="number"]::-webkit-outer-spin-button {
   color: black;
 }
 
-/* ── Theme CSS Variables ── */
+/* ──────────────────────────────────────────────────────────────
+   DESIGN TOKENS — Hallmark-inspired system
+   Paper → Ink → Neutrals → Accent, all OKLCH, all named.
+   Dark theme anchored to emerald hue 160; light theme keeps the
+   same anchor (hue never switches between modes, only L and C).
+   ────────────────────────────────────────────────────────────── */
 
-:root {
-  --cz-bg: #050505;
-  --cz-bg-alt: #0A0A0A;
-  --cz-bg-section: #050505;
-  --cz-bg-card: #080808;
-  --cz-text: #FFFFFF;
-  --cz-text-90: rgba(255,255,255,0.9);
-  --cz-text-80: rgba(255,255,255,0.8);
-  --cz-text-70: rgba(255,255,255,0.7);
-  --cz-text-50: rgba(255,255,255,0.5);
-  --cz-text-40: rgba(255,255,255,0.4);
-  --cz-text-30: rgba(255,255,255,0.3);
-  --cz-text-20: rgba(255,255,255,0.2);
-  --cz-border: rgba(255,255,255,0.1);
-  --cz-nav: rgba(5,5,5,0.8);
-  --cz-input: rgba(0,0,0,0.3);
-  --cz-ledger: rgba(5,5,5,0.8);
-  --cz-hero-from: #050505;
-  --cz-hero-via: #0A0A0A;
-  --cz-hero-to: #050505;
-  --cz-footer: #050505;
-  --cz-card-border: rgba(255,255,255,0.1);
-  --cz-ring: rgba(0,230,118,0.15);
+:root,
+[data-theme="dark"] {
+  /* Paper — tinted near-black, never #000 */
+  --cz-bg:          oklch(15% 0.008 160);
+  --cz-bg-alt:      oklch(17% 0.010 160);
+  --cz-bg-section:  oklch(15% 0.008 160);
+  --cz-bg-card:     oklch(16.5% 0.009 160);
+
+  /* Ink — tinted near-white, never #fff */
+  --cz-text:        oklch(96% 0.006 160);
+  --cz-text-90:     oklch(93% 0.006 160);
+  --cz-text-80:     oklch(88% 0.006 160);
+  --cz-text-70:     oklch(80% 0.006 160);
+  --cz-text-50:     oklch(66% 0.008 160);
+  --cz-text-40:     oklch(55% 0.008 160);
+  --cz-text-30:     oklch(42% 0.008 160);
+  --cz-text-20:     oklch(30% 0.008 160);
+
+  /* Rules & surfaces */
+  --cz-border:        oklch(28% 0.010 160);
+  --cz-border-strong: oklch(38% 0.012 160);
+  --cz-nav:           oklch(15% 0.008 160 / 0.8);
+  --cz-input:         oklch(19% 0.010 160);
+  --cz-ledger:        oklch(17.5% 0.010 160);
+
+  /* Hero — tinted dark, single subtle two-stop gradient */
+  --cz-hero-from:    oklch(16% 0.012 160);
+  --cz-hero-via:     oklch(15% 0.010 160);
+  --cz-hero-to:      oklch(14% 0.008 160);
+  --cz-footer:       oklch(14.5% 0.008 160);
+  --cz-card-border:  oklch(28% 0.010 160);
+  --cz-ring:         oklch(80% 0.16 163 / 0.15);
+
+  /* Accent — one accent (emerald), meaningful chroma */
+  --cz-accent:       oklch(80% 0.19 163);
+  --cz-accent-strong: oklch(72% 0.19 163);
+  --cz-accent-ink:   oklch(20% 0.05 163);   /* text on accent fill */
+  --cz-accent-soft:  oklch(80% 0.19 163 / 0.10);   /* selection/washes */
+  --cz-accent-line:  oklch(80% 0.19 163 / 0.35);
+
+  /* Functional data-coding counterpoint (0%-down figures) */
+  --cz-counter:      oklch(80% 0.16 75);    /* amber, tuned for dark */
+  --cz-counter-soft: oklch(80% 0.16 75 / 0.10);
+  --cz-counter-line: oklch(80% 0.16 75 / 0.35);
+
+  /* Focus */
+  --cz-focus:        oklch(80% 0.19 163);
 }
 
 [data-theme="light"] {
-  --cz-bg: #FFFFFF;
-  --cz-bg-alt: #F0FDF4;
-  --cz-bg-section: #F8FAFC;
-  --cz-bg-card: #FFFFFF;
-  --cz-text: #050505;
-  --cz-text-90: #0A0A0A;
-  --cz-text-80: #1F2937;
-  --cz-text-70: #374151;
-  --cz-text-50: #6B7280;
-  --cz-text-40: #9CA3AF;
-  --cz-text-30: #D1D5DB;
-  --cz-text-20: #E5E7EB;
-  --cz-border: #E5E7EB;
-  --cz-nav: rgba(255,255,255,0.85);
-  --cz-input: rgba(255,255,255,0.3);
-  --cz-ledger: #F0FDF4;
-  --cz-hero-from: #00E676;
-  --cz-hero-via: #00D4FF;
-  --cz-hero-to: #059669;
-  --cz-footer: #F8FAFC;
-  --cz-card-border: #E5E7EB;
-  --cz-ring: rgba(0,230,118,0.1);
+  /* Paper — tinted off-white, never #fff */
+  --cz-bg:          oklch(97.5% 0.006 160);
+  --cz-bg-alt:      oklch(95% 0.010 160);
+  --cz-bg-section:  oklch(97% 0.007 160);
+  --cz-bg-card:     oklch(98.5% 0.005 160);
+
+  /* Ink — tinted near-black */
+  --cz-text:        oklch(20% 0.010 160);
+  --cz-text-90:     oklch(25% 0.010 160);
+  --cz-text-80:     oklch(30% 0.012 160);
+  --cz-text-70:     oklch(38% 0.012 160);
+  --cz-text-50:     oklch(50% 0.012 160);
+  --cz-text-40:     oklch(58% 0.010 160);
+  --cz-text-30:     oklch(70% 0.008 160);
+  --cz-text-20:     oklch(84% 0.006 160);
+
+  /* Rules & surfaces */
+  --cz-border:        oklch(88% 0.008 160);
+  --cz-border-strong: oklch(78% 0.010 160);
+  --cz-nav:           oklch(97.5% 0.006 160 / 0.85);
+  --cz-input:         oklch(93% 0.010 160);
+  --cz-ledger:        oklch(95.5% 0.008 160);
+
+  /* Hero — light mode keeps a quiet tinted wash */
+  --cz-hero-from:    oklch(96% 0.020 160);
+  --cz-hero-via:     oklch(95% 0.014 160);
+  --cz-hero-to:      oklch(97% 0.010 160);
+  --cz-footer:       oklch(95% 0.010 160);
+  --cz-card-border:  oklch(88% 0.008 160);
+  --cz-ring:         oklch(55% 0.16 163 / 0.10);
+
+  /* Accent — same hue, darker for contrast on light paper */
+  --cz-accent:        oklch(55% 0.17 163);
+  --cz-accent-strong: oklch(48% 0.17 163);
+  --cz-accent-ink:    oklch(98% 0.005 160);
+  --cz-accent-soft:   oklch(55% 0.17 163 / 0.10);
+  --cz-accent-line:   oklch(55% 0.17 163 / 0.40);
+
+  /* Functional counterpoint */
+  --cz-counter:      oklch(55% 0.15 75);
+  --cz-counter-soft: oklch(55% 0.15 75 / 0.10);
+  --cz-counter-line: oklch(55% 0.15 75 / 0.40);
+
+  /* Focus */
+  --cz-focus:        oklch(48% 0.17 163);
+}
+
+/* ── Motion tokens — named easings & duration buckets ── */
+:root {
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);     /* elements entering */
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);     /* elements leaving  */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);    /* state toggles     */
+
+  --dur-micro: 120ms;   /* button press, color shift    */
+  --dur-short: 220ms;   /* hover lift, menu open        */
+  --dur-long:  420ms;   /* modal, page reveal           */
 }
 
 /* ── Theme utility classes ── */
@@ -88,16 +159,76 @@ input[type="number"]::-webkit-outer-spin-button {
 .text-theme-20 { color: var(--cz-text-20); }
 .border-theme { border-color: var(--cz-border); }
 
+/* Accent utilities — the one accent, referenced by token everywhere */
+.text-accent { color: var(--cz-accent); }
+.text-accent-strong { color: var(--cz-accent-strong); }
+.bg-accent { background-color: var(--cz-accent); }
+.bg-accent-soft { background-color: var(--cz-accent-soft); }
+.border-accent-line { border-color: var(--cz-accent-line); }
+.text-counter { color: var(--cz-counter); }
+.bg-counter-soft { background-color: var(--cz-counter-soft); }
+.border-counter-line { border-color: var(--cz-counter-line); }
+
+/* Data font — the mono outlier tags financial figures ONLY */
+.font-data {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Quiet mono label — the Minimal eyebrow (line prefix, not a pill) */
+.label-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;           /* 11px */
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cz-text-40);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.label-mono::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--cz-accent);
+  flex-shrink: 0;
+}
+
+/* Display headline — the Minimal register:
+   light 300 against one 600 moment, aggressive negative tracking */
+.font-display {
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  font-synthesis-weight: none;
+}
+
+.font-display strong,
+.font-display .strong {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+/* Wordmark — mono, tracked, the one branded mono moment */
+.font-wordmark {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
 /* ── Focus styles for keyboard nav ── */
 *:focus-visible {
-  outline: 2px solid #34D399;
+  outline: 2px solid var(--cz-focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #34D399;
+  outline: 2px solid var(--cz-focus);
   outline-offset: 2px;
 }
 
@@ -115,31 +246,13 @@ a:focus-visible {
   display: none;
 }
 
-/* ── Animations ── */
-
-@keyframes blob {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(15px, -25px) scale(1.05); }
-  50% { transform: translate(-10px, 10px) scale(0.95); }
-  75% { transform: translate(20px, 15px) scale(1.02); }
-}
-
-.animate-blob { animation: blob 20s infinite ease-in-out; }
-
-.animation-delay-2000 { animation-delay: 5s; }
-.animation-delay-4000 { animation-delay: 10s; }
-
-/* Gradient text utility */
-.text-gradient {
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* ── CSS Animations (replaces framer-motion) ── */
+/* ──────────────────────────────────────────────────────────────
+   ANIMATIONS — one orchestrated entrance, then the page settles.
+   Cap total stagger ~480ms. transform/opacity only.
+   ────────────────────────────────────────────────────────────── */
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -149,35 +262,26 @@ a:focus-visible {
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-20px); }
 }
 
 .animate-fade-up {
   opacity: 0;
-  animation: fade-up 0.6s ease-out forwards;
+  animation: fade-up 0.42s var(--ease-out) forwards;
 }
 
 .animate-fade-in {
   opacity: 0;
-  animation: fade-in 0.2s ease-out forwards;
+  animation: fade-in 0.2s var(--ease-out) forwards;
 }
 
 .animate-scale-in {
   opacity: 0;
-  animation: scale-in 0.25s ease-out forwards;
+  animation: scale-in 0.25s var(--ease-out) forwards;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* ── Reduced motion ── */
+/* ── Reduced motion — collapses spatial motion to opacity ── */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -186,8 +290,6 @@ a:focus-visible {
   .animate-fade-up,
   .animate-fade-in,
   .animate-scale-in,
-  .animate-float,
-  .animate-blob,
   .parking-spot {
     animation: none !important;
     opacity: 1 !important;
@@ -195,51 +297,96 @@ a:focus-visible {
   }
 }
 
-/* Circuit board grid — PCB-inspired traces and solder points */
+/* ──────────────────────────────────────────────────────────────
+   TEXTURES — quiet, single-purpose, part of the theme voice
+   ────────────────────────────────────────────────────────────── */
+
+/* Circuit grid — PCB-inspired traces, hero only */
 .circuit-grid {
   background-image:
     repeating-linear-gradient(
       90deg,
-      rgba(0, 230, 118, 0.04) 0px,
-      rgba(0, 230, 118, 0.04) 1px,
+      oklch(80% 0.19 163 / 0.035) 0px,
+      oklch(80% 0.19 163 / 0.035) 1px,
       transparent 1px,
       transparent 60px
     ),
     repeating-linear-gradient(
       0deg,
-      rgba(0, 212, 255, 0.04) 0px,
-      rgba(0, 212, 255, 0.04) 1px,
+      oklch(80% 0.19 163 / 0.035) 0px,
+      oklch(80% 0.19 163 / 0.035) 1px,
       transparent 1px,
       transparent 60px
     ),
     radial-gradient(
       circle at 50% 50%,
-      rgba(0, 230, 118, 0.08) 0px,
-      rgba(0, 230, 118, 0.08) 2px,
+      oklch(80% 0.19 163 / 0.07) 0px,
+      oklch(80% 0.19 163 / 0.07) 2px,
       transparent 2px
     );
   background-size: 60px 60px, 60px 60px, 30px 30px;
   background-position: 0 0, 0 0, 15px 15px;
 }
 
-/* ── Parking Lot ── */
+[data-theme="light"] .circuit-grid {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      oklch(55% 0.17 163 / 0.05) 0px,
+      oklch(55% 0.17 163 / 0.05) 1px,
+      transparent 1px,
+      transparent 60px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      oklch(55% 0.17 163 / 0.05) 0px,
+      oklch(55% 0.17 163 / 0.05) 1px,
+      transparent 1px,
+      transparent 60px
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      oklch(55% 0.17 163 / 0.08) 0px,
+      oklch(55% 0.17 163 / 0.08) 2px,
+      transparent 2px
+    );
+}
 
+/* Parking lot — faint asphalt texture for data sections */
 .parking-lot-bg {
-  background-color: #080808;
+  background-color: var(--cz-bg);
   background-image:
     repeating-linear-gradient(
       0deg,
       transparent,
       transparent 3px,
-      rgba(255,255,255,0.008) 3px,
-      rgba(255,255,255,0.008) 4px
+      oklch(96% 0.006 160 / 0.012) 3px,
+      oklch(96% 0.006 160 / 0.012) 4px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 3px,
-      rgba(255,255,255,0.005) 3px,
-      rgba(255,255,255,0.005) 4px
+      oklch(96% 0.006 160 / 0.008) 3px,
+      oklch(96% 0.006 160 / 0.008) 4px
+    );
+}
+
+[data-theme="light"] .parking-lot-bg {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      oklch(20% 0.010 160 / 0.012) 3px,
+      oklch(20% 0.010 160 / 0.012) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      oklch(20% 0.010 160 / 0.008) 3px,
+      oklch(20% 0.010 160 / 0.008) 4px
     );
 }
 
@@ -249,15 +396,16 @@ a:focus-visible {
   width: 100%;
   max-width: 240px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--dur-short) var(--ease-out);
 }
 
 .parking-spot:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .parking-spot.selected {
-  box-shadow: 0 0 35px rgba(0,230,118,0.15);
+  outline: 1px solid var(--cz-accent-line);
+  outline-offset: 2px;
   transform: translateY(-1px);
 }
 
@@ -273,5 +421,108 @@ a:focus-visible {
 .specs-bar-item .spec-icon {
   width: 12px;
   height: 12px;
-  color: #34D399;
+  color: var(--cz-accent);
+}
+
+/* ── Scroll reveal (one-shot, IntersectionObserver-driven) ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-long) var(--ease-out),
+    transform var(--dur-long) var(--ease-out);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── CTA hover — translateY(-1px), never shadow-glow on dark ── */
+.hero-cta {
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+
+.hero-cta:hover {
+  transform: translateY(-1px);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+/* ── Outline button — border + color shift, no glow ── */
+.cta-outline {
+  border: 1px solid var(--cz-accent-line);
+  color: var(--cz-accent);
+  background-color: transparent;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
+}
+
+.cta-outline:hover {
+  background-color: var(--cz-accent-soft);
+  border-color: var(--cz-accent);
+  color: var(--cz-accent-strong);
+}
+
+/* ── Calc button — counter-tinted, no glow ── */
+.calc-btn {
+  border: 1px solid var(--cz-counter-line);
+  background-color: var(--cz-counter-soft);
+  color: var(--cz-counter);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out);
+}
+
+.calc-btn:hover {
+  border-color: var(--cz-counter);
+  color: var(--cz-counter);
+}
+
+/* ── Vehicle card banner — hairline border, no glow ── */
+.spot-banner {
+  border: 1px solid var(--cz-border);
+  background-color: var(--cz-bg-card);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
+}
+
+.spot-banner:hover {
+  border-color: var(--cz-accent-line);
+  background-color: var(--cz-bg-alt);
+}
+
+.spot-icon {
+  border: 1px solid var(--cz-accent-line);
+  background-color: var(--cz-accent-soft);
+}
+
+/* ── Form inputs — shared surface, token-driven ── */
+.field {
+  background-color: var(--cz-input);
+  border: 1px solid var(--cz-border);
+  color: var(--cz-text);
+}
+
+.field::placeholder {
+  color: var(--cz-text-30);
+}
+
+.field:focus {
+  border-color: var(--cz-accent-line);
+  outline: none;
 }

@@ -39,6 +39,9 @@ yarn-error.log*
 # ghost
 .ghost
 
+# browser test artifacts
+.playwright-mcp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

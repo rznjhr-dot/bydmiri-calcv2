@@ -22,10 +22,10 @@ const inputStyle: React.CSSProperties = {
   color: "var(--cz-text-80, #ddd)",
 };
 
-const labelCls = "block text-[11px] font-semibold uppercase tracking-wide text-white/40 mb-1.5";
+const labelCls = "block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5";
 
 const fieldCls =
-  "w-full py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors focus:border-emerald-500/40";
+  "w-full py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors focus:border-[color:var(--cz-accent-line)]";
 
 const VEHICLES_BY_ID = new Map(vehicles.map((v) => [v.id, v]));
 
@@ -116,15 +116,15 @@ export default function FuelSavingsCalculator() {
   const showResults = calculated && result.valid;
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 md:p-6">
+    <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-          <TrendingDown size={15} className="text-emerald-400" />
+        <div className="w-8 h-8 rounded-lg border flex items-center justify-center">
+          <TrendingDown size={15} className="text-accent" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-white/80">Fuel vs EV Running Cost</h3>
-          <p className="text-xs text-white/30">Estimate your annual savings by switching to electric</p>
+          <h3 className="text-sm font-bold text-theme-80">Fuel vs EV Running Cost</h3>
+          <p className="text-xs text-theme-30">Estimate your annual savings by switching to electric</p>
         </div>
       </div>
 
@@ -135,7 +135,7 @@ export default function FuelSavingsCalculator() {
           <div>
             <label className={labelCls}>BYD Model</label>
             <div className="relative">
-              <Car size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+              <Car size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
@@ -157,7 +157,7 @@ export default function FuelSavingsCalculator() {
             <div>
               <label className={labelCls}>Fuel Price (RM/L)</label>
               <div className="relative">
-                <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                 <input
                   type="number"
                   inputMode="decimal"
@@ -176,7 +176,7 @@ export default function FuelSavingsCalculator() {
             <div>
               <label className={labelCls}>Electricity (RM/kWh)</label>
               <div className="relative">
-                <Zap size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                <Zap size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                 <input
                   type="number"
                   inputMode="decimal"
@@ -201,7 +201,7 @@ export default function FuelSavingsCalculator() {
           <div>
             <label className={labelCls}>Electricity Tariff</label>
             <div className="relative">
-              <Zap size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+              <Zap size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
               <select
                 value={tariffKey}
                 onChange={(e) => setTariffKey(e.target.value as TariffKey)}
@@ -223,7 +223,7 @@ export default function FuelSavingsCalculator() {
             <div>
               <label className={labelCls}>Daily Work Round Trip (km)</label>
               <div className="relative">
-                <Route size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                <Route size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                 <input
                   type="number"
                   inputMode="numeric"
@@ -242,7 +242,7 @@ export default function FuelSavingsCalculator() {
             <div>
               <label className={labelCls}>Weekend Round Trip (km)</label>
               <div className="relative">
-                <Route size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                <Route size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                 <input
                   type="number"
                   inputMode="numeric"
@@ -264,7 +264,7 @@ export default function FuelSavingsCalculator() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <div className="relative">
-                  <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                   <input
                     type="number"
                     inputMode="decimal"
@@ -277,11 +277,11 @@ export default function FuelSavingsCalculator() {
                     style={inputStyle}
                   />
                 </div>
-                <p className="text-[10px] text-white/30 mt-1">km/L</p>
+                <p className="text-[10px] text-theme-30 mt-1">km/L</p>
               </div>
               <div>
                 <div className="relative">
-                  <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Fuel size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-theme-30" />
                   <input
                     type="number"
                     inputMode="decimal"
@@ -297,7 +297,7 @@ export default function FuelSavingsCalculator() {
                     style={inputStyle}
                   />
                 </div>
-                <p className="text-[10px] text-white/30 mt-1">L/100km</p>
+                <p className="text-[10px] text-theme-30 mt-1">L/100km</p>
               </div>
             </div>
           </div>
@@ -305,7 +305,8 @@ export default function FuelSavingsCalculator() {
           {/* Calculate button */}
           <button
             onClick={handleCalc}
-            className="w-full min-h-11 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-[#04120b] text-sm font-bold py-3 hover:opacity-90 transition-opacity cursor-pointer"
+            className="hero-cta w-full min-h-11 rounded-lg bg-accent text-sm font-bold py-3 cursor-pointer"
+            style={{ color: "var(--cz-accent-ink)" }}
           >
             Calculate Savings
           </button>
@@ -316,8 +317,8 @@ export default function FuelSavingsCalculator() {
           <div
             className="rounded-xl p-4 h-full flex flex-col justify-center"
             style={{
-              backgroundColor: "var(--cz-ledger, rgba(255,255,255,0.03))",
-              border: "1px solid var(--cz-border, rgba(255,255,255,0.06))",
+              backgroundColor: "var(--cz-ledger)",
+              border: "1px solid var(--cz-border)",
             }}
           >
             {/* Validation errors */}
@@ -326,7 +327,11 @@ export default function FuelSavingsCalculator() {
                 {result.errors.map((err, i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-1.5 text-xs text-amber-400/80 bg-amber-400/[0.06] border border-amber-400/15 rounded-lg p-2.5"
+                    className="flex items-start gap-1.5 text-xs text-counter rounded-lg p-2.5"
+                    style={{
+                      backgroundColor: "var(--cz-counter-soft)",
+                      border: "1px solid var(--cz-counter-line)",
+                    }}
                   >
                     <Info size={11} className="shrink-0 mt-0.5" />
                     <span>{err}</span>
@@ -336,7 +341,7 @@ export default function FuelSavingsCalculator() {
             )}
 
             {!calculated && (
-              <div className="text-center text-white/40 text-sm py-8">
+              <div className="text-center text-theme-40 text-sm py-8">
                 Run the calculator to see weekly cost comparison, annual impact, and the 10-year
                 savings story.
               </div>
@@ -344,23 +349,22 @@ export default function FuelSavingsCalculator() {
 
             {showResults && (
               <div className="space-y-3">
-                {/* Hero annual savings */}
+                {/* Hero annual savings — accent surface, no gradient */}
                 <div
                   className="rounded-xl p-4 text-center"
                   style={{
-                    background:
-                      "linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,206,209,0.08))",
-                    border: "1px solid rgba(0,230,118,0.2)",
+                    backgroundColor: "var(--cz-accent-soft)",
+                    border: "1px solid var(--cz-accent-line)",
                   }}
                 >
-                  <div className="flex items-center justify-center gap-1 text-white/40 mb-1">
+                  <div className="flex items-center justify-center gap-1 mb-1" style={{ color: "var(--cz-text-40)" }}>
                     <DollarSign size={13} />
-                    <span className="text-[10px] uppercase tracking-wide">Estimated Annual Savings</span>
+                    <span className="label-mono">Estimated Annual Savings</span>
                   </div>
-                  <div className="text-gradient text-3xl md:text-4xl font-bold">
+                  <div className="font-data text-3xl md:text-4xl font-semibold text-accent">
                     RM {fmt(result.annualSavings)}
                   </div>
-                  <p className="text-[10px] text-white/40 mt-1">
+                  <p className="font-data text-[10px] text-theme-40 mt-1">
                     ≈ RM {fmt(result.weeklySavings)}/week &middot; {result.effConsumption.toFixed(1)} kWh/100km avg
                   </p>
                 </div>
@@ -378,34 +382,34 @@ export default function FuelSavingsCalculator() {
                     label="10-Year Savings"
                     value={`RM ${fmt(result.tenYearSavings)}`}
                     highlight
-                    color="cyan"
+                    color="counter"
                   />
                 </div>
 
                 {/* Bar chart */}
                 {chart && (
-                  <div className="rounded-lg p-3 bg-white/[0.02] border border-white/[0.05]">
-                    <p className="text-[10px] text-white/40 mb-2">Annual Cost Comparison</p>
+                  <div className="rounded-lg p-3 bg-theme-alt border border-[color:var(--cz-border)]">
+                    <p className="text-[10px] text-theme-40 mb-2">Annual Cost Comparison</p>
                     <div className="flex items-end justify-center gap-8 h-[180px]">
                       <div className="flex flex-col items-center justify-end gap-1.5">
-                        <span className="text-xs font-bold text-emerald-400 whitespace-nowrap">
+                        <span className="text-xs font-bold text-accent whitespace-nowrap">
                           RM {fmt(chart.evAnnual)}
                         </span>
                         <div
-                          className="w-14 rounded-t-md bg-gradient-to-t from-emerald-600 to-emerald-400"
+                          className="w-14 rounded-t-md bg-linear-to-t from-[color:var(--cz-accent)] to-[color:var(--cz-accent-strong)]"
                           style={{ height: `${chart.evH}px` }}
                         />
-                        <span className="text-[10px] text-white/50">BYD EV</span>
+                        <span className="text-[10px] text-theme-50">BYD EV</span>
                       </div>
                       <div className="flex flex-col items-center justify-end gap-1.5">
-                        <span className="text-xs font-bold text-amber-400 whitespace-nowrap">
+                        <span className="text-xs font-bold text-counter whitespace-nowrap">
                           RM {fmt(chart.iceAnnual)}
                         </span>
                         <div
-                          className="w-14 rounded-t-md bg-gradient-to-t from-amber-600 to-amber-400"
+                          className="w-14 rounded-t-md bg-linear-to-t from-[color:var(--cz-counter)] to-[color:var(--cz-counter)]"
                           style={{ height: `${chart.iceH}px` }}
                         />
-                        <span className="text-[10px] text-white/50">Current ICE</span>
+                        <span className="text-[10px] text-theme-50">Current ICE</span>
                       </div>
                     </div>
                   </div>
@@ -417,10 +421,10 @@ export default function FuelSavingsCalculator() {
       </div>
 
       {/* Disclaimer */}
-      <div className="mt-4 pt-3 border-t border-white/[0.06]">
+      <div className="mt-4 pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
         <div className="flex items-start gap-1.5">
-          <Info size={11} className="shrink-0 mt-0.5 text-white/30" />
-          <p className="text-[10px] text-white/30 leading-relaxed">
+          <Info size={11} className="shrink-0 mt-0.5 text-theme-30" />
+          <p className="text-[10px] text-theme-30 leading-relaxed">
             Savings estimates are for reference only and are not a quotation or guarantee. Results
             are based on the fuel price, electricity tariff, mileage and manufacturer (WLTP)
             consumption figures you enter — real-world consumption varies with driving style,

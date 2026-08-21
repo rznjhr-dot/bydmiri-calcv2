@@ -6,33 +6,53 @@ interface Props {
   title: ReactNode;
   subtitle?: string;
   size?: "md" | "lg";
+  /** Defaults to center; use "start" to bias the section left —
+      breaks the center-everything pattern on data-heavy sections. */
+  align?: "center" | "start";
   className?: string;
 }
 
-/* Unifies the badge + heading + subtitle pattern used by every landing page
-   section, so spacing and typography stay consistent site-wide. */
+/* Direction 01 · Minimal — the mono label with line prefix carries the
+   section identity; the heading is Geist 600. Icons are optional and
+   inline (accent-tinted), never above the heading. Vertical stack only. */
 export default function SectionHeader({
   icon,
   label,
   title,
   subtitle,
   size = "md",
+  align = "center",
   className,
 }: Props) {
+  const isStart = align === "start";
+
   return (
-    <div className={`text-center ${className ?? "mb-8"}`}>
-      <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold mb-3 border border-emerald-500/15 uppercase tracking-wide">
-        {icon && <span className="shrink-0 flex items-center">{icon}</span>}
+    <div
+      className={`${isStart ? "text-left" : "text-center mx-auto"} ${className ?? "mb-8"} max-w-2xl`}
+    >
+      <span className={`label-mono mb-4 ${isStart ? "" : "justify-center"}`}>
+        {icon && (
+          <span className="shrink-0 flex items-center -ml-1" style={{ color: "var(--cz-accent)" }}>
+            {icon}
+          </span>
+        )}
         {label}
       </span>
       <h2
-        className={`font-[family-name:var(--font-syne)] font-bold text-theme-90 ${
-          size === "lg" ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"
-        } ${subtitle ? "mb-2" : "mb-0"}`}
+        className={`font-display text-theme-90 ${
+          size === "lg" ? "text-[32px] md:text-[44px]" : "text-[28px] md:text-4xl"
+        } ${subtitle ? "mb-3" : "mb-0"}`}
+        style={{ fontWeight: 600, letterSpacing: "-0.025em" }}
       >
         {title}
       </h2>
-      {subtitle && <p className="text-xs md:text-sm text-theme-50">{subtitle}</p>}
+      {subtitle && (
+        <p
+          className={`text-sm md:text-base text-theme-50 max-w-[55ch] leading-relaxed ${isStart ? "" : "mx-auto"}`}
+        >
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,5 +1,75 @@
 # Changelog
 
+## [2.8.0] — 2026-08-21
+
+### Fixed (visual bugs from the token migration)
+- **Charging slider fill bar restored** — the green fill between the two handles was invisible: the migration had placed a bare `var(--cz-accent)` token inside `className` (invalid CSS class). Now a proper inline `backgroundColor`; handle rings also tokenized (removed hardcoded emerald rgba + glow)
+- **Fuel-savings chart bars restored** — same class of bug: `bg-gradient-to-t` had been lost, leaving orphaned `from-`/`to-` gradient stops and invisible bars. Fixed with Tailwind v4's `bg-linear-to-t` + token stops; verified live (both bars render real linear-gradients)
+- Codebase audit confirms no other leaked tokens in `className` strings
+
+### Charging cost — kept per-kWh (owner decision)
+- DC public charging cost stays `kWh × RM1.40` (per-kWh), matching the remote `charging.json` data source. A per-minute variant was implemented and tested, then reverted on owner instruction (no time-based pricing data available)
+- `lib/charging-profiles.ts` — parser rewritten for the current remote schema (`chargingProfiles` array, `home` / `public_default` profiles); the old `dcTariffRange` field no longer exists in the remote data, so the previous parser always fell back to defaults. Fetch failures return sane Sarawak defaults (RM0.33 AC / RM1.40 DC)
+- Cost math verified live: Atto 2, 20→80%, 180 kW DC → RM45.21 = 51.13 × 0.6 ÷ 0.95 × 1.40 ✓
+
+### Verification
+- `eslint` clean · `next build` static export success (5 routes)
+- Slider fill, chart bars, DC/AC cost figures, per-kWh labels all verified in-browser at 375px
+
+## [2.7.1] — 2026-08-21
+
+### "Why BYD" — media discipline pass (owner feedback)
+- **Removed decorative images from topic cards**: a car photo next to "Warranty"/"V2L"/"#1 NEV" titles and image headers on all six "What You Gain" cards looked like unrelated filler. Media now appears only where it genuinely informs:
+  - Blade Battery **video** stays (it's the actual nail-penetration test footage)
+  - Comparison-card BYD model images stay (they show the exact model being compared)
+- Advantage cards without video revert to clean icon + title + bullet layout; "What You Gain" cards back to compact text cards
+
+## [2.7.0] — 2026-08-21
+
+### "Why BYD" page — media redesign
+- **Blade Battery video embedded** (was an external link): privacy-enhanced `youtube-nocookie.com` iframe with **muted autoplay** (`autoplay=1&mute=1&playsinline=1` — the only autoplay combination browsers permit), `loading="lazy"`, hydration-safe mount, and click-to-play fallback for `prefers-reduced-motion` users (`components/video-embed.tsx`)
+- **Every topic now carries visuals**: advantage cards get media columns (video for Blade Battery; Atto 3 Ultra / Sealion 7 / Atto 2 photos for warranty, V2L, #1-NEV), the six "What You Gain" cards get image headers with fade-to-card overlay (all 9 local vehicle photos used once), and comparison cards show the specific BYD model in the BYD panel
+- **CSP updated in both enforcement points** — meta tag (`app/layout.tsx`) and production Netlify headers (`public/_headers`): `frame-src` now allows `youtube-nocookie.com`/`youtube.com`, `img-src` allows `i.ytimg.com` thumbnails
+- Card layout: mobile-first stacked (media above text), desktop 2-col media/text
+
+### Fixed (price-figure rendering — "tak kemas dalam box")
+- **Figure wrapping eliminated**: ledger values (`RM103,500`, `−RM9,000`…) were breaking mid-figure to 2 lines inside cramped 2-col cells. All RM value spans now `whitespace-nowrap shrink-0`; labels take the squeeze via `truncate` — a price never splits, the label ellipsizes first. Applied across: pricelist mobile ledger (11 row types), homepage `PricingCardMobile` OTR/monthly block, vehicle-card banner
+- Vehicle-card banner: `min-w-0` on the flex row so the name truncates instead of squeezing the figure
+- Verified via DOM scanner (unique client-rect line-tops per figure): 0 wrapping figures / 0 clipped figures on all pages at 320/375px; fuel-savings results exercised live (Calculate clicked) — clean
+
+### Verification
+- `eslint` clean · `next build` static export success
+- why-byd @320px: 13 images + 1 video iframe rendered, 0 broken images, 0 overflow, 0 internal scrollers
+- Video embed params confirmed live: nocookie domain, autoplay+muted+playsinline present
+
+## [2.6.0] — 2026-08-21
+
+### Design System (Hallmark-inspired revamp, Direction 01 · Minimal)
+- **Typography** — Syne + IBM Plex Sans + JetBrains Mono → **Geist 300/400/500/600 + Geist Mono**. The 2+1 pairing done canonically: one family for display+body, mono as the data outlier tagging RM figures only (`.font-data`, tabular-nums)
+- **Hero** (`components/hero.tsx`) — rewritten in the Minimal register: weight contrast 300→600 (`-0.035em` tracking, `clamp` to 80px), pure tinted paper (all decorative orbs/textures removed), mono line-prefix eyebrow, hairline-grid stats with mono numerals
+- **Color tokens** (`app/globals.css`) — flat hex/rgba → **OKLCH four-layer system** (paper → ink → neutrals → accent), emerald-anchored hue 160 with tinted dark theme; one accent + one functional counterpoint (amber, 0%-down figures only)
+- **Motion tokens** — named easings (`--ease-out/in/in-out`) + three duration buckets (120/220/420ms); all `hover:scale-105` + shadow-glow CTAs → `translateY(-1px)` + border-shift; infinite loop animations removed; stagger capped ~480ms; `prefers-reduced-motion` collapses to opacity
+- **Section headers** (`components/section-header.tsx`) — pill-badge eyebrows → quiet mono labels; `align="start"` support de-centers data sections
+- **Wordmarks** — mono `/ MIRI` across all pages
+- **Warranty cards** (`components/warranty-details.tsx`) — 5-color rainbow → single-accent system with mono data badges
+
+### Fixed (mobile responsiveness audit — go-live readiness)
+- **F-1 CRITICAL `/pricelist` @320px** — page-level horizontal scroll (333px > 320px): mobile card packed image + info + 2 prices + button in one row. Restructured to 3 stacked rows; all figures now visible without scrolling
+- **F-2 MAJOR `/` @320px** — pricing table hid 111px behind an internal `overflow-x-auto` scroller (desktop table shrunk onto mobile). Mobile now renders a dedicated `PricingCardMobile` list (10 cards); full comparison table is desktop-only (`md:`)
+- **F-3 MINOR** — tap targets below HIG 40px minimum: hero social links, footer legal links → `min-h-11` (44px)
+- **Defense-in-depth** — `overflow-x: clip` on `html`/`body`: no stray element can ever produce page-level horizontal scrolling (WCAG 2.2 / industry standard)
+- Text floor: no type below 10px anywhere (was `text-[9px]` in table headers)
+
+### Cleanup (production readiness)
+- Removed `public/mockups/` — design exploration artifacts (4 hero-direction concepts) that must not ship
+- `.gitignore` — added `.playwright-mcp/` (browser-test artifacts); working tree has zero untracked files
+
+### Verification
+- Programmatic audit at 320/375/414/768px × all 3 routes: zero document overflow, zero internal horizontal scrollers, no sub-10px text, tap targets ≥44px (footer/social) or ≥40px everywhere else
+- Calculator modal, charging estimator, fuel-savings calculator verified fit-within-viewport at 320px
+- `eslint` clean · `next build` static export success (5 routes)
+- Known/accepted: pre-existing CSP meta-tag console notice (`X-Frame-Options` via meta) — served by Netlify `_headers` in production; not a functional issue
+
 ## [2.5.0] — 2026-08-17
 
 ### Pricing (Master DB sync — August 2026 rebate campaign)

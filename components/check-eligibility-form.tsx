@@ -56,11 +56,15 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
   if (submitted) {
     return (
       <div
-        className={`animate-scale-in rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5 text-center ${className}`}
+        className={`animate-scale-in rounded-xl p-5 text-center ${className}`}
+        style={{
+          backgroundColor: "var(--cz-accent-soft)",
+          border: "1px solid var(--cz-accent-line)",
+        }}
       >
-        <CheckCircle2 size={28} className="text-emerald-400 mx-auto mb-2" />
-        <p className="text-sm font-semibold text-emerald-300">Thank You!</p>
-        <p className="text-xs text-white/50 mt-1">
+        <CheckCircle2 size={28} className="text-accent mx-auto mb-2" />
+        <p className="text-sm font-semibold text-accent">Thank You!</p>
+        <p className="text-xs text-theme-50 mt-1">
           We will review your eligibility and contact you via WhatsApp within 24 hours.
         </p>
       </div>
@@ -76,7 +80,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             placeholder="Full name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"
             required
           />
           <input
@@ -84,7 +88,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             placeholder="Phone number *"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"
             required
           />
         </div>
@@ -92,44 +96,45 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           <select
             value={targetCar}
             onChange={(e) => setTargetCar(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors appearance-none"
+            className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors appearance-none"
             required
           >
-            <option value="" disabled className="bg-[#080808] text-white/30">
+            <option value="" disabled className="bg-theme-card text-theme-30">
               Target car *
             </option>
-            <option value="Atto 2 Premium" className="bg-[#080808]">Atto 2 Premium</option>
-            <option value="Seal 6 Premium" className="bg-[#080808]">Seal 6 Premium</option>
-            <option value="Atto 3 Ultra" className="bg-[#080808]">Atto 3 Ultra</option>
-            <option value="Atto 3 Premium" className="bg-[#080808]">Atto 3 Premium</option>
-            <option value="Sealion 7 Dynamic" className="bg-[#080808]">Sealion 7 Dynamic</option>
-            <option value="Sealion 7 Premium" className="bg-[#080808]">Sealion 7 Premium</option>
-            <option value="Sealion 7 Performance" className="bg-[#080808]">Sealion 7 Performance</option>
-            <option value="Seal Premium" className="bg-[#080808]">Seal Premium</option>
-            <option value="Seal Performance" className="bg-[#080808]">Seal Performance</option>
-            <option value="M6 Extended" className="bg-[#080808]">M6 Extended</option>
-            <option value="Not sure yet" className="bg-[#080808]">Not sure yet</option>
+            <option value="Atto 2 Premium" className="bg-theme-card">Atto 2 Premium</option>
+            <option value="Seal 6 Premium" className="bg-theme-card">Seal 6 Premium</option>
+            <option value="Atto 3 Ultra" className="bg-theme-card">Atto 3 Ultra</option>
+            <option value="Atto 3 Premium" className="bg-theme-card">Atto 3 Premium</option>
+            <option value="Sealion 7 Dynamic" className="bg-theme-card">Sealion 7 Dynamic</option>
+            <option value="Sealion 7 Premium" className="bg-theme-card">Sealion 7 Premium</option>
+            <option value="Sealion 7 Performance" className="bg-theme-card">Sealion 7 Performance</option>
+            <option value="Seal Premium" className="bg-theme-card">Seal Premium</option>
+            <option value="Seal Performance" className="bg-theme-card">Seal Performance</option>
+            <option value="M6 Extended" className="bg-theme-card">M6 Extended</option>
+            <option value="Not sure yet" className="bg-theme-card">Not sure yet</option>
           </select>
           <input
             type="number"
             placeholder="Monthly income (RM) *"
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white text-base placeholder:text-white/30 focus:outline-none focus:border-emerald-500/40 transition-colors"
+            className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"
             required
           />
         </div>
 
-        {error && <p className="text-xs text-red-400/80">{error}</p>}
+        {error && <p className="text-xs text-counter">{error}</p>}
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-sm font-bold hover:shadow-[0_0_30px rgba(52,211,153,0.3)] transition-all min-h-11"
+          className="hero-cta w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-accent text-sm font-bold min-h-11"
+          style={{ color: "var(--cz-accent-ink)" }}
         >
           Check My Eligibility
         </button>
 
-        <p className="text-[10px] text-white/20 text-center">
+        <p className="text-[10px] text-theme-20 text-center">
           We will WhatsApp you regarding your eligibility. Your data is kept confidential.
         </p>
       </form>
