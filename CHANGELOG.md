@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [2.10.1] — 2026-08-25
+
+### Nav fixes
+- **Removed broken "Calculator" nav button** (desktop) — scrolled to non-existent `#main-content`; Calculator is a modal, not a scroll target
+- **Why-byd page**: replaced "Back to Calculator" link with full navbar (Home, Models, Charging, Why BYD, Contact Us) + mobile hamburger menu
+- **Why-byd footer**: removed "Back to Loan Calculator" link
+
 ## [2.10.0] — 2026-08-25
 
 ### Full audit — security, performance, SEO & code health

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   Shield,
@@ -12,7 +13,8 @@ import {
   VolumeX,
   Smartphone,
   Heart,
-  ArrowLeft,
+  Menu,
+  X,
   CheckCircle2,
   ExternalLink,
 } from "lucide-react";
@@ -211,23 +213,89 @@ const salesPoints = [
 ];
 
 export default function WhyBydPage() {
+  const [navOpen, setNavOpen] = useState(false);
   return (
     <div className="min-h-screen" style={{  }}>
       {/* ── Nav ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-theme/80 backdrop-blur-xl border-b border-[color:var(--cz-border)]">
-        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-theme" aria-label="BYD Miri Home">
+        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between gap-2">
+          <Link href="/" className="flex items-center gap-1.5 text-sm text-theme shrink-0" aria-label="BYD Miri Home">
             <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
             <span className="font-wordmark text-[11px] ml-2">| MIRI</span>
           </Link>
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 py-2 px-2 -mr-2 text-xs text-theme-50 hover:text-theme-80 transition-colors"
+
+          {/* Desktop links */}
+          <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
+            <Link href="/" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Home
+            </Link>
+            <Link href="/#full-lineup" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Models
+            </Link>
+            <Link href="/#charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Charging, Savings &amp; Warranty
+            </Link>
+            <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-90 px-2 py-3 whitespace-nowrap">
+              Why BYD
+            </Link>
+            <Link href="/#contact" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Contact Us
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setNavOpen((o) => !o)}
+            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+            aria-label={navOpen ? "Close menu" : "Open menu"}
+            aria-expanded={navOpen}
           >
-            <ArrowLeft size={14} />
-            Back to Calculator
-          </Link>
+            {navOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
+
+        {/* Mobile menu panel */}
+        {navOpen && (
+          <div className="sm:hidden border-t bg-theme/95 backdrop-blur-xl" style={{ borderColor: "var(--cz-border)" }}>
+            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
+              <Link
+                href="/"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                href="/#full-lineup"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Models
+              </Link>
+              <Link
+                href="/#charging"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Charging, Savings &amp; Warranty
+              </Link>
+              <Link
+                href="/why-byd"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme hover:bg-white/5 transition-colors"
+              >
+                Why BYD
+              </Link>
+              <Link
+                href="/#contact"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero — Minimal: pure paper, no decoration ── */}
@@ -534,13 +602,6 @@ export default function WhyBydPage() {
       {/* Footer */}
       <footer className="border-t border-[color:var(--cz-border)] py-8 px-6 text-center">
         <div className="max-w-6xl mx-auto">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-theme-30 hover:text-theme-60 transition-colors"
-          >
-            <ArrowLeft size={12} />
-            Back to Loan Calculator
-          </Link>
           <p className="text-xs text-counter mt-3 max-w-md mx-auto leading-relaxed">
             All comparisons and estimates are for illustrative purposes only. Data as of August 2026. Subject to change. Verify with authorised BYD dealer.
           </p>
