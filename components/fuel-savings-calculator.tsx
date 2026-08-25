@@ -25,7 +25,7 @@ const inputStyle: React.CSSProperties = {
 const labelCls = "block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5";
 
 const fieldCls =
-  "w-full py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors focus:border-[color:var(--cz-accent-line)]";
+  "w-full py-2 sm:py-2.5 min-h-11 rounded-lg text-base outline-none transition-colors focus:border-[color:var(--cz-accent-line)]";
 
 const VEHICLES_BY_ID = new Map(vehicles.map((v) => [v.id, v]));
 
@@ -116,9 +116,9 @@ export default function FuelSavingsCalculator() {
   const showResults = calculated && result.valid;
 
   return (
-    <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
+    <div className="rounded-2xl border bg-theme-card p-3 sm:p-5 md:p-6">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3 sm:mb-4">
         <div className="w-8 h-8 rounded-lg border flex items-center justify-center">
           <TrendingDown size={15} className="text-accent" />
         </div>
@@ -128,9 +128,9 @@ export default function FuelSavingsCalculator() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
         {/* Inputs */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {/* Vehicle selector */}
           <div>
             <label className={labelCls}>BYD Model</label>
@@ -315,7 +315,7 @@ export default function FuelSavingsCalculator() {
         {/* Results */}
         <div>
           <div
-            className="rounded-xl p-4 h-full flex flex-col justify-center"
+            className="rounded-xl p-3 sm:p-4 h-full flex flex-col justify-center"
             style={{
               backgroundColor: "var(--cz-ledger)",
               border: "1px solid var(--cz-border)",
@@ -348,10 +348,10 @@ export default function FuelSavingsCalculator() {
             )}
 
             {showResults && (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {/* Hero annual savings — accent surface, no gradient */}
                 <div
-                  className="rounded-xl p-4 text-center"
+                  className="rounded-xl p-3 sm:p-4 text-center"
                   style={{
                     backgroundColor: "var(--cz-accent-soft)",
                     border: "1px solid var(--cz-accent-line)",
@@ -361,7 +361,7 @@ export default function FuelSavingsCalculator() {
                     <DollarSign size={13} />
                     <span className="label-mono">Estimated Annual Savings</span>
                   </div>
-                  <div className="font-data text-3xl md:text-4xl font-semibold text-accent">
+                  <div className="font-data text-2xl sm:text-3xl md:text-4xl font-semibold text-accent">
                     RM {fmt(result.annualSavings)}
                   </div>
                   <p className="font-data text-[10px] text-theme-40 mt-1">
@@ -390,7 +390,7 @@ export default function FuelSavingsCalculator() {
                 {chart && (
                   <div className="rounded-lg p-3 bg-theme-alt border border-[color:var(--cz-border)]">
                     <p className="text-[10px] text-theme-40 mb-2">Annual Cost Comparison</p>
-                    <div className="flex items-end justify-center gap-8 h-[180px]">
+                    <div className="flex items-end justify-center gap-8 h-[140px] sm:h-[180px]">
                       <div className="flex flex-col items-center justify-end gap-1.5">
                         <span className="text-xs font-bold text-accent whitespace-nowrap">
                           RM {fmt(chart.evAnnual)}
@@ -421,7 +421,7 @@ export default function FuelSavingsCalculator() {
       </div>
 
       {/* Disclaimer */}
-      <div className="mt-4 pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
+      <div className="mt-3 pt-2 sm:mt-4 sm:pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
         <div className="flex items-start gap-1.5">
           <Info size={11} className="shrink-0 mt-0.5 text-theme-30" />
           <p className="text-[10px] text-theme-30 leading-relaxed">

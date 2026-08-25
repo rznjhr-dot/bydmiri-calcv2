@@ -5,7 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 
 const GSHEET_WEBAPP_URL =
   process.env.NEXT_PUBLIC_GSHEET_URL ||
-  "https://script.google.com/macros/s/AKfycbz0jdVsbUzuwK9ecuAvZJ9AWtuGsA5Gn32sBpxC0wzPURsi3WEDF3mXoNpBe9cQsqd0/exec";
+  "https://script.google.com/macros/s/AKfycbzqtg1BfVu49JUZ7SnSe3gqtBdLZO_o671YwwhXAwRyaS2ZS3PQQZ_GnJuk4ZEZr0kXvw/exec";
 
 interface Props {
   className?: string;
@@ -33,7 +33,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
       return;
     }
 
-    const body = new URLSearchParams({
+    const params = new URLSearchParams({
       name: name.trim(),
       phone: phone.trim(),
       targetCar: targetCar.trim(),
@@ -42,12 +42,12 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
       source: "BYD Miri Website",
     });
 
-    // Fire-and-forget POST (no-cors): success is assumed; a network failure
-    // is surfaced by the Google Sheet owner, not the customer.
-    fetch(GSHEET_WEBAPP_URL, {
-      method: "POST",
+    // Apps Script reads e.parameter (query string). Using GET with query
+    // params is the most reliable cross-origin method — no Content-Type
+    // issues, no preflight, works with no-cors.
+    fetch(`${GSHEET_WEBAPP_URL}?${params.toString()}`, {
+      method: "GET",
       mode: "no-cors",
-      body: body.toString(),
     }).catch(() => {});
 
     setSubmitted(true);

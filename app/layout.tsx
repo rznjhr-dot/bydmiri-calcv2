@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const baseUrl = "https://bydmiri.com";
@@ -18,6 +19,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-geist-mono",
+  display: "swap",
+});
+
+/* Conthrax — used ONLY for model names (hero caption + vehicle card title). */
+const conthrax = localFont({
+  src: "./../conthrax/Conthrax-SemiBold.otf",
+  variable: "--font-conthrax",
   display: "swap",
 });
 
@@ -54,9 +62,9 @@ export const metadata: Metadata = {
   publisher: "Ridzuan Jahari",
 
   // ── Canonical ──
-  // NOTE: canonical is set per-page via lib/use-page-meta.ts (client pages
-  // cannot export static metadata). A layout-level canonical would incorrectly
-  // point every page at the root URL, so it is intentionally omitted here.
+  // NOTE: canonical is set per-page via nested layout.tsx files
+  // (pricelist/layout.tsx, why-byd/layout.tsx) using alternates.canonical.
+  // A layout-level canonical would incorrectly point every page at the root URL.
   metadataBase: new URL(baseUrl),
 
   // ── OpenGraph ──
@@ -70,10 +78,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/byd-logo.png",
-        width: 512,
-        height: 512,
-        alt: "BYD Miri",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "BYD Miri — Loan Calculator & Price List",
       },
     ],
   },
@@ -84,7 +92,7 @@ export const metadata: Metadata = {
     title: "BYD Miri by Ridzuan Jahari",
     description:
       "Calculate BYD monthly financing instantly. Compare 10 models, deposit, tenure & rates. Contact Ridzuan Jahari, BYD Miri.",
-    images: ["/byd-logo.png"],
+    images: ["/og-image.png"],
   },
 
   // ── Robots ──
@@ -123,7 +131,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-theme="dark" className={`h-full antialiased ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning data-theme="dark" className={`h-full antialiased ${geist.variable} ${geistMono.variable} ${conthrax.variable}`}>
       <head>
         {/* ── Body font — Geist 400 base; light display cuts handled in CSS ── */}
         <style

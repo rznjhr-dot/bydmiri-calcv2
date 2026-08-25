@@ -7,7 +7,6 @@ import { vehicles } from "@/lib/vehicles";
 import { activeRebate } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
-import { usePageMeta } from "@/lib/use-page-meta";
 
 const REG_FEE = 60;
 const EV_PLATE_FEE = 150;
@@ -18,11 +17,6 @@ function calcOtrWithoutIns(v: typeof vehicles[0]): number {
 }
 
 export default function PricelistPage() {
-  usePageMeta(
-    "Full Price List | BYD Miri",
-    "Full BYD price list Malaysia 2026 — OTR prices, rebates, and monthly instalments for every BYD model. Transparent pricing from BYD Miri, Sarawak."
-  );
-
   return (
     <div className="min-h-screen bg-theme">
       {/* Nav */}

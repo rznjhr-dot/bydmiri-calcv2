@@ -19,8 +19,8 @@ import { ChevronLeft, ChevronRight, Phone, ArrowDown } from "lucide-react";
 
 const SLIDES = [
   {
-    img: "/images/hero/atto3premium.jpg",
-    name: "Atto 3 Premium",
+    img: "/images/hero/atto3premium.webp",
+    name: "BYD Atto 3",
     category: "C-Segment Electric SUV",
     line1: "Drive electric.",
     line2: "Live vibrant.",
@@ -28,17 +28,17 @@ const SLIDES = [
       "Family-sized, sharply priced. Quiet ride, smart interior, instant pickup at the lights.",
   },
   {
-    img: "/images/hero/sealion7premium.jpg",
-    name: "Sealion 7",
+    img: "/images/hero/sealion7premium.webp",
+    name: "BYD Sealion 7",
     category: "D-Segment Premium SUV",
     line1: "Go farther.",
     line2: "Refuse ordinary.",
     sub:
-      "Coupe roofline, seven-airbag safety, BYD's flagship family SUV. The Mercedes vibe at BYD money.",
+      "Coupe roofline, seven-airbag safety, BYD's flagship family SUV. Premium presence, sharper pricing.",
   },
   {
-    img: "/images/hero/m6.jpg",
-    name: "M6 Extended",
+    img: "/images/hero/m6.webp",
+    name: "BYD M6",
     category: "C-Segment Family MPV",
     line1: "Built for family.",
     line2: "Driven by comfort.",
@@ -46,17 +46,17 @@ const SLIDES = [
       "Malaysia's only pure-electric 7-seater under RM 130k. School runs, beach days, balik kampung — all silent.",
   },
   {
-    img: "/images/hero/sealpremium.jpg",
+    img: "/images/hero/sealpremium.webp",
     name: "BYD Seal",
     category: "D-Segment Sedan",
     line1: "Seal the speed.",
     line2: "Own the road.",
     sub:
-      "3.8-second 0–100, rear-wheel drive, the sport sedan for the EV era. The everyday Toyota Camry driver’s upgrade.",
+      "3.8-second 0–100, rear-wheel drive, the sport sedan for the EV era. Effortless performance, everyday comfort.",
   },
   {
-    img: "/images/hero/atto2.jpg",
-    name: "Atto 2",
+    img: "/images/hero/atto2.webp",
+    name: "BYD Atto 2",
     category: "B-Segment Compact SUV",
     line1: "When chill",
     line2: "meets thrill.",
@@ -131,7 +131,7 @@ export default function Hero() {
               Sarawak
             </p>
             <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/70 mb-3 sm:mb-4">
-              {slide.name} · <span className="hidden sm:inline">{slide.category}</span>
+              <span className="font-conthrax normal-case tracking-normal text-white/90 text-[11px] sm:text-[13px]">{slide.name}</span> · <span className="hidden sm:inline">{slide.category}</span>
             </p>
             <h1 className="font-display text-[40px] leading-[1.02] sm:text-6xl sm:leading-[0.95] lg:text-7xl xl:text-8xl tracking-tight text-white">
               {slide.line1}
@@ -153,7 +153,7 @@ export default function Hero() {
                 <ArrowDown className="w-4 h-4" aria-hidden />
               </Link>
               <a
-                href="https://wa.me/60XXXXXXXXX"
+                href="https://wa.me/601131933930"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 border border-white/40 text-white px-6 py-3.5 sm:py-3 font-body font-medium hover:bg-white/10 motion-safe:transition-colors motion-safe:duration-200 min-h-[44px] sm:min-h-0"
@@ -166,9 +166,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Slide controls — top-right on mobile (clear of thumb zone),
+      {/* Slide controls — bottom-left on mobile (clear of dots at bottom-right),
           bottom-right on desktop. Tap-friendly 44px minimum. */}
-      <div className="absolute top-3 right-3 sm:top-auto sm:bottom-6 sm:right-5 sm:right-8 flex items-center gap-2 z-10">
+      <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-auto sm:right-8 flex items-center gap-2 z-10">
         <button
           onClick={prev}
           aria-label="Previous slide"

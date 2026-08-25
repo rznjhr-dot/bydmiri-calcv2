@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import {
   Shield,
@@ -16,20 +15,17 @@ import {
   ArrowLeft,
   CheckCircle2,
   ExternalLink,
-  ClipboardCheck,
-  ChevronDown,
 } from "lucide-react";
 import { Img } from "@/components/img";
 import VideoEmbed from "@/components/video-embed";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
-import { usePageMeta } from "@/lib/use-page-meta";
 
 const advantages = [
   {
     icon: Shield,
     title: "Blade Battery Technology",
     subtitle: "The Safest EV Battery Ever Made",
-    image: "/images/hero/atto3premium.jpg",
+    image: "/images/hero/atto3premium.webp",
     imageAlt: "BYD Blade Battery powered Atto 3",
     points: [
       "Passed nail penetration test — no fire, no explosion",
@@ -47,7 +43,7 @@ const advantages = [
     icon: BadgeCheck,
     title: "Industry-Leading Warranty",
     subtitle: "Peace of Mind, Standard",
-    image: "/images/hero/sealpremium.jpg",
+    image: "/images/hero/sealpremium.webp",
     imageAlt: "BYD Seal — backed by 6+8 year warranty",
     points: [
       "6 years or 150,000 km vehicle warranty",
@@ -61,7 +57,7 @@ const advantages = [
     icon: Cable,
     title: "V2L — Vehicle-to-Load",
     subtitle: "Your Car Becomes a Power Station",
-    image: "/images/hero/sealion7premium.jpg",
+    image: "/images/hero/sealion7premium.webp",
     imageAlt: "BYD Sealion 7 — V2L capable",
     points: [
       "Standard across ALL BYD models — no extra cost",
@@ -75,7 +71,7 @@ const advantages = [
     icon: Zap,
     title: "World's #1 NEV Manufacturer",
     subtitle: "Global Leadership You Can Trust",
-    image: "/images/hero/m6.jpg",
+    image: "/images/hero/m6.webp",
     imageAlt: "BYD M6 — best-selling EV family MPV",
     points: [
       "Largest new energy vehicle maker in the world (2024–2025)",
@@ -116,7 +112,7 @@ const comparisons = [
     },
     verdict:
       "Atto 3 offers more range, proven safety (285.6 GWh Blade Battery installed in 2025), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
-    bydImage: "/images/hero/atto3premium.jpg",
+    bydImage: "/images/hero/atto3premium.webp",
     bydImageAlt: "BYD Atto 3 Ultra",
   },
   {
@@ -145,7 +141,7 @@ const comparisons = [
     },
     verdict:
       "Seal delivers superior range and a comprehensive warranty at a competitive price point with V2L included as standard.",
-    bydImage: "/images/hero/sealpremium.jpg",
+    bydImage: "/images/hero/sealpremium.webp",
     bydImageAlt: "BYD Seal Premium",
   },
   {
@@ -176,7 +172,7 @@ const comparisons = [
     },
     verdict:
       "M6 stands alone as the only 7-seat EV MPV under RM150,000 in Malaysia — ideal for families who need space and range.",
-    bydImage: "/images/hero/m6.jpg",
+    bydImage: "/images/hero/m6.webp",
     bydImageAlt: "BYD M6 Extended — 7-seat EV MPV",
   },
 ];
@@ -215,12 +211,6 @@ const salesPoints = [
 ];
 
 export default function WhyBydPage() {
-  usePageMeta(
-    "Why BYD? | BYD Miri",
-    "Why choose BYD? Blade Battery safety, 6+8 year warranty, V2L technology, and honest comparisons vs competitors. BYD Miri, Sarawak."
-  );
-
-  const [showForm, setShowForm] = useState(false);
   return (
     <div className="min-h-screen" style={{  }}>
       {/* ── Nav ── */}
@@ -528,28 +518,14 @@ export default function WhyBydPage() {
               </a>
             </div>
 
-            {/* Eligibility check — visible CTA */}
+            {/* Eligibility check — always visible */}
             <div className="pt-6 border-t border-[color:var(--cz-border)]">
-              <p className="text-xs text-theme-30 mb-3">
-                Not sure if you&apos;re eligible? Let us check for you.
+              <p className="text-xs text-theme-30 mb-3 text-center">
+                Not sure if you&apos;re eligible? Let us check for you — free & no obligation.
               </p>
-              <button
-                onClick={() => setShowForm(!showForm)}
-                className="cta-outline w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold"
-              >
-                <ClipboardCheck size={14} className="transition-transform group-hover:scale-110" />
-                <span>
-                  {showForm ? "Close" : "Check My Eligibility — Free & No Obligation"}
-                </span>
-                <ChevronDown size={12} className={`transition-transform ${showForm ? "rotate-180" : ""}`} style={{ transitionDuration: "var(--dur-short)" }} />
-              </button>
-              {showForm && (
-                <div
-                  className="mt-4 max-w-md mx-auto"
-                >
-                  <CheckEligibilityForm />
-                </div>
-              )}
+              <div className="max-w-md mx-auto">
+                <CheckEligibilityForm />
+              </div>
             </div>
           </div>
         </div>

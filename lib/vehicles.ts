@@ -57,7 +57,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 7.9,
     driveType: "FWD",
     seats: 5,
-    image: "/images/models/png/atto2_green.png",
+    image: "/images/models/webp/atto2_green.webp",
     url: "https://byd.simemotors.my/models/byd-atto-2.html",
   },
   {
@@ -79,7 +79,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 7.5,
     driveType: "RWD",
     seats: 5,
-    image: "/images/models/png/bydseal6.png",
+    image: "/images/models/webp/bydseal6.webp",
     url: "https://byd.simemotors.my/models/byd-seal-6-ev.html",
   },
   {
@@ -111,7 +111,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 7.3,
     driveType: "FWD",
     seats: 5,
-    image: "/images/models/png/atto3_2026.png",
+    image: "/images/models/webp/atto3_2026.webp",
     url: "https://byd.simemotors.my/byd-atto-3",
   },
   {
@@ -143,7 +143,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 5.5,
     driveType: "RWD",
     seats: 5,
-    image: "/images/models/png/atto3_2026.png",
+    image: "/images/models/webp/atto3_2026.webp",
     url: "https://byd.simemotors.my/byd-atto-3",
   },
   {
@@ -165,7 +165,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 7.3,
     driveType: "RWD",
     seats: 5,
-    image: "/images/models/png/sealion7_violet.png",
+    image: "/images/models/webp/sealion7_violet.webp",
     url: "https://byd.simemotors.my/models/byd-sealion-7.html",
   },
   {
@@ -187,7 +187,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 6.9,
     driveType: "RWD",
     seats: 5,
-    image: "/images/models/png/sealion7_violet.png",
+    image: "/images/models/webp/sealion7_violet.webp",
     url: "https://byd.simemotors.my/models/byd-sealion-7.html",
   },
   {
@@ -209,7 +209,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 4.5,
     driveType: "AWD",
     seats: 5,
-    image: "/images/models/png/sealion7_violet.png",
+    image: "/images/models/webp/sealion7_violet.webp",
     url: "https://byd.simemotors.my/models/byd-sealion-7.html",
   },
   {
@@ -230,7 +230,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 5.9,
     driveType: "RWD",
     seats: 5,
-    image: "/images/models/png/seal_white.png",
+    image: "/images/models/webp/seal_white.webp",
     url: "https://byd.simemotors.my/models/byd-seal.html",
   },
   {
@@ -251,7 +251,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 3.8,
     driveType: "AWD",
     seats: 5,
-    image: "/images/models/png/seal_white.png",
+    image: "/images/models/webp/seal_white.webp",
     url: "https://byd.simemotors.my/models/byd-seal.html",
   },
   {
@@ -273,7 +273,7 @@ export const vehicles: Vehicle[] = [
     acceleration: 8.6,
     driveType: "FWD",
     seats: 7,
-    image: "/images/models/png/m6_white.png",
+    image: "/images/models/webp/m6_white.webp",
     url: "https://byd.simemotors.my/models/byd-m6.html",
   },
 ];

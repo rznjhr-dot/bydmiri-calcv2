@@ -11,16 +11,11 @@ import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
 import ChargingEstimator from "@/components/charging-estimator";
 import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
-import { usePageMeta } from "@/lib/use-page-meta";
 import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 import SectionHeader from "@/components/section-header";
 
 export default function Home() {
-  usePageMeta(
-    "BYD Miri by Ridzuan Jahari",
-    "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 10 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment."
-  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
   const [navOpen, setNavOpen] = useState(false);
@@ -134,7 +129,6 @@ export default function Home() {
               </Link>
               {[
                 { id: "full-lineup", label: "Models" },
-                { id: "charging", label: "Calculator & Extras" },
                 { id: "charging", label: "Charging, Savings & Warranty" },
                 { id: "contact", label: "Contact Us" },
               ].map((item) => (
@@ -180,9 +174,9 @@ export default function Home() {
 
           {/* Parking Lot Grid — same component as the old #main-content.
               Photos are 16:9 landscape via PNGs from public/images/models/png/. */}
-          <div className="flex flex-wrap justify-center -mx-1">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-1 gap-y-5 lg:gap-x-2.5 lg:px-2.5">
             {vehicles.map((v, i) => (
-              <div key={v.id} className="w-full min-[400px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 px-1 mb-5">
+              <div key={v.id} className="px-1">
                 <VehicleCard
                   vehicle={v}
                   isSelected={selectedId === v.id}
@@ -246,15 +240,15 @@ export default function Home() {
             align="start"
           />
 
-          <div className="grid md:grid-cols-2 gap-4 items-stretch">
+          <div className="grid md:grid-cols-2 gap-4 items-stretch w-full">
             {/* Map */}
             <div
-              className="rounded-2xl overflow-hidden border bg-theme-card min-h-[300px] md:min-h-[320px]"
+              className="rounded-2xl overflow-hidden border bg-theme-card min-h-[300px] md:min-h-[320px] min-w-0 w-full"
               style={{ borderColor: "var(--cz-border)" }}
             >
               <iframe
                 src="https://www.google.com/maps?q=4.4279602,114.0020263&output=embed"
-                className="w-full h-full"
+                className="w-full h-full max-w-full block"
                 style={{ minHeight: "300px", filter: "invert(0.88) hue-rotate(160deg) saturate(0.7)" }}
                 loading="lazy"
                 allowFullScreen
@@ -264,7 +258,7 @@ export default function Home() {
 
             {/* Info card */}
             <div
-              className="flex flex-col justify-center gap-1.5"
+              className="flex flex-col justify-center gap-1.5 min-w-0"
             >
               <div className="rounded-xl p-3 bg-theme-card border" style={{ borderColor: "var(--cz-border)" }}>
                 <div className="flex items-start gap-2">
@@ -282,20 +276,20 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col min-[420px]:flex-row gap-2">
+              <div className="flex flex-col min-[420px]:flex-row gap-2 min-w-0 max-w-full">
                 <a
                   href="https://www.google.com/maps?q=4.4279602,114.0020263"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="cta-outline flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold whitespace-nowrap"
+                  className="cta-outline flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
                     <circle cx="12" cy="9" r="3" fill="white"/>
                     <circle cx="12" cy="9" r="1.5" fill="#4285F4"/>
                   </svg>
-                  Open in Google Maps
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60">
+                  <span>Open in Google Maps</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
                     <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   </svg>
                 </a>
@@ -303,14 +297,14 @@ export default function Home() {
                   href="https://www.waze.com/ul?ll=4.4279602,114.0020263&navigate=yes"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="cta-outline flex-1 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold whitespace-nowrap"
+                  className="cta-outline flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="#33CCFF"/>
                     <polygon points="3,11 22,2 13,21 11,13" fill="white"/>
                   </svg>
-                  Navigate with Waze
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60">
+                  <span>Navigate with Waze</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
                     <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   </svg>
                 </a>
@@ -353,6 +347,73 @@ export default function Home() {
                 Book Test Drive
               </span>
             </a>
+          </div>
+
+          {/* Advisor info card */}
+          <div className="mt-8 rounded-2xl border bg-theme-card p-5 sm:p-6 max-w-md mx-auto text-left" style={{ borderColor: "var(--cz-border)" }}>
+            <div className="flex items-start gap-4">
+              {/* Photo */}
+              <div className="shrink-0">
+                <Img
+                  src="/ridzuan.jpg"
+                  alt="Ridzuan Jahari — BYD Sales Advisor Miri"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border"
+                  style={{ borderColor: "var(--cz-border-strong)" }}
+                />
+              </div>
+              {/* Details */}
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-base sm:text-lg font-semibold text-theme-90 leading-tight">
+                  Ridzuan Jahari
+                </h3>
+                <p className="text-xs text-theme-50 mt-0.5">
+                  BYD Sales Advisor · Kah Progression Auto Miri
+                </p>
+                <div className="mt-2 flex items-center gap-1.5">
+                  <a
+                    href="https://wa.me/601131933930"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline underline-offset-2"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    011 3193 3930
+                  </a>
+                </div>
+              </div>
+            </div>
+            {/* Social links */}
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--cz-border)" }}>
+              <p className="text-xs text-theme-50 mb-2">Follow for updates &amp; promos:</p>
+              <div className="flex items-center gap-2">
+                {/* Facebook */}
+                <a
+                  href="https://web.facebook.com/ridzuanbydmiri"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-outline inline-flex flex-1 items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold min-h-9"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073"/>
+                  </svg>
+                  Facebook
+                </a>
+                {/* TikTok */}
+                <a
+                  href="https://www.tiktok.com/@ridzuanbydmiri"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-outline inline-flex flex-1 items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold min-h-9"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.14v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.5-4.41c.3 0 .6.04.88.13V9.4a6.03 6.03 0 0 0-1-.08A6.04 6.04 0 0 0 4 15.33a6.04 6.04 0 0 0 10.42 4.13 6.04 6.04 0 0 0 1.77-4.28V8.68a8.02 8.02 0 0 0 4.69 1.5V7.04a4.83 4.83 0 0 1-1.29-.35z"/>
+                  </svg>
+                  TikTok
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Check Eligibility — form rendered directly, no accordion. */}

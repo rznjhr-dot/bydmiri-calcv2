@@ -238,9 +238,9 @@ export default function ChargingEstimator() {
   }
 
   return (
-    <div className="rounded-2xl border bg-theme-card p-5 md:p-6">
+    <div className="rounded-2xl border bg-theme-card p-3 sm:p-5 md:p-6">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3 sm:mb-4">
         <div className="w-8 h-8 rounded-lg border flex items-center justify-center" style={{ backgroundColor: "var(--cz-accent-soft)", borderColor: "var(--cz-accent-line)" }}>
           <Zap size={15} className="text-accent" />
         </div>
@@ -250,9 +250,9 @@ export default function ChargingEstimator() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-5">
         {/* Inputs */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {/* Vehicle selector */}
           <div>
             <label className="block text-[11px] font-semibold uppercase tracking-wide text-theme-40 mb-1.5">
@@ -325,7 +325,7 @@ export default function ChargingEstimator() {
               </div>
               <div
                 ref={trackRef}
-                className="relative h-8 mx-3 flex items-center select-none touch-none"
+                className="relative h-6 sm:h-8 mx-2 sm:mx-3 flex items-center select-none touch-none"
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
@@ -343,7 +343,7 @@ export default function ChargingEstimator() {
                 />
                 {/* Handle 1 (from) */}
                 <div
-                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center"
+                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center"
                   style={{ left: `${fromPct}%` }}
                   onPointerDown={handlePointerDown("from")}
                 >
@@ -359,7 +359,7 @@ export default function ChargingEstimator() {
                 </div>
                 {/* Handle 2 (to) */}
                 <div
-                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-11 h-11 flex items-center justify-center"
+                  className="absolute -translate-x-1/2 z-10 cursor-grab active:cursor-grabbing w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center"
                   style={{ left: `${toPct}%` }}
                   onPointerDown={handlePointerDown("to")}
                 >
@@ -386,16 +386,16 @@ export default function ChargingEstimator() {
         {/* Results */}
         <div>
           <div
-            className="rounded-xl p-4 h-full flex flex-col justify-center"
+            className="rounded-xl p-3 sm:p-4 h-full flex flex-col justify-center"
             style={{
               backgroundColor: "var(--cz-ledger)",
               border: "1px solid var(--cz-border)",
             }}
           >
             {result && vehicle && (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {/* Metric cards */}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                   <ResultBox
                     icon={<Battery size={13} />}
                     label="Battery Capacity"
@@ -478,7 +478,7 @@ export default function ChargingEstimator() {
                   </div>
                 )}
 
-                <div className="flex items-start gap-1.5 mt-3 pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
+                <div className="flex items-start gap-1.5 mt-2 pt-2 sm:mt-3 sm:pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
                   <Info size={11} className="shrink-0 mt-0.5 text-theme-30" />
                   <p className="text-[10px] text-theme-30 leading-relaxed">
                     Charging times &amp; costs are estimates and already account for slower DC charging

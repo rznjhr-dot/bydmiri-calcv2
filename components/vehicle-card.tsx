@@ -72,23 +72,24 @@ export default function VehicleCard({
         <ModelImage src={vehicle.image} name={vehicle.name} />
 
         {/* Bottom banner: name, price, calculator */}
-        <div className="spot-banner w-full mt-2.5 px-3 py-2.5 rounded-lg flex items-center justify-between gap-2 cursor-pointer min-w-0">
+        <div className="spot-banner w-full mt-2.5 px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-lg flex items-center justify-between gap-1.5 sm:gap-2 cursor-pointer min-w-0">
           <div className="min-w-0">
-            <div className="text-[11px] text-theme-50 truncate leading-tight">
+            <div className="font-conthrax text-[11px] text-theme-50 truncate leading-tight">
               {vehicle.name}
             </div>
-            <div className="font-data text-[13px] sm:text-sm font-semibold tracking-tight whitespace-nowrap">
+            <div className="font-data font-semibold tracking-tight leading-tight"
+                 style={{ fontSize: "clamp(10px, 3.2vw, 14px)" }}>
               <span className="text-accent">RM{fmt(monthly)}</span>
-              <span className="text-theme-30">/</span>
+              <span className="text-theme-30 mx-0.5">/</span>
               <span className="text-counter">RM{fmt(monthlyFull)}</span>
-              <span className="text-[10px] text-theme-40 font-medium">/mo</span>
+              <span className="font-medium text-theme-40 ml-0.5" style={{ fontSize: "clamp(8px, 2.4vw, 10px)" }}>/mo</span>
             </div>
             <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 whitespace-nowrap">
               10% · 0% down
             </div>
           </div>
-          <div className="spot-icon shrink-0 flex items-center justify-center w-9 h-9 rounded-lg">
-            <Calculator size={16} className="text-accent" />
+          <div className="spot-icon shrink-0 flex items-center justify-center w-5 h-5 sm:w-9 sm:h-9 rounded-md sm:rounded-lg">
+            <Calculator size={12} className="text-accent" />
           </div>
         </div>
       </div>

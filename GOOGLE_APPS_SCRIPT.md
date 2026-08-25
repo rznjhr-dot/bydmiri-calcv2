@@ -14,28 +14,38 @@
 var SHEET_ID = "1Bw4ZlDSL0EWeh082VnTmDgOoeRW9VrJoWuFi690ZdgM";
 
 function doPost(e) {
+  return processLead(e);
+}
+
+function doGet(e) {
+  return processLead(e);
+}
+
+function processLead(e) {
   try {
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName("Leads");
     if (!sheet) {
       return HtmlService.createHtmlOutput("ERROR: Sheet Leads not found");
     }
 
-    var name = e.parameter.name || "";
-    var phone = e.parameter.phone || "";
-    var targetCar = e.parameter.targetCar || "";
-    var salary = e.parameter.salary || "";
-    var timestamp = e.parameter.timestamp || new Date().toISOString();
-    var source = e.parameter.source || "";
+    var p = e.parameter;
+    if (!p || !p.name || !p.phone) {
+      return HtmlService.createHtmlOutput("OK");
+    }
 
-    sheet.appendRow([timestamp, name, phone, targetCar, salary, source]);
+    sheet.appendRow([
+      p.timestamp || new Date().toISOString(),
+      p.name,
+      p.phone,
+      p.targetCar || "",
+      p.salary || "",
+      p.source || ""
+    ]);
+
     return HtmlService.createHtmlOutput("OK");
   } catch (err) {
     return HtmlService.createHtmlOutput("ERROR: " + err.toString());
   }
-}
-
-function doGet() {
-  return HtmlService.createHtmlOutput("OK");
 }
 ```
 

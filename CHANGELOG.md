@@ -1,6 +1,31 @@
 # Changelog
 
 
+## [2.10.0] — 2026-08-25
+
+### Full audit — security, performance, SEO & code health
+- **Security**: Fixed dead hero CTA — `wa.me/60XXXXXXXXX` placeholder → real number `601131933930`
+- **Performance**: Converted all images to WebP — **9.4 MB → 668 KB (~94% reduction)**
+  - Model cards: PNG cutouts → WebP with **transparent alpha preserved** (38–42 KB each, was 400 KB–2 MB)
+  - Hero slides: JPG → WebP (66–91 KB each, was 500 KB–1.4 MB)
+  - Unused `seal6.jpg` (1.4 MB) removed
+- **SEO**: Per-page metadata moved from client-side `usePageMeta()` to **server-side `layout.tsx`** (`app/pricelist/layout.tsx`, `app/why-byd/layout.tsx`)
+  - Title / description / canonical now render at build time (Google indexes correctly, no JS required)
+  - Removed `lib/use-page-meta.ts` (client-side meta hack)
+- **SEO**: New 1200×630 `og-image.png` (dark theme + white BYD logo + Montserrat) replacing 512×512 logo for social cards
+- **SEO**: `sitemap.xml` lastmod → 2026-08-25
+
+### Code health
+- Removed dead files: `lib/theme.tsx` (empty placeholder), `lib/use-page-meta.ts` (orphaned)
+- Fixed duplicate React key warning — mobile nav had two `id: "charging"` menu items → kept "Charging, Savings & Warranty"
+- Removed unused imports (`useState`, `ClipboardCheck`, `ChevronDown` from why-byd; `usePageMeta` from all pages)
+
+### Verification
+- `tsc --noEmit` clean
+- `next build` pass — all 4 routes prerendered static
+- Server-side titles verified in output: "Full Price List | BYD Miri", "Why BYD? | BYD Miri"
+- WebP alpha channel confirmed for all 6 model cutouts (transparent background preserved)
+
 ## [2.9.0] — 2026-08-25
 
 ### Photo enrichment — full hero carousel + model card overhaul

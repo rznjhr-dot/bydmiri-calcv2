@@ -13,7 +13,7 @@ export function ResultBox({ icon, label, value, sub, highlight, color }: ResultB
   const isCounter = color === "counter";
   return (
     <div
-      className="rounded-lg p-2.5"
+      className="rounded-lg p-2 sm:p-2.5"
       style={{
         backgroundColor: highlight
           ? isCounter
