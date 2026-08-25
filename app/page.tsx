@@ -88,9 +88,6 @@ export default function Home() {
             <button onClick={() => scrollToSection("full-lineup")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Models
             </button>
-            <button onClick={() => scrollToSection("main-content")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
-              Calculator
-            </button>
             <button onClick={() => scrollToSection("charging")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Charging, Savings &amp; Warranty
             </button>
