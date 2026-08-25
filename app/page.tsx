@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, ClipboardCheck, ChevronDown, MapPin, Clock, Menu, X } from "lucide-react";
+import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, MapPin, Clock, Menu, X } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
@@ -27,7 +27,6 @@ export default function Home() {
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
-  const [showEligibility, setShowEligibility] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const legalCloseRef = useRef<HTMLButtonElement>(null);
 
@@ -410,29 +409,12 @@ export default function Home() {
             </a>
           </div>
 
-          {/* Check Eligibility — bottom CTA */}
+          {/* Check Eligibility — form rendered directly, no accordion. */}
           <div className="mt-6 pt-6 border-t" style={{ borderColor: "var(--cz-border)" }}>
             <p className="text-xs text-theme-50 mb-3">
-              Not sure if you&apos;re eligible? Let us check for you.
+              Not sure if you&apos;re eligible? Let us check for you — free &amp; no obligation.
             </p>
-            <button
-              onClick={() => setShowEligibility(!showEligibility)}
-              className="cta-outline inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
-            >
-              <ClipboardCheck size={14} />
-              Check My Eligibility — Free & No Obligation
-              <ChevronDown
-                size={14}
-                className={`transition-transform ${showEligibility ? "rotate-180" : ""}`}
-                style={{ transitionDuration: "var(--dur-short)" }}
-              />
-            </button>
-
-            {showEligibility && (
-              <div className="mt-4 animate-fade-in">
-                <CheckEligibilityForm />
-              </div>
-            )}
+            <CheckEligibilityForm />
           </div>
         </div>
       </section>

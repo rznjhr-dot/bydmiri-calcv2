@@ -146,7 +146,8 @@ export default function Hero() {
             <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <Link
                 href="#full-lineup"
-                className="inline-flex items-center justify-center gap-3 bg-accent text-accent-ink px-6 py-3.5 sm:py-3 font-body font-medium hover:bg-accent-strong motion-safe:transition-colors motion-safe:duration-200 min-h-[44px] sm:min-h-0"
+                className="inline-flex items-center justify-center gap-3 bg-accent px-6 py-3.5 sm:py-3 font-bold text-sm sm:text-base cursor-pointer hover:bg-accent-strong motion-safe:transition-colors motion-safe:duration-200 min-h-[44px] sm:min-h-0 rounded-lg"
+                style={{ color: "var(--cz-accent-ink)" }}
               >
                 Choose your model
                 <ArrowDown className="w-4 h-4" aria-hidden />
