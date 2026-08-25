@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, MapPin, Clock, Menu, X } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
@@ -10,8 +9,6 @@ import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
-import { activeRebate } from "@/lib/vehicles";
-import type { Vehicle } from "@/lib/vehicles";
 import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
 import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
@@ -138,7 +135,7 @@ export default function Home() {
               </Link>
               {[
                 { id: "full-lineup", label: "Models" },
-                { id: "main-content", label: "Calculator" },
+                { id: "charging", label: "Calculator & Extras" },
                 { id: "charging", label: "Charging, Savings & Warranty" },
                 { id: "contact", label: "Contact Us" },
               ].map((item) => (
@@ -165,84 +162,25 @@ export default function Home() {
       {/* Hero */}
       <Hero />
 
-      {/* ── Full Price List ── */}
-      <section id="full-lineup" className="relative px-6 py-12 md:py-16 pb-6 md:pb-8 overflow-hidden scroll-mt-24">
-        <div className="absolute inset-0 bg-theme" />
+      {/* ── Full Lineup — model photo grid (5 columns on lg, 3 on md, stack on mobile) ── */}
+      <section
+        id="full-lineup"
+        className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24 bg-theme"
+      >
+        <div className="absolute inset-0 parking-lot-bg opacity-30" />
+
         <div className="max-w-6xl mx-auto relative">
           <SectionHeader
-            icon={<Zap size={12} />}
+            icon={<span className="w-1.5 h-1.5 rounded-full bg-accent" />}
             label="Complete BYD Lineup"
             title="Discover the Lineup. 6 Models, 10 Choices."
-            subtitle="Explore every model. OTR pricing & monthly instalments below."
+            subtitle="Pick your model, click the calculator icon to estimate your monthly instalment instantly."
             align="start"
             className="mb-6"
           />
 
-          {/* Mobile (< md): card list — every value visible, no horizontal scroll.
-              Desktop (md+): the full comparison table. */}
-          <div className="md:hidden space-y-2">
-            {vehicles.map((v) => (
-              <PricingCardMobile key={v.id} v={v} onCalc={handleSelect} />
-            ))}
-          </div>
-
-          <div className="hidden md:block overflow-x-auto rounded-2xl border bg-theme-card" style={{ borderColor: "var(--cz-border)" }}>
-            <table className="w-full text-left text-xs md:text-sm">
-              <thead>
-                <tr className="border-b bg-theme-alt" style={{ borderColor: "var(--cz-border-strong)" }}>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider">Model</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider text-right">Range</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-theme-40 uppercase tracking-wider text-right leading-tight">OTR Price<br /><span className="text-[10px] font-normal normal-case text-theme-30">(Rebate)</span></th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-accent uppercase tracking-wider text-right">10% Down</th>
-                  <th scope="col" className="px-2 py-3 md:px-3 text-[11px] font-bold text-counter uppercase tracking-wider text-right">0% Down</th>
-                  <th scope="col" className="px-2 py-3 w-6"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {vehicles.map((v, i) => (
-                  <PricingTableRow key={v.id} v={v} onCalc={handleSelect} index={i} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="text-center mt-4">
-            <Link
-              href="/pricelist"
-              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline underline-offset-2 transition-colors py-2 px-2"
-            >
-              View full details &rarr;
-            </Link>
-            <p className="mt-2 text-xs text-theme-40">
-              Monthly estimates: 10% or 0% down &middot; 9-year tenure &middot; 2.30% flat rate. Subject to bank approval T&amp;Cs.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Vehicle Section — Parking Lot Style ── */}
-      <section
-        id="main-content"
-        className="relative px-6 pt-8 md:pt-10 pb-0 scroll-mt-24 bg-theme"
-      >
-        <div className="absolute inset-0 parking-lot-bg opacity-30" />
-        <div
-          className="absolute top-0 left-0 right-0 h-32"
-          style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, transparent 100%)" }}
-        />
-
-        <div className="max-w-6xl mx-auto relative">
-          {/* Section header */}
-          <SectionHeader
-            icon={<span className="w-1.5 h-1.5 rounded-full bg-accent" />}
-            label="Find Your Match"
-            title="Calculate Your Monthly Payment"
-            subtitle="Tap any model to open OTR pricing, specs & instant monthly estimates."
-            size="lg"
-            align="start"
-          />
-
-          {/* Parking Lot Grid */}
+          {/* Parking Lot Grid — same component as the old #main-content.
+              Photos are 16:9 landscape via PNGs from public/images/models/png/. */}
           <div className="flex flex-wrap justify-center -mx-1">
             {vehicles.map((v, i) => (
               <div key={v.id} className="w-full min-[400px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 px-1 mb-5">
@@ -254,6 +192,15 @@ export default function Home() {
                 />
               </div>
             ))}
+          </div>
+
+          <div className="text-center mt-2">
+            <Link
+              href="/pricelist"
+              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline underline-offset-2 transition-colors py-2 px-2"
+            >
+              View full details &rarr;
+            </Link>
           </div>
         </div>
       </section>
@@ -626,153 +573,3 @@ export default function Home() {
   );
 }
 
-/* ── Pricing Card (mobile) — every figure on-screen, stacked rows,
-      no horizontal scroll. Card navigates to pricelist; the calc
-      button stops propagation and opens the calculator modal. ── */
-function PricingCardMobile({ v, onCalc }: { v: Vehicle; onCalc: (id: string) => void }) {
-  const router = useRouter();
-  const rebate = activeRebate(v);
-  const monthly = calcCardMonthly(v.otr, rebate);
-  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => router.push("/pricelist")}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          router.push("/pricelist");
-        }
-      }}
-      className="rounded-xl border bg-theme-card p-3 cursor-pointer transition-colors hover:bg-theme-alt"
-      style={{ borderColor: "var(--cz-border)" }}
-    >
-      {/* Row 1: image + name + calc button */}
-      <div className="flex items-center gap-3">
-        <div
-          className="w-16 h-10 rounded-md overflow-hidden bg-black/40 shrink-0 border"
-          style={{ borderColor: "var(--cz-border)" }}
-        >
-          <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-theme-90 text-sm leading-snug truncate">{v.name}</div>
-          <div className="text-[11px] text-theme-40 leading-tight">{v.range} km range</div>
-        </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onCalc(v.id);
-          }}
-          className="calc-btn flex items-center justify-center w-11 h-11 rounded-md shrink-0"
-          aria-label={`Calculate monthly payment for ${v.name}`}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="4" y="2" width="16" height="20" rx="2" />
-            <line x1="8" y1="6" x2="16" y2="6" />
-            <line x1="8" y1="10" x2="16" y2="10" />
-            <line x1="8" y1="14" x2="12" y2="14" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Row 2: figures — OTR left, monthly pair right. Figures NEVER wrap;
-          labels yield space first (truncate) so RM values stay kemas. */}
-      <div
-        className="flex items-end justify-between gap-3 mt-3 pt-3 border-t"
-        style={{ borderColor: "var(--cz-border)" }}
-      >
-        <div className="min-w-0">
-          <div className="text-[10px] text-theme-30 uppercase tracking-wide truncate">OTR (Rebate)</div>
-          <div className="font-data text-theme-80 text-sm leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
-          <div className="font-data text-counter text-[11px] leading-tight whitespace-nowrap">−RM{fmt(rebate)}</div>
-        </div>
-        <div className="text-right shrink-0">
-          <div className="whitespace-nowrap">
-            <span className="text-[10px] text-accent mr-1">10%</span>
-            <span className="font-data font-semibold text-accent text-sm whitespace-nowrap">RM{fmt(monthly)}</span>
-            <span className="text-accent text-[10px]">/mo</span>
-          </div>
-          <div className="whitespace-nowrap mt-0.5">
-            <span className="text-[10px] text-counter mr-1">0%</span>
-            <span className="font-data font-semibold text-counter text-sm whitespace-nowrap">RM{fmt(monthlyFull)}</span>
-            <span className="text-counter text-[10px]">/mo</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Pricing Table Row (desktop only, md+) ── */
-function PricingTableRow({ v, onCalc, index }: { v: Vehicle; onCalc: (id: string) => void; index: number }) {
-  const router = useRouter();
-  const rebate = activeRebate(v);
-  const monthly = calcCardMonthly(v.otr, rebate);
-  const monthlyFull = calcFullLoanMonthly(v.otr, rebate);
-
-  return (
-    <tr
-      onClick={() => router.push("/pricelist")}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          router.push("/pricelist");
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      className={`border-b transition-colors cursor-pointer ${
-        index % 2 === 1 ? "bg-theme-alt" : ""
-      } hover:bg-white/[0.04]`}
-      style={{ borderColor: "var(--cz-border)" }}
-    >
-      <td className="px-2 py-2.5 md:px-3 md:py-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-16 h-9 rounded-md overflow-hidden bg-black/40 shrink-0 border" style={{ borderColor: "var(--cz-border)" }}>
-            <Img src={v.image} alt={v.name} className="w-full h-full object-contain" width={100} height={56} />
-          </div>
-          <div className="min-w-0">
-            <div className="font-medium text-theme-90 text-sm leading-snug">{v.name}</div>
-            <div className="text-[10px] text-theme-30 truncate">{v.category}</div>
-          </div>
-        </div>
-      </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
-        <span className="font-data text-theme-50 text-sm">{v.range}</span>
-        <span className="text-theme-30 text-[11px]"> km</span>
-      </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
-        <div className="font-data text-theme-80 text-sm leading-tight whitespace-nowrap">RM{fmt(v.otr)}</div>
-        <div className="font-data text-counter text-[11px] leading-tight whitespace-nowrap">(-RM{fmt(rebate)})</div>
-      </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
-        <span className="font-data font-semibold text-accent text-[15px]">RM{fmt(monthly)}</span>
-        <span className="text-accent text-[11px] font-medium">/mo</span>
-      </td>
-      <td className="px-2 py-2.5 md:px-3 md:py-3 text-right whitespace-nowrap">
-        <span className="font-data font-semibold text-counter text-[15px]">RM{fmt(monthlyFull)}</span>
-        <span className="text-counter text-[11px] font-medium">/mo</span>
-      </td>
-      <td className="px-2 py-2.5 md:py-3">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onCalc(v.id);
-          }}
-          className="calc-btn flex items-center justify-center w-11 h-11 rounded-md"
-          aria-label={`Calculate monthly payment for ${v.name}`}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="4" y="2" width="16" height="20" rx="2" />
-            <line x1="8" y1="6" x2="16" y2="6" />
-            <line x1="8" y1="10" x2="16" y2="10" />
-            <line x1="8" y1="14" x2="12" y2="14" />
-          </svg>
-        </button>
-      </td>
-    </tr>
-  );
-}
