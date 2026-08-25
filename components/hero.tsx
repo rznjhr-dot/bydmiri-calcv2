@@ -77,6 +77,7 @@ export default function Hero() {
   const slide = SLIDES[idx];
   const prev = () => setIdx((i) => (i - 1 + total) % total);
   const next = () => setIdx((i) => (i + 1) % total);
+  if (!slide) return null;
 
   return (
     <section className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-theme">
