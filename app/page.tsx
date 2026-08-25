@@ -9,7 +9,6 @@ import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
-import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import ChargingEstimator from "@/components/charging-estimator";
 import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
 import { usePageMeta } from "@/lib/use-page-meta";
