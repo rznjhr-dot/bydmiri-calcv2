@@ -104,6 +104,9 @@ export default function Home() {
             <button onClick={() => scrollToSection("charging")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Charging, Savings &amp; Warranty
             </button>
+            <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Why BYD
+            </Link>
             <button onClick={() => scrollToSection("contact")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Contact Us
             </button>
@@ -148,6 +151,13 @@ export default function Home() {
                   {item.label}
                 </button>
               ))}
+              <Link
+                href="/why-byd"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Why BYD
+              </Link>
             </div>
           </div>
         )}

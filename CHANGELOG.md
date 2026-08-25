@@ -1,6 +1,46 @@
 # Changelog
 
+
+## [2.9.0] — 2026-08-25
+
+### Photo enrichment — full hero carousel + model card overhaul
+- **Real Sime Motors MY homepage KV assets** for all 5 hero slides (Atto 3 Premium, Sealion 7, M6 Extended, BYD Seal, Atto 2) at 1920×1082 (native desktop hero dimensions)
+- **Brand-licensed PNG cutouts** in `public/images/models/png/` for model cards — clean studio shots used by all 10 vehicle entries (Atto 3 Premium/Ultra, Atto 2, Sealion 7 Premium/Performance/Dynamic, Seal Premium/Performance, Seal 6, M6); clip-path-friendly 2:1 landscape ratio
+- **Vehicle-card rendering** (`components/vehicle-card.tsx`) — `object-cover` → `object-contain` so wide-ratio PNGs no longer get clipped in the 5-column calculator grid
+- **Hero CTA copy** — "See your monthly" → **"Choose your model"**; target `#calculator` → `#full-lineup` (the actual lineup section)
+- **Duplicate hero files dropped** — `atto3ultra.jpg`, `sealion7dynamic.jpg`, `sealion7performance.jpg`, `sealperformance.jpg` (vehicle trims share body shape, kept canonical filename per model)
+- **Broken `bydImage` paths** in `app/why-byd/page.tsx` comparison cards fixed: `/images/X.jpg` → `/images/hero/X.jpg` (real BYD models now display in VS sections)
+- **Why-byd advantage cards** — added `image`/`imageAlt` fields with hero fallback photos; cards now render media-or-none (video wins, falls back to image, then icon-only)
+- **Why-byd nav link added** to top navigation (desktop + mobile), pointing at `/why-byd` route
+
+### Mobile optimizations (`components/hero.tsx`)
+- Headline `text-5xl` (48px) → `text-[40px]` on phones for tighter line breaks
+- Eyebrow chip condensed: "BYD Miri · Kah Progression Auto · Sarawak" → "BYD · Miri · Sarawak" (full text restored on `sm+`)
+- Subtitle: `text-lg` → `text-sm` on mobile
+- Buttons: stacked full-width with 44px tap-target on mobile, inline on `sm+`
+- Slide arrows: bottom-right (overlapped caption) → **top-right on mobile**, with rounded touch targets + backdrop blur
+- Dots navigation: bottom-center (clashed with caption) → **bottom-right on mobile**, backdrop-blurred pill style
+- iOS safe-area support — `.safe-area-bottom` utility added to `globals.css`; uses `env(safe-area-inset-bottom)` to clear iPhone home bar
+- `min-h-[44px]` on touch targets (Apple HIG compliance)
+- Zero compiled-against stale Tailwind classes — verified with mobile UA render (iPhone user-agent)
+
+### Codebase slim-down (token conservation)
+- Deleted 7 unused `scripts/*.py` (one-off build tools: `download-byd-photos.py`, `extract-brochure-images.py`, `use-brochures.py`, `clean-hero-kvs.py`, `composite-hero.py`, `process-photos.py`, `upscale-clean-press.py`) — replaced by your direct uploads
+- Removed `public/images/_brochure-source/` (8.1 MB raw PDF page extracts)
+- Removed orphaned `data/` directory (stale `image_credits.json` from deleted scripts)
+- Stripped `out/` (89 MB static export from prior build) and `.next/cache/` (regenerates on next dev/build)
+- Cleaned 6 `.DS_Store` files (Mac metadata noise)
+- Project slimmed by ~100 MB before commit
+
+### Verification
+- `curl -A 'iPhone…'` rendered mobile HTML — all `sm:` breakpoints present, dots/arrows repositioned correctly
+- Server: HTTP 200 on `/`, `/pricelist`, `/why-byd` after the slimmer build
+- All 5 unique hero JPGs (1920×1082) + 6 unique PNG cutouts serve 200 OK from `/images/hero/` and `/images/models/png/`
+- Cards: `object-contain` verified — wide-aspect PNGs now fit without vertical clipping
+- Why-byd comparison cards: 3 BYD model images now render correctly (was: broken paths)
+
 ## [2.8.0] — 2026-08-21
+
 
 ### Fixed (visual bugs from the token migration)
 - **Charging slider fill bar restored** — the green fill between the two handles was invisible: the migration had placed a bare `var(--cz-accent)` token inside `className` (invalid CSS class). Now a proper inline `backgroundColor`; handle rings also tokenized (removed hardcoded emerald rgba + glow)

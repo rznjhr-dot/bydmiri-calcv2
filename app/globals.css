@@ -526,3 +526,9 @@ a:focus-visible {
   border-color: var(--cz-accent-line);
   outline: none;
 }
+
+
+/* --- iOS safe-area support for hero --- */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom { padding-bottom: max(7rem, calc(env(safe-area-inset-bottom) + 6rem)); }
+}

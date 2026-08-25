@@ -14,17 +14,22 @@ interface Props {
   index: number;
 }
 
-/* ── Model Image ── */
+/* ── Model Image ──
+   Render at a fixed panel ratio. Brochure pages are portrait (1241×1754 ≈ 0.71),
+   so we use object-cover center-crop and letterbox the overflow. Selected car
+   gets a cyan ring; hover lifts the card.
+*/
 function ModelImage({ src, name }: { src: string; name: string }) {
   return (
     <div
-      className="w-full rounded-lg overflow-hidden"
-      style={{ aspectRatio: "2572/1200", backgroundColor: "var(--cz-input)" }}
+      className="w-full rounded-lg overflow-hidden bg-[var(--cz-input)]"
+      style={{ aspectRatio: "16 / 9" }}
     >
       <Img
         src={src}
         alt={name}
         className="w-full h-full object-contain"
+        priority
       />
     </div>
   );
@@ -43,7 +48,6 @@ export default function VehicleCard({
   const { ref, inView } = useInView<HTMLDivElement>();
 
   const handleClick = () => onSelect(vehicle.id);
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -64,22 +68,24 @@ export default function VehicleCard({
         tabIndex={0}
         className={`parking-spot ${isSelected ? "selected" : ""}`}
       >
-        {/* Model Image */}
+        {/* Model Image — uses /images/models/{car_id}.jpg */}
         <ModelImage src={vehicle.image} name={vehicle.name} />
 
         {/* Bottom banner: name, price, calculator */}
-        <div
-          className="spot-banner w-full mt-2.5 px-3 py-2.5 rounded-lg flex items-center justify-between gap-2 cursor-pointer min-w-0"
-        >
+        <div className="spot-banner w-full mt-2.5 px-3 py-2.5 rounded-lg flex items-center justify-between gap-2 cursor-pointer min-w-0">
           <div className="min-w-0">
             <div className="text-[11px] text-theme-50 truncate leading-tight">
               {vehicle.name}
             </div>
-            {/* Figures never wrap — the name truncates instead */}
             <div className="font-data text-[13px] sm:text-sm font-semibold tracking-tight whitespace-nowrap">
-              <span className="text-accent">RM{fmt(monthly)}</span><span className="text-theme-30">/</span><span className="text-counter">RM{fmt(monthlyFull)}</span><span className="text-[10px] text-theme-40 font-medium">/mo</span>
+              <span className="text-accent">RM{fmt(monthly)}</span>
+              <span className="text-theme-30">/</span>
+              <span className="text-counter">RM{fmt(monthlyFull)}</span>
+              <span className="text-[10px] text-theme-40 font-medium">/mo</span>
             </div>
-            <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 whitespace-nowrap">10% · 0% down</div>
+            <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 whitespace-nowrap">
+              10% · 0% down
+            </div>
           </div>
           <div className="spot-icon shrink-0 flex items-center justify-center w-9 h-9 rounded-lg">
             <Calculator size={16} className="text-accent" />

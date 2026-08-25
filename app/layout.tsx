@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     "kereta EV Miri",
     "buy BYD Miri Sarawak",
     "BYD dealership Miri",
-    "BYD Sime Motors",
+    "BYD Kah Progression Auto",
     "BYD Miri contact",
   ],
 

@@ -29,6 +29,8 @@ const advantages = [
     icon: Shield,
     title: "Blade Battery Technology",
     subtitle: "The Safest EV Battery Ever Made",
+    image: "/images/hero/atto3premium.jpg",
+    imageAlt: "BYD Blade Battery powered Atto 3",
     points: [
       "Passed nail penetration test — no fire, no explosion",
       "LFP chemistry — longer lifespan, more stable than NMC",
@@ -45,6 +47,8 @@ const advantages = [
     icon: BadgeCheck,
     title: "Industry-Leading Warranty",
     subtitle: "Peace of Mind, Standard",
+    image: "/images/hero/sealpremium.jpg",
+    imageAlt: "BYD Seal — backed by 6+8 year warranty",
     points: [
       "6 years or 150,000 km vehicle warranty",
       "8 years or 160,000 km battery warranty",
@@ -57,6 +61,8 @@ const advantages = [
     icon: Cable,
     title: "V2L — Vehicle-to-Load",
     subtitle: "Your Car Becomes a Power Station",
+    image: "/images/hero/sealion7premium.jpg",
+    imageAlt: "BYD Sealion 7 — V2L capable",
     points: [
       "Standard across ALL BYD models — no extra cost",
       "Power your home appliances, laptops, camping gear",
@@ -69,6 +75,8 @@ const advantages = [
     icon: Zap,
     title: "World's #1 NEV Manufacturer",
     subtitle: "Global Leadership You Can Trust",
+    image: "/images/hero/m6.jpg",
+    imageAlt: "BYD M6 — best-selling EV family MPV",
     points: [
       "Largest new energy vehicle maker in the world (2024–2025)",
       "Over 17 million electrified vehicles sold globally",
@@ -108,7 +116,7 @@ const comparisons = [
     },
     verdict:
       "Atto 3 offers more range, proven safety (285.6 GWh Blade Battery installed in 2025), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
-    bydImage: "/images/atto3-ultra.jpg",
+    bydImage: "/images/hero/atto3premium.jpg",
     bydImageAlt: "BYD Atto 3 Ultra",
   },
   {
@@ -137,7 +145,7 @@ const comparisons = [
     },
     verdict:
       "Seal delivers superior range and a comprehensive warranty at a competitive price point with V2L included as standard.",
-    bydImage: "/images/seal-premium.jpg",
+    bydImage: "/images/hero/sealpremium.jpg",
     bydImageAlt: "BYD Seal Premium",
   },
   {
@@ -168,7 +176,7 @@ const comparisons = [
     },
     verdict:
       "M6 stands alone as the only 7-seat EV MPV under RM150,000 in Malaysia — ideal for families who need space and range.",
-    bydImage: "/images/m6.jpg",
+    bydImage: "/images/hero/m6.jpg",
     bydImageAlt: "BYD M6 Extended — 7-seat EV MPV",
   },
 ];
@@ -297,12 +305,20 @@ export default function WhyBydPage() {
                 style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
-                  {/* Media column — ONLY the Blade Battery test video.
-                      Other topics get no media: a random car photo next to
-                      "Warranty" is decoration, not information. */}
+                  {/* Media column — video wins, fall back to image, then icon-only.
+                      Image is preferred over bare icons: a real photo of the
+                      car/feature builds trust faster than a glyph. */}
                   {adv.videoId ? (
                     <div className="w-full md:w-2/5 shrink-0">
                       <VideoEmbed videoId={adv.videoId} title={`${adv.title} — official test video`} />
+                    </div>
+                  ) : adv.image ? (
+                    <div className="w-full md:w-2/5 shrink-0">
+                      <Img
+                        src={adv.image}
+                        alt={adv.imageAlt || adv.title}
+                        className="w-full h-auto rounded-lg"
+                      />
                     </div>
                   ) : null}
 
