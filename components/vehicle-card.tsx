@@ -71,20 +71,26 @@ export default function VehicleCard({
         {/* Model Image — uses /images/models/{car_id}.jpg */}
         <ModelImage src={vehicle.image} name={vehicle.name} />
 
-        {/* Bottom banner: name, price, calculator */}
+        {/* Bottom banner: name, price, calculator.
+            Price layout is responsive: on mobile the two monthly figures
+            stack vertically (each RM figure fits ~50px) so nothing clips;
+            on sm+ they go inline as before. */}
         <div className="spot-banner w-full mt-2.5 px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-lg flex items-center justify-between gap-1.5 sm:gap-2 cursor-pointer min-w-0">
-          <div className="min-w-0">
-            <div className="font-conthrax text-[11px] text-theme-50 truncate leading-tight">
+          <div className="min-w-0 flex-1">
+            <div className="font-conthrax text-[11px] text-theme-50 leading-tight break-words">
               {vehicle.name}
             </div>
-            <div className="font-data font-semibold tracking-tight leading-tight"
-                 style={{ fontSize: "clamp(10px, 3.2vw, 14px)" }}>
-              <span className="text-accent">RM{fmt(monthly)}</span>
-              <span className="text-theme-30 mx-0.5">/</span>
-              <span className="text-counter">RM{fmt(monthlyFull)}</span>
-              <span className="font-medium text-theme-40 ml-0.5" style={{ fontSize: "clamp(8px, 2.4vw, 10px)" }}>/mo</span>
+            {/* Mobile: stacked; sm+: inline */}
+            <div className="font-data font-semibold tracking-tight leading-tight flex flex-col sm:flex-row sm:items-baseline sm:gap-1 min-w-0">
+              <span className="text-accent whitespace-nowrap" style={{ fontSize: "clamp(11px, 3.5vw, 14px)" }}>
+                RM{fmt(monthly)}<span className="font-medium text-theme-40 ml-0.5" style={{ fontSize: "clamp(8px, 2.4vw, 10px)" }}>/mo</span>
+              </span>
+              <span className="text-counter whitespace-nowrap" style={{ fontSize: "clamp(9px, 2.8vw, 12px)" }}>
+                <span className="text-theme-30 mr-0.5 sm:hidden">0% </span>
+                RM{fmt(monthlyFull)}
+              </span>
             </div>
-            <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 whitespace-nowrap">
+            <div className="text-[10px] text-theme-30 leading-tight -mt-0.5 hidden sm:block">
               10% · 0% down
             </div>
           </div>

@@ -229,8 +229,8 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
           <Img src={v.image} alt={v.name} className="w-full h-full object-contain" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-theme-80 truncate">{v.name}</div>
-          <div className="text-[10px] text-theme-30 truncate">{v.category}</div>
+          <div className="text-sm font-semibold text-theme-80 break-words leading-tight">{v.name}</div>
+          <div className="text-[10px] text-theme-30 break-words leading-tight">{v.category}</div>
         </div>
         <button
           onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
@@ -241,40 +241,46 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
         </button>
       </div>
 
-      {/* Row 2: monthly figures — full-width row, wraps never */}
+      {/* Row 2: monthly figures — stacked on mobile, inline on sm+ */}
       <div
         className="flex items-center justify-between gap-2 mt-2.5 pt-2.5 border-t border-[color:var(--cz-border)]"
       >
-        <a href={v.url} target="_blank" rel="noopener noreferrer" className="text-accent inline-flex items-center gap-1 px-3 min-h-9 rounded-lg text-[11px] font-semibold transition-colors" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)" }}>
+        <a href={v.url} target="_blank" rel="noopener noreferrer" className="text-accent inline-flex items-center gap-1 px-3 min-h-9 rounded-lg text-[11px] font-semibold transition-colors shrink-0" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)" }}>
           Brochure <ExternalLink size={11} />
         </a>
         <div className="text-right min-w-0">
-          <div className="text-[10px]"><span className="text-accent">10%</span> <span className="text-theme-20">·</span> <span className="text-counter">0%</span> <span className="text-theme-30">down</span></div>
-          <div className="text-sm font-semibold font-data whitespace-nowrap">
-            <span className="text-accent">RM{fmt(monthly)}</span><span className="text-theme-20"> · </span><span className="text-counter">RM{fmt(monthlyFull)}</span>
+          <div className="text-[10px] hidden sm:block">
+            <span className="text-accent">10%</span> <span className="text-theme-20">·</span> <span className="text-counter">0%</span> <span className="text-theme-30">down</span>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-end sm:gap-1">
+            <span className="text-[10px] sm:hidden text-accent">10% down</span>
+            <span className="text-accent font-semibold font-data whitespace-nowrap text-sm">RM{fmt(monthly)}</span>
+            <span className="text-theme-20 hidden sm:inline">·</span>
+            <span className="text-[10px] sm:hidden text-theme-20">0% down</span>
+            <span className="text-counter font-semibold font-data whitespace-nowrap text-sm">RM{fmt(monthlyFull)}</span>
           </div>
         </div>
       </div>
 
-      {/* Row 3: OTR breakdown ledger */}
+      {/* Row 3: OTR breakdown ledger — 1-col on mobile, 2-col on sm+ */}
       <div className="space-y-1 text-xs pt-2.5 mt-2.5 border-t border-[color:var(--cz-border)]">
-        <div className="grid grid-cols-2 gap-x-3">
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Body Price</span><span className="text-theme-70 font-data whitespace-nowrap shrink-0">RM{fmt(v.sumInsured)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Road Tax</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(v.roadTax)}</span></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Body Price</span><span className="text-theme-70 font-data whitespace-nowrap shrink-0">RM{fmt(v.sumInsured)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Road Tax</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(v.roadTax)}</span></div>
         </div>
-        <div className="grid grid-cols-2 gap-x-3">
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Registration</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(REG_FEE)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">EV Plate</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(EV_PLATE_FEE)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">B2 Inspection</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(INSPECTION_FEE)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">OTR w/o Ins.</span><span className="text-theme-70 font-data whitespace-nowrap shrink-0">RM{fmt(otrWO)}</span></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Registration</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(REG_FEE)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">EV Plate</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(EV_PLATE_FEE)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">B2 Inspection</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(INSPECTION_FEE)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">OTR w/o Ins.</span><span className="text-theme-70 font-data whitespace-nowrap shrink-0">RM{fmt(otrWO)}</span></div>
         </div>
-        <div className="grid grid-cols-2 gap-x-3">
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Insurance</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(insurance)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-accent font-semibold truncate">OTR Price</span><span className="text-theme-90 font-semibold font-data whitespace-nowrap shrink-0">RM{fmt(v.otr)}</span></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Insurance</span><span className="text-theme-50 font-data whitespace-nowrap shrink-0">+RM{fmt(insurance)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-accent font-semibold">OTR Price</span><span className="text-theme-90 font-semibold font-data whitespace-nowrap shrink-0">RM{fmt(v.otr)}</span></div>
         </div>
-        <div className="grid grid-cols-2 gap-x-3 pt-1 border-t border-[color:var(--cz-border)]">
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Rebate</span><span className="text-counter font-semibold font-data whitespace-nowrap shrink-0">-RM{fmt(rebate)}</span></div>
-          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30 truncate">Range</span><span className="text-theme-50 whitespace-nowrap shrink-0">{v.range} km</span></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 pt-1 border-t border-[color:var(--cz-border)]">
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Rebate</span><span className="text-counter font-semibold font-data whitespace-nowrap shrink-0">-RM{fmt(rebate)}</span></div>
+          <div className="flex justify-between gap-1 min-w-0"><span className="text-theme-30">Range</span><span className="text-theme-50 whitespace-nowrap shrink-0">{v.range} km</span></div>
         </div>
       </div>
     </div>

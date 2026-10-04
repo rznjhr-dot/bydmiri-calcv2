@@ -38,6 +38,11 @@ export default function FuelSavingsCalculator() {
   const [tariffKey, setTariffKey] = useState<TariffKey>("sarawak-above-1300");
   const [customElecPrice, setCustomElecPrice] = useState("");
   const [calculated, setCalculated] = useState(false);
+  // Draft for the derived L/100km field. While the user is typing we show their
+  // raw text (so decimals survive); on blur we clear it and fall back to the
+  // derived value. Without this, every keystroke is overwritten by the derived
+  // round-trip and a decimal point can never be entered.
+  const [l100Draft, setL100Draft] = useState<string | null>(null);
 
   // Static lookup built once at module scope.
   const vehicle = VEHICLES_BY_ID.get(selectedId) ?? vehicles[0]!;
@@ -271,7 +276,10 @@ export default function FuelSavingsCalculator() {
                     min="0"
                     step="0.1"
                     value={iceKmPerL}
-                    onChange={(e) => setIceKmPerL(e.target.value)}
+                    onChange={(e) => {
+                      setIceKmPerL(e.target.value);
+                      setL100Draft(null);
+                    }}
                     aria-label="Current car fuel efficiency in km per litre"
                     className={`${fieldCls} pl-7 pr-3`}
                     style={inputStyle}
@@ -287,11 +295,14 @@ export default function FuelSavingsCalculator() {
                     inputMode="decimal"
                     min="0"
                     step="0.1"
-                    value={lPer100 !== null ? lPer100.toFixed(1) : ""}
+                    value={l100Draft ?? (lPer100 !== null ? lPer100.toFixed(1) : "")}
                     onChange={(e) => {
-                      const v = parseFloat(e.target.value);
-                      if (v > 0) setIceKmPerL(String(100 / v));
+                      const raw = e.target.value;
+                      setL100Draft(raw);
+                      const v = parseFloat(raw);
+                      if (v > 0) setIceKmPerL(String(Number((100 / v).toFixed(2))));
                     }}
+                    onBlur={() => setL100Draft(null)}
                     aria-label="Current car fuel consumption in litres per 100 km"
                     className={`${fieldCls} pl-7 pr-3`}
                     style={inputStyle}

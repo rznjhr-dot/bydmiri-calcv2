@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { Zap, Battery, Clock, DollarSign, Cable, Car, Info } from "lucide-react";
 import { fetchChargingProfiles, type ChargingProfiles } from "@/lib/charging-profiles";
+import { vehicles } from "@/lib/vehicles";
 import { ResultBox } from "@/components/result-box";
 
 const CHARGERS = [
@@ -26,6 +27,13 @@ const OPTION_ORDER = [
   "seal-performance",
   "m6-extended",
 ];
+
+// Canonical option id, derived from the display label. Both the remote and the
+// bundled fallback paths build ids through this single helper so they cannot
+// drift apart; OPTION_ORDER entries must equal optionId(<display label>).
+function optionId(label: string): string {
+  return label.toLowerCase().replace(/\s+/g, "-");
+}
 
 function parseACKW(val: string): number {
   const m = val.match(/(\d+\.?\d*)\s*kW/);
@@ -107,9 +115,10 @@ function flattenVariants(models: RawModel[]): VariantOption[] {
   const list: VariantOption[] = [];
   for (const m of models) {
     for (const v of m.variants) {
+      const label = `${m.model} ${v.name}`;
       list.push({
-        id: `${m.model.toLowerCase().replace(/\s+/g, "-")}-${v.name.toLowerCase().replace(/\s+/g, "-")}`,
-        label: `${m.model} ${v.name}`,
+        id: optionId(label),
+        label,
         battery: v.battery,
         range: v.range,
         acCharging: v.acCharging,
@@ -118,6 +127,21 @@ function flattenVariants(models: RawModel[]): VariantOption[] {
     }
   }
   return list;
+}
+
+// Bundled fallback so the estimator still works if the remote data host is
+// unreachable. Ids come from the same optionId helper as the remote path, so
+// they match OPTION_ORDER and sort identically. AC limit falls back to 7 kW
+// (same default the remote parser uses).
+function fallbackOptions(): VariantOption[] {
+  return vehicles.map((v) => ({
+    id: optionId(v.name),
+    label: v.name,
+    battery: v.battery,
+    range: v.range,
+    acCharging: `${v.acLimitKw ?? 7} kW`,
+    maxChargePower: `${v.maxChargeKw} kW`,
+  }));
 }
 
 export default function ChargingEstimator() {
@@ -136,24 +160,47 @@ export default function ChargingEstimator() {
   const [dragging, setDragging] = useState<"from" | "to" | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const apply = (flat: VariantOption[]) => {
+      if (cancelled) return;
+      const sorted = [...flat].sort(
+        (a, b) => OPTION_ORDER.indexOf(a.id) - OPTION_ORDER.indexOf(b.id)
+      );
+      setOptions(sorted);
+      if (sorted.length > 0) setSelectedId(sorted[0]!.id);
+    };
+
     fetch(VEHICLES_URL)
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data: RawModel[]) => {
         const flat = flattenVariants(data);
-        flat.sort((a, b) => OPTION_ORDER.indexOf(a.id) - OPTION_ORDER.indexOf(b.id));
-        setOptions(flat);
-        if (flat.length > 0) setSelectedId(flat[0]!.id);
+        if (flat.length === 0) throw new Error("empty payload");
+        apply(flat);
       })
       .catch(() => {
-        // fallback: keep empty
+        // Remote host unreachable or malformed — fall back to bundled data so
+        // the estimator is never left showing "Unable to load vehicle data".
+        apply(fallbackOptions());
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
     fetchChargingProfiles()
-      .then(setProfiles)
+      .then((p) => {
+        if (!cancelled) setProfiles(p);
+      })
       .catch(() => {
         // fallback: keep null, calculation will use hardcoded fallbacks
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const clampPct = useCallback((clientX: number): number => {

@@ -76,6 +76,15 @@ export default function Calculator({ vehicle }: Props) {
   const showCustom =
     customDeposit !== "" && parseFloat(customDeposit) > 0;
 
+  // When a custom RM downpayment is entered, show what it works out to as a
+  // percentage of the full (OTR) price. Based on the deposit the calculator
+  // actually applies, so it stays consistent with the ledger's Downpayment line
+  // when a custom amount is capped at the net price.
+  const customPctOfOtr =
+    showCustom && vehicle.otr > 0
+      ? (result.depositAmount / vehicle.otr) * 100
+      : null;
+
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-6">
@@ -199,6 +208,11 @@ export default function Calculator({ vehicle }: Props) {
                   }}
                 />
               </div>
+              {customPctOfOtr !== null && (
+                <p className="text-[11px] text-theme-40 text-center mt-1.5">
+                  ≈&nbsp;{customPctOfOtr.toFixed(1)}% of OTR price
+                </p>
+              )}
             </div>
 
             {/* Rate & Tenure */}

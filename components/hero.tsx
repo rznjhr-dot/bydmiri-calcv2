@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Phone, ArrowDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, Phone, ArrowDown, Pause, Play } from "lucide-react";
 
 /**
  * Hero carousel — showcase of the BYD Miri lineup, one slide per model.
@@ -67,12 +67,28 @@ const SLIDES = [
 
 export default function Hero() {
   const [idx, setIdx] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const [hovered, setHovered] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const total = SLIDES.length;
 
+  // Respect prefers-reduced-motion: do not auto-rotate for users who ask for less motion.
   useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Auto-advance pauses when the user toggles it off, while the carousel is
+  // hovered or focused, or under reduced motion.
+  const playing = autoplay && !hovered && !reduceMotion;
+  useEffect(() => {
+    if (!playing) return;
     const id = setInterval(() => setIdx((i) => (i + 1) % total), 6000);
     return () => clearInterval(id);
-  }, [total]);
+  }, [playing, total]);
 
   const slide = SLIDES[idx];
   const prev = () => setIdx((i) => (i - 1 + total) % total);
@@ -80,7 +96,16 @@ export default function Hero() {
   if (!slide) return null;
 
   return (
-    <section className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-theme">
+    <section
+      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-theme"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setHovered(true)}
+      onBlurCapture={(e) => {
+        // Only resume once focus actually leaves the carousel.
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHovered(false);
+      }}
+    >
       {/* Background slides — crossfade */}
       {SLIDES.map((s, i) => (
         <div
@@ -170,6 +195,17 @@ export default function Hero() {
           bottom-right on desktop. Tap-friendly 44px minimum. */}
       <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-auto sm:right-8 flex items-center gap-2 z-10">
         <button
+          onClick={() => setAutoplay((p) => !p)}
+          aria-label={autoplay ? "Pause slideshow" : "Play slideshow"}
+          className="w-11 h-11 sm:w-10 sm:h-10 inline-flex items-center justify-center bg-black/50 hover:bg-black/80 text-white border border-white/20 motion-safe:transition-colors rounded-full sm:rounded-none backdrop-blur-sm"
+        >
+          {autoplay ? (
+            <Pause className="w-5 h-5" aria-hidden />
+          ) : (
+            <Play className="w-5 h-5" aria-hidden />
+          )}
+        </button>
+        <button
           onClick={prev}
           aria-label="Previous slide"
           className="w-11 h-11 sm:w-10 sm:h-10 inline-flex items-center justify-center bg-black/50 hover:bg-black/80 text-white border border-white/20 motion-safe:transition-colors rounded-full sm:rounded-none backdrop-blur-sm"
@@ -192,7 +228,8 @@ export default function Hero() {
             key={s.name}
             onClick={() => setIdx(i)}
             aria-label={`Go to slide ${i + 1}`}
-            className={`h-1 motion-safe:transition-all motion-safe:duration-200 ${
+            aria-current={i === idx ? "true" : undefined}
+            className={`relative h-1 before:absolute before:inset-x-[-2px] before:inset-y-[-12px] before:content-[''] motion-safe:transition-all motion-safe:duration-200 ${
               i === idx ? "w-8 bg-accent" : "w-4 bg-white/30 hover:bg-white/60"
             }`}
           />
