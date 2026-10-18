@@ -78,6 +78,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           <input
             type="text"
             placeholder="Full name *"
+            aria-label="Full name"
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"
@@ -86,6 +88,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           <input
             type="tel"
             placeholder="Phone number *"
+            aria-label="Phone number"
+            autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"
@@ -95,6 +99,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <select
             value={targetCar}
+            aria-label="Target car"
             onChange={(e) => setTargetCar(e.target.value)}
             className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors appearance-none"
             required
@@ -117,6 +122,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           <input
             type="number"
             placeholder="Monthly income (RM) *"
+            aria-label="Monthly income in ringgit"
+            inputMode="numeric"
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
             className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors"

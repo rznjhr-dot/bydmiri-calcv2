@@ -33,6 +33,7 @@ export default function PricelistPage() {
         </div>
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* Hero — Minimal: pure paper, no decoration */}
       <section className="relative pt-24 pb-8 md:pt-32 md:pb-12 overflow-hidden bg-theme">
         <div className="relative max-w-6xl mx-auto px-6 text-center">
@@ -93,7 +94,7 @@ export default function PricelistPage() {
               Monthly estimates for 10% &amp; 0% down, 9 years, 2.3% rate. Subject to bank approval T&amp;Cs.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/#main-content" className="hero-cta inline-flex items-center gap-1.5 px-5 py-3 min-h-11 rounded-full bg-accent text-sm font-semibold" style={{ color: "var(--cz-accent-ink)" }}>
+              <Link href="/#full-lineup" className="hero-cta inline-flex items-center gap-1.5 px-5 py-3 min-h-11 rounded-full bg-accent text-sm font-semibold" style={{ color: "var(--cz-accent-ink)" }}>
                 Calculate My Payment
               </Link>
               <Link href="/why-byd" className="inline-flex items-center gap-1.5 px-5 py-3 min-h-11 rounded-full border border-[color:var(--cz-border-strong)] text-theme-50 text-sm font-semibold hover:bg-theme-alt hover:text-theme transition-all">
@@ -114,6 +115,7 @@ export default function PricelistPage() {
           <p className="text-xs text-theme-20 mt-3">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
         </div>
       </footer>
+      </main>
     </div>
   );
 }

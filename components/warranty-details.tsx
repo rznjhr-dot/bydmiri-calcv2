@@ -94,9 +94,9 @@ export default function WarrantyDetails() {
               >
                 {tier.icon}
               </div>
-              <h4 className="text-sm font-bold text-theme-90">
+              <h3 className="text-sm font-bold text-theme-90">
                 {tier.title}
-              </h4>
+              </h3>
             </div>
 
             {/* Duration badges — mono data font, quiet */}

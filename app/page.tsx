@@ -1,17 +1,15 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Zap, Gauge, Battery, BatteryCharging, CircleDot, Info, MapPin, Clock, Menu, X } from "lucide-react";
+import { Zap, Gauge, Battery, CircleDot, Info, MapPin, Clock, Menu, X } from "lucide-react";
 import Hero from "@/components/hero";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
-import ChargingEstimator from "@/components/charging-estimator";
-import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
-import WarrantyDetails from "@/components/warranty-details";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 import SectionHeader from "@/components/section-header";
 
@@ -53,18 +51,33 @@ export default function Home() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [handleClose]);
 
-  // Handle ?calc=vehicle-id from pricelist page — read once after mount,
-  // clean the URL, and defer the modal-open state to avoid a sync setState
-  // inside the effect (react-hooks/set-state-in-effect).
+  // Handle ?calc=vehicle-id from the pricelist page. Runs on mount and again
+  // whenever the pathname changes (client-side navigation back to "/"), then
+  // cleans the URL and opens the modal on the next frame. usePathname (not
+  // useSearchParams) keeps this page statically prerenderable.
+  const pathname = usePathname();
   const calcCloseRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const calcId = params.get("calc");
+    const calcId = new URLSearchParams(window.location.search).get("calc");
     if (!calcId || !vehicles.some((v) => v.id === calcId)) return;
     window.history.replaceState(null, "", "/");
-    const frame = requestAnimationFrame(() => setSelectedId(calcId));
-    return () => cancelAnimationFrame(frame);
-  }, []);
+    // Deferred to a microtask so the setState is not synchronous inside the
+    // effect body (avoids cascading renders); intentionally not cancelled on
+    // cleanup, otherwise a re-render before the microtask would drop the open.
+    queueMicrotask(() => setSelectedId(calcId));
+  }, [pathname]);
+
+  // Legacy anchors: /#charging and /#warranty used to live on this page before
+  // those tools moved to /charging. Hash fragments never reach the server (and
+  // this site is a static export), so the redirect has to happen client-side.
+  useEffect(() => {
+    const legacy: Record<string, string> = {
+      "#charging": "/charging",
+      "#warranty": "/charging/#warranty",
+    };
+    const target = legacy[window.location.hash];
+    if (target) window.location.replace(target);
+  }, [pathname]);
 
   const selectedVehicle = selectedId
     ? vehicles.find((v) => v.id === selectedId)
@@ -88,11 +101,11 @@ export default function Home() {
             <button onClick={() => scrollToSection("full-lineup")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Models
             </button>
-            <button onClick={() => scrollToSection("charging")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
-              Charging, Savings &amp; Warranty
-            </button>
             <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
               Why BYD
+            </Link>
+            <Link href="/charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Charging, Savings &amp; Warranty
             </Link>
             <button onClick={() => scrollToSection("contact")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
               Contact Us
@@ -126,8 +139,6 @@ export default function Home() {
               </Link>
               {[
                 { id: "full-lineup", label: "Models" },
-                { id: "charging", label: "Charging, Savings & Warranty" },
-                { id: "contact", label: "Contact Us" },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -144,11 +155,25 @@ export default function Home() {
               >
                 Why BYD
               </Link>
+              <Link
+                href="/charging"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Charging, Savings &amp; Warranty
+              </Link>
+              <button
+                onClick={() => scrollToSection("contact")}
+                className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                Contact Us
+              </button>
             </div>
           </div>
         )}
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* Hero */}
       <Hero />
 
@@ -195,36 +220,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Extras: Charging & Warranty ── */}
-      <section id="charging" className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24 bg-theme">
-        <div className="absolute inset-0 bg-theme-alt" />
-        <div className="absolute inset-0 parking-lot-bg opacity-15" />
-        <div className="max-w-6xl mx-auto relative">
-          <SectionHeader
-            icon={<BatteryCharging size={12} />}
-            label="Extras"
-            title="Charging, Savings & Warranty"
-            subtitle="Everything you need to know about charging, savings and warranty coverage"
-            align="start"
-          />
-
-          {/* Charging Estimator */}
-          <div className="mb-8">
-            <ChargingEstimator />
-          </div>
-
-          {/* Fuel Savings Calculator */}
-          <div className="mb-8">
-            <FuelSavingsCalculator />
-          </div>
-
-          {/* Warranty Details */}
-          <div id="warranty" className="scroll-mt-24">
-            <WarrantyDetails />
-          </div>
-        </div>
-      </section>
-
       {/* ── Map & Location ── */}
       <section className="relative px-6 py-12 md:py-16 overflow-hidden bg-theme">
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
@@ -264,7 +259,7 @@ export default function Home() {
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                   <div>
-                    <h4 className="text-sm font-bold text-theme-90">BYD Kah Progression Auto</h4>
+                    <h3 className="text-sm font-bold text-theme-90">BYD Kah Progression Auto</h3>
                     <p className="text-xs text-theme-50">Official BYD Dealer · Sales · Service</p>
                     <p className="text-xs text-theme-50 mt-1">
                       Lot 1829, Jalan Krokop Utama, 98000 Miri, Sarawak
@@ -444,6 +439,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </main>
 
       {/* ── Calculator Modal ── */}
       <Modal
@@ -451,7 +447,7 @@ export default function Home() {
         onClose={handleClose}
         label={selectedVehicle?.name ?? "Calculator"}
         closeRef={calcCloseRef}
-        className="max-w-2xl p-5 md:p-6"
+        className="max-w-2xl md:max-w-4xl p-5 md:p-6"
       >
         {selectedVehicle && (
           <>

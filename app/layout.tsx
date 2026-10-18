@@ -32,28 +32,34 @@ const conthrax = localFont({
 export const metadata: Metadata = {
   // ── Primary Meta ──
   title: {
-    default: "BYD Miri by Ridzuan Jahari",
-    template: "%s | BYD Miri",
+    default: "BYD Miri, Sarawak — Test Drive, Price & Financing",
+    template: "%s | BYD Miri, Sarawak",
   },
   description:
-    "Calculate BYD monthly financing instantly in Miri, Sarawak. Compare 10 BYD models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari for accurate assessment.",
+    "Authorised BYD dealer in Miri, Sarawak. Compare 10 models with prices from RM106,353 and monthly instalments from RM979. Test drive at our Miri showroom, plus trade-in and 8-year battery warranty.",
 
   // ── Keywords ──
   keywords: [
     "BYD Miri",
+    "BYD Sarawak",
+    "test drive BYD Miri",
+    "BYD price Sarawak",
+    "BYD dealer Miri",
+    "BYD showroom Miri",
     "BYD loan calculator",
-    "BYD Malaysia price",
     "BYD monthly payment",
     "BYD financing Miri",
-    "BYD Atto 3 price Malaysia",
+    "BYD Atto 3 price Sarawak",
     "BYD Seal price Malaysia",
     "BYD Sealion 7 Malaysia",
     "BYD M6 Malaysia",
     "kereta EV Miri",
     "buy BYD Miri Sarawak",
-    "BYD dealership Miri",
+    "BYD Bintulu",
+    "BYD Limbang",
+    "BYD Lawas",
     "BYD Kah Progression Auto",
-    "BYD Miri contact",
+    "BYD warranty Malaysia",
   ],
 
   // ── Authorship ──
@@ -69,11 +75,11 @@ export const metadata: Metadata = {
 
   // ── OpenGraph ──
   openGraph: {
-    title: "BYD Miri by Ridzuan Jahari",
+    title: "BYD Miri, Sarawak — Test Drive, Price & Financing",
     description:
-      "Calculate BYD monthly financing instantly. Compare 10 models, deposit options, loan tenure & interest rates. Contact Ridzuan Jahari, BYD Miri.",
+      "Authorised BYD dealer in Miri, Sarawak. 10 models, prices from RM106,353, monthly from RM979. Test drive at our Miri showroom, with warranty support across Sarawak.",
     url: baseUrl,
-    siteName: "BYD Miri Loan Calculator",
+    siteName: "BYD Miri & Sarawak",
     locale: "en_MY",
     type: "website",
     images: [
@@ -81,7 +87,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BYD Miri — Loan Calculator & Price List",
+        alt: "BYD Miri — Test Drive, Price & Financing in Sarawak",
       },
     ],
   },
@@ -156,7 +162,7 @@ export default function RootLayout({
         {/* ── Skip-to-content (keyboard users) ── */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[300] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-emerald-500 focus:text-white focus:text-sm focus:font-bold focus:outline-none"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[300] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-blue-600 focus:text-white focus:text-sm focus:font-bold focus:outline-none"
         >
           Skip to main content
         </a>
@@ -191,11 +197,36 @@ export default function RootLayout({
                   priceRange: "RM106,000–RM213,000",
                   currenciesAccepted: "MYR",
                   knowsLanguage: ["en", "ms"],
+                  areaServed: [
+                    { "@type": "City", name: "Miri" },
+                    { "@type": "City", name: "Bintulu" },
+                    { "@type": "City", name: "Limbang" },
+                    { "@type": "City", name: "Lawas" },
+                    { "@type": "City", name: "Marudi" },
+                    { "@type": "AdministrativeArea", name: "Sarawak" },
+                  ],
+                  containsPlace: {
+                    "@type": "Place",
+                    name: "BYD Miri Showroom",
+                    address: {
+                      "@type": "PostalAddress",
+                      streetAddress: "Lot 1829, Jalan Krokop Utama",
+                      addressLocality: "Miri",
+                      addressRegion: "Sarawak",
+                      postalCode: "98000",
+                      addressCountry: "MY",
+                    },
+                    geo: {
+                      "@type": "GeoCoordinates",
+                      latitude: 4.4279602,
+                      longitude: 114.0020263,
+                    },
+                  },
                   contactPoint: {
                     "@type": "ContactPoint",
                     telephone: "+6011-31933930",
                     contactType: "sales",
-                    areaServed: "MY",
+                    areaServed: ["MY", "Sarawak", "Miri", "Bintulu", "Limbang", "Lawas"],
                     availableLanguage: ["en", "ms"],
                   },
                   openingHoursSpecification: {
@@ -220,14 +251,72 @@ export default function RootLayout({
                     "@type": "OfferCatalog",
                     name: "BYD Electric Vehicles",
                     itemListElement: [
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD Atto 2" } },
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD Atto 3" } },
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD Seal" } },
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD Sealion 7" } },
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD Seal 6" } },
-                      { "@type": "Offer", itemOffered: { "@type": "Product", name: "BYD M6" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "106353", itemOffered: { "@type": "Car", name: "BYD Atto 2 Premium" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "122552", itemOffered: { "@type": "Car", name: "BYD Seal 6 Premium" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "132729", itemOffered: { "@type": "Car", name: "BYD Atto 3 Ultra" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "146228", itemOffered: { "@type": "Car", name: "BYD Atto 3 Premium" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "171519", itemOffered: { "@type": "Car", name: "BYD Sealion 7 Dynamic" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "197147", itemOffered: { "@type": "Car", name: "BYD Sealion 7 Premium" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "213073", itemOffered: { "@type": "Car", name: "BYD Sealion 7 Performance" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "179879", itemOffered: { "@type": "Car", name: "BYD Seal Premium" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "200904", itemOffered: { "@type": "Car", name: "BYD Seal Performance" } },
+                      { "@type": "Offer", priceCurrency: "MYR", price: "130729", itemOffered: { "@type": "Car", name: "BYD M6 Extended" } },
                     ],
                   },
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://bydmiri.com/#faq",
+                  mainEntity: [
+                    {
+                      "@type": "Question",
+                      name: "Is there a BYD dealer in Miri, Sarawak?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. BYD is represented in Miri, Sarawak by Kah Progression Auto, an authorised BYD dealer. Sales, financing, test drives and after-sales support are handled locally by Ridzuan Jahari at the Miri showroom on Jalan Krokop Utama.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "How much does a BYD cost in Sarawak?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "BYD prices in Sarawak start from RM106,353 OTR for the Atto 2 Premium and go up to RM213,073 for the Sealion 7 Performance. Monthly instalments start from around RM979 at 10% down over 9 years at 2.3%.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Can I test drive a BYD in Miri?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. Test drives are held at the BYD Miri showroom on Jalan Krokop Utama. Contact Ridzuan to set an appointment at your convenience, and bring your IC and driving licence; a session takes about 30 minutes.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Can a BYD drive from Miri to Bintulu on one charge?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Yes. Miri to Bintulu is about 200 km, well within the 410 km to 650 km range of BYD models sold in Sarawak. A charge adds roughly 246 km of range in under five hours on a 7 kW home wallbox.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "What warranty do BYD cars have in Malaysia?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "All BYD models sold in Malaysia carry a 6-year or 150,000 km vehicle warranty and a separate 8-year or 160,000 km High-Voltage Blade Battery warranty, with a guaranteed minimum 70% state of health.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Is servicing available in Miri or must I go to Kuching?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Servicing is done at authorised BYD service centres, so Miri owners do not need to send their car to Kuching. Kah Progression Auto coordinates warranty and service work locally.",
+                      },
+                    },
+                  ],
                 },
                 {
                   "@type": "WebSite",

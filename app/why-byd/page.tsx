@@ -7,7 +7,6 @@ import {
   BadgeCheck,
   Cable,
   Zap,
-  Gauge,
   Car,
   Users,
   VolumeX,
@@ -17,12 +16,71 @@ import {
   X,
   CheckCircle2,
   ExternalLink,
+  Factory,
+  MapPin,
+  Globe2,
+  ChevronDown,
+  Cpu,
+  Battery,
 } from "lucide-react";
 import { Img } from "@/components/img";
 import VideoEmbed from "@/components/video-embed";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
+import { vehicles } from "@/lib/vehicles";
+import { fmt } from "@/lib/finance";
+
+type Faq = { q: string; a: string };
+
+function FaqAccordion({ items }: { items: Faq[] }) {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <div className="mt-4 border-t pt-3" style={{ borderColor: "var(--cz-border)" }}>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-theme-40 mb-2">
+        FAQs
+      </p>
+      <div className="divide-y" style={{ borderColor: "var(--cz-border)" }}>
+        {items.map((item, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={item.q}>
+              <button
+                type="button"
+                onClick={() => setOpen(isOpen ? null : i)}
+                aria-expanded={isOpen}
+                className="w-full flex items-start justify-between gap-3 py-2 text-left text-xs text-theme-60 hover:text-theme-90 transition-colors"
+              >
+                <span className="leading-snug">{item.q}</span>
+                <ChevronDown
+                  size={13}
+                  className={`shrink-0 mt-0.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              {isOpen && (
+                <p className="pb-2.5 pr-5 text-[11px] text-theme-40 leading-relaxed">{item.a}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 const advantages = [
+  {
+    icon: Zap,
+    title: "World's No. 1 NEV Seller",
+    subtitle: "The Numbers Speak for Themselves",
+    image: "/images/hero/byd-nev.webp",
+    imageAlt: "BYD vehicles at a production and export facility",
+    points: [
+      "2.26 million battery-electric cars sold in 2025 — beating Tesla's 1.64 million deliveries",
+      "Including plug-in hybrids, total NEV sales reached 4.27 million units in 2024",
+      "Cumulative NEVs sold globally passed 17.3 million by 2026",
+      "Vertically integrated — batteries, motors, chips, in-house",
+      "Second-largest EV battery maker worldwide (after CATL), 17.9% share in 2025",
+    ],
+  },
   {
     icon: Shield,
     title: "Blade Battery Technology",
@@ -30,10 +88,32 @@ const advantages = [
     image: "/images/hero/atto3premium.webp",
     imageAlt: "BYD Blade Battery powered Atto 3",
     points: [
-      "Passed nail penetration test — no fire, no explosion",
-      "LFP chemistry — longer lifespan, more stable than NMC",
-      "Cell-to-pack design — higher density, better cooling",
-      "Over 500,000 km battery life expectancy",
+      "Nail penetration test — no fire, no smoke, surface stayed 30–60°C",
+      "LFP chemistry — no oxygen release, stable well past 200°C where NMC struggles",
+      "Cell-to-body structure — each cell acts as a structural beam; +50% space utilisation",
+      "Over 5,000 charge cycles — a service life equivalent to 1.2 million km",
+    ],
+    faqs: [
+      {
+        q: "What is the Blade Battery?",
+        a: "A lithium iron phosphate (LFP) battery designed by BYD. Its long, blade-shaped cells sit flat in a honeycomb pack with no intermediate modules, which makes it compact, strong and stable.",
+      },
+      {
+        q: "Why is it safer than other EV batteries?",
+        a: "LFP releases no oxygen when hot, so it resists thermal runaway. In the nail penetration test the Blade Battery produced no smoke or fire, with surface temperature reaching only 30–60°C.",
+      },
+      {
+        q: "How long will the battery last?",
+        a: "BYD rates it for over 5,000 charge and discharge cycles — a service life equivalent to roughly 1.2 million kilometres — while retaining at least 70% capacity through the warranty period.",
+      },
+      {
+        q: "Which BYD models use it?",
+        a: "Every BYD passenger EV and DM-i plug-in hybrid, including the Atto 2, Atto 3, Dolphin, M6, Seal, Seal 6 and Sealion 7.",
+      },
+      {
+        q: "Is the battery recyclable?",
+        a: "Yes. Blade Batteries are designed to be recyclable, with processes that recover valuable materials.",
+      },
     ],
     videoId: "CGQwqWqzkNA",
     link2: {
@@ -42,25 +122,83 @@ const advantages = [
     },
   },
   {
+    icon: Cpu,
+    title: "e-Platform 3.0",
+    subtitle: "The Architecture Underneath Every BYD",
+    image: "/images/hero/e-platform-3.webp",
+    imageAlt: "BYD e-Platform 3.0 architecture — Blade Battery, 8-in-1 drive and thermal system",
+    points: [
+      "Blade Battery integrated into the chassis — doubles body rigidity",
+      "World's first mass-produced 8-in-1 electric drive, up to 89% system efficiency",
+      "Heat pump and direct battery heating — steady range from -30°C to 60°C",
+      "Flat battery layout gives a completely flat rear floor and more cabin space",
+      "Drag coefficient as low as 0.21 Cd; supports 800V architecture and rapid charging",
+    ],
+    faqs: [
+      {
+        q: "What is e-Platform 3.0?",
+        a: "BYD's dedicated electric vehicle architecture. It bundles the Blade Battery, an 8-in-1 drive unit and a high-efficiency heat pump into one integrated system rather than assembling parts from many suppliers.",
+      },
+      {
+        q: "How does it make the car safer?",
+        a: "The Blade Battery becomes part of the chassis structure, doubling body rigidity and lowering the centre of gravity. That improves both crash resistance and stability.",
+      },
+      {
+        q: "Does it help with range in hot weather?",
+        a: "Yes. Direct battery heating and cooling plus a heat pump keep cells in their efficient window, with BYD quoting stable operation from -30°C up to 60°C and up to 20% better electrical efficiency.",
+      },
+      {
+        q: "Do all BYD models use it?",
+        a: "It underpins BYD's electric and plug-in hybrid ranges, adapted per model for the best balance of performance, space and reliability.",
+      },
+    ],
+    link2: {
+      text: "BYD e-Platform 3.0 official page →",
+      url: "https://www.byd.com/uk/technology/byd-e-platform-3",
+    },
+  },
+  {
     icon: BadgeCheck,
     title: "Industry-Leading Warranty",
     subtitle: "Peace of Mind, Standard",
-    image: "/images/hero/sealpremium.webp",
-    imageAlt: "BYD Seal — backed by 6+8 year warranty",
+    image: "/images/hero/warranty.webp",
+    imageAlt: "BYD service centre — warranty and after-sales care",
     points: [
       "6 years or 150,000 km vehicle warranty",
-      "8 years or 160,000 km battery warranty",
-      "Covers Blade Battery against defects and capacity loss",
+      "8 years or 160,000 km High-Voltage Blade Battery warranty",
+      "Separate 8-year or 160,000 km Drive Unit coverage (motor, controller, DC assembly)",
+      "Minimum 70% state of health guaranteed for the battery warranty period",
       "Valid at any authorised BYD service centre nationwide",
-      "Malaysia's most comprehensive EV warranty package",
+    ],
+    faqs: [
+      {
+        q: "Is the 8-year battery warranty based on time or mileage?",
+        a: "Whichever comes first. The Blade Battery is covered for 8 years or 160,000 km — if you reach the mileage limit first, battery cover ends there even if the car is under 8 years old.",
+      },
+      {
+        q: "What does the basic warranty cover?",
+        a: "Manufacturing defects on mechanical and electrical components across the vehicle, including the powertrain, cooling, suspension and steering systems. Wear-and-tear items follow shorter terms stated in the warranty booklet.",
+      },
+      {
+        q: "What happens after the 6-year vehicle warranty ends?",
+        a: "The high-voltage Blade Battery and drive unit keep their own 8-year / 160,000 km cover, so the electric heart of the car stays protected beyond the basic term.",
+      },
+      {
+        q: "Does the warranty transfer if I sell the car?",
+        a: "In most cases yes — the remaining warranty stays with the vehicle, which supports resale value. Terms are set out in the warranty booklet.",
+      },
+      {
+        q: "Will skipping scheduled servicing void the warranty?",
+        a: "Yes. Servicing must follow BYD's recommended schedule at an authorised centre. Keep your service records — they are required for any warranty claim.",
+      },
     ],
   },
   {
     icon: Cable,
     title: "V2L — Vehicle-to-Load",
     subtitle: "Your Car Becomes a Power Station",
-    image: "/images/hero/sealion7premium.webp",
-    imageAlt: "BYD Sealion 7 — V2L capable",
+    image: "/images/hero/v2l.webp",
+    imageAlt: "BYD Vehicle-to-Load (V2L) powering everyday appliances",
     points: [
       "Standard across ALL BYD models — no extra cost",
       "Power your home appliances, laptops, camping gear",
@@ -69,114 +207,23 @@ const advantages = [
       "Turn your car into a mobile power station on the go",
     ],
   },
-  {
-    icon: Zap,
-    title: "World's #1 NEV Manufacturer",
-    subtitle: "Global Leadership You Can Trust",
-    image: "/images/hero/m6.webp",
-    imageAlt: "BYD M6 — best-selling EV family MPV",
-    points: [
-      "Largest new energy vehicle maker in the world (2024–2025)",
-      "Over 17 million electrified vehicles sold globally",
-      "Vertically integrated — batteries, motors, chips, in-house",
-      "Second-largest EV battery maker worldwide (after CATL)",
-      "Trusted by Warren Buffett's Berkshire Hathaway since 2008",
-    ],
-  },
 ];
 
-const comparisons = [
-  {
-    title: "BYD Atto 3 vs Proton e.MAS 7",
-    byd: {
-      name: "Atto 3 Ultra",
-      tag: "Proven EV Platform",
-      items: [
-        "480 km range (NEDC)",
-        "60.48 kWh Blade Battery",
-        "V2L standard — power your devices",
-        "6+8 year warranty",
-        "7.3s 0–100 km/h",
-        "1 million+ Atto 3s sold worldwide",
-      ],
-    },
-    vs: {
-      name: "e.MAS 7",
-      tag: "First Generation EV",
-      items: [
-        "~450 km range",
-        "60 kWh battery",
-        "5 year vehicle warranty",
-        "~8.5s 0–100 km/h",
-        "5-seat SUV",
-        "Front-wheel drive",
-      ],
-    },
-    verdict:
-      "Atto 3 offers more range, proven safety (285.6 GWh Blade Battery installed in 2025), V2L, and a comprehensive warranty — all backed by the world's #1 EV maker.",
-    bydImage: "/images/hero/atto3premium.webp",
-    bydImageAlt: "BYD Atto 3 Ultra",
-  },
-  {
-    title: "BYD Seal vs Tesla Model 3",
-    byd: {
-      name: "Seal Premium",
-      tag: "650 km Range",
-      items: [
-        "650 km range (NEDC)",
-        "82.56 kWh Blade Battery",
-        "V2L standard",
-        "5.9s 0–100 km/h (RWD)",
-        "More rear legroom & comfort",
-      ],
-    },
-    vs: {
-      name: "Model 3 Premium LR",
-      tag: "513 km Range",
-      items: [
-        "513 km range (WLTP)",
-        "60 kWh LFP battery",
-        "V2L via optional adapter",
-        "6.1s 0–100 km/h (RWD)",
-        "5-seat sedan",
-      ],
-    },
-    verdict:
-      "Seal delivers superior range and a comprehensive warranty at a competitive price point with V2L included as standard.",
-    bydImage: "/images/hero/sealpremium.webp",
-    bydImageAlt: "BYD Seal Premium",
-  },
-  {
-    title: "BYD M6 — The Only EV MPV Under RM150k",
-    byd: {
-      name: "M6 Extended",
-      tag: "Category Leader",
-      items: [
-        "7-seater — only EV MPV under RM150k",
-        "530 km range (NEDC)",
-        "71.8 kWh battery",
-        "RM 130,729 OTR",
-        "V2L standard",
-        "Perfect for families",
-      ],
-    },
-    vs: {
-      name: "Competitors",
-      tag: "Segment",
-      items: [
-        "5-seat EVs in similar price range",
-        "Chery OMODA E5: RM99k, 5-seat SUV",
-        "MG4: RM101k, 5-seat hatchback",
-        "Proton e.MAS 7: RM97k, 5-seat SUV",
-        "No 7-seat EV under RM150k alternative",
-        "M6 is the only 7-seat EV MPV option",
-      ],
-    },
-    verdict:
-      "M6 stands alone as the only 7-seat EV MPV under RM150,000 in Malaysia — ideal for families who need space and range.",
-    bydImage: "/images/hero/m6.webp",
-    bydImageAlt: "BYD M6 Extended — 7-seat EV MPV",
-  },
+const aboutBydPoints = [
+  "Founded February 1995 in Shenzhen, China — over 30 industrial parks across six continents",
+  "Dual-listed on the Hong Kong and Shenzhen stock exchanges; 2025 revenue exceeded RMB 804 billion",
+  "Spans electronics, automotive, renewable energy, and rail transit — a vertically integrated high-tech group",
+  "Pioneer of the Blade Battery and dual-mode hybrid technology that accelerated the shift away from fossil fuels",
+  "NEVs present in 121 countries and regions worldwide",
+];
+
+const aboutBydMalaysiaPoints = [
+  "Launched December 2022 through a strategic partnership between BYD Auto Industry and Sime Motors",
+  "Official distributor: Beyond Auto (Sime Motors) — first BYD EVs for Malaysia's passenger market",
+  "First model unveiled: the BYD ATTO 3 — over 1,000 orders within the first 10 days",
+  "1,000 ATTO 3 units delivered within the first 100 days; the BYD DOLPHIN followed in mid-2023",
+  "Showroom network nationwide — flagship in Ara Damansara plus a KL city outlet at TREC, Jalan Tun Razak",
+  "Three authorised Body & Paint Centres in Penang, Bukit Jelutong (Klang Valley), and Johor Bahru",
 ];
 
 const salesPoints = [
@@ -232,13 +279,14 @@ export default function WhyBydPage() {
             <Link href="/#full-lineup" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
               Models
             </Link>
-            <Link href="/#charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Charging, Savings &amp; Warranty
-            </Link>
             <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-90 px-2 py-3 whitespace-nowrap">
               Why BYD
             </Link>
-            <Link href="/#contact" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+            <Link href="/charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
+              Charging, Savings &amp; Warranty
+            </Link>
+                          <Link
+                href="#contact" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
               Contact Us
             </Link>
           </div>
@@ -273,18 +321,18 @@ export default function WhyBydPage() {
                 Models
               </Link>
               <Link
-                href="/#charging"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Charging, Savings &amp; Warranty
-              </Link>
-              <Link
                 href="/why-byd"
                 onClick={() => setNavOpen(false)}
                 className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme hover:bg-white/5 transition-colors"
               >
                 Why BYD
+              </Link>
+              <Link
+                href="/charging"
+                onClick={() => setNavOpen(false)}
+                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
+              >
+                Charging, Savings &amp; Warranty
               </Link>
               <Link
                 href="/#contact"
@@ -298,22 +346,26 @@ export default function WhyBydPage() {
         )}
       </nav>
 
+      <main id="main-content" tabIndex={-1} className="outline-none">
       {/* ── Hero — Minimal: pure paper, no decoration ── */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-theme">
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <div>
             <span className="label-mono justify-center mb-5">
               <BadgeCheck size={12} />
-              Why Choose BYD?
+              BYD Miri &amp; Sarawak
             </span>
-            <h1 className="font-display text-[40px] sm:text-5xl md:text-6xl mb-5">
-              <span className="text-theme-90">The smart switch,</span>
+            <h1 className="font-display text-[34px] sm:text-5xl md:text-6xl mb-5">
+              <span className="text-theme-90">BYD in Miri &amp; Sarawak —</span>
               <br />
-              <strong className="text-accent">the clear choice.</strong>
+              <strong className="text-accent">test drive, price &amp; financing.</strong>
             </h1>
             <p className="text-base md:text-lg text-theme-50 max-w-2xl mx-auto leading-relaxed">
-              From the world&apos;s safest EV battery to the most comprehensive warranty in Malaysia —
-              discover why BYD is Malaysia&apos;s fastest-growing automotive brand.
+              BYD is available in Miri, Sarawak through authorised dealer Kah Progression Auto.
+              Test drives, financing and after-sales support for all 10 BYD models — Atto 2, Atto 3,
+              Seal 6, Sealion 7, Seal and M6 — are handled locally by Ridzuan Jahari, with prices
+              from <strong className="text-theme-70">RM106,353</strong> and monthly instalments
+              from <strong className="text-theme-70">RM979</strong>.
             </p>
           </div>
         </div>
@@ -326,9 +378,9 @@ export default function WhyBydPage() {
             className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-[color:var(--cz-border)] bg-theme-alt"
           >
             {[
-              { value: "#1", label: "World's NEV Maker" },
-              { value: "17.3M+", label: "Electrified Vehicles Sold" },
-              { value: "285.6 GWh", label: "Blade Battery Installed (2025)" },
+              { value: "2.26M", label: "Battery-Electric Cars Sold (2025)" },
+              { value: "4.60M", label: "Total NEVs Delivered (2025)" },
+              { value: "17.3M+", label: "Cumulative NEVs Sold" },
               { value: "121", label: "Countries & Regions" },
             ].map((stat) => (
               <div key={stat.label} className="bg-theme-card p-5 text-center">
@@ -348,10 +400,12 @@ export default function WhyBydPage() {
         <div className="max-w-5xl mx-auto relative">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
-              Engineered to Outperform
+              Why the World Is Choosing BYD
             </h2>
-            <p className="text-sm text-theme-40 mt-2">
-              Every BYD is built on years of R&D, vertical integration, and millions of real-world kilometres.
+            <p className="text-sm text-theme-40 mt-2 max-w-2xl mx-auto">
+              BYD sold 2.26 million battery-electric cars in 2025 — more than any other brand — across
+              121 countries. That scale comes from building its own batteries, motors and chips, which
+              keeps servicing simple and prices competitive.
             </p>
           </div>
 
@@ -398,6 +452,7 @@ export default function WhyBydPage() {
                         </li>
                       ))}
                     </ul>
+                    {adv.faqs && <FaqAccordion items={adv.faqs} />}
                     {adv.link2 && (
                       <div className="mt-3">
                         <a
@@ -416,6 +471,110 @@ export default function WhyBydPage() {
               </div>
             ))}
           </div>
+
+          <p className="text-[11px] text-theme-30 mt-5 text-center leading-relaxed">
+            Sources: BYD annual results and company sales releases; SNE Research (battery market share); BYD Malaysia by Sime Motors. Sales figures as of full-year 2025.
+          </p>
+        </div>
+      </section>
+
+      {/* ── About BYD — global + Malaysia ── */}
+      <section className="relative px-6 pb-16 md:pb-24">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="label-mono justify-center mb-3">
+              <Factory size={12} />
+              The Company Behind the Car
+            </span>
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
+              About BYD in Malaysia
+            </h2>
+            <p className="text-sm text-theme-40 mt-2 max-w-xl mx-auto">
+              From Shenzhen to Sarawak — the story behind the world&apos;s largest new energy vehicle maker.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div
+              className="rounded-2xl border p-5 md:p-6"
+              style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)", color: "var(--cz-accent)" }}>
+                  <Globe2 size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base md:text-lg font-bold text-theme-90 leading-tight">Global</h3>
+                  <p className="text-xs text-theme-40">Build Your Dreams · since 1995</p>
+                </div>
+              </div>
+              <ul className="space-y-1.5">
+                {aboutBydPoints.map((point) => (
+                  <li key={point} className="flex items-start gap-2 text-sm text-theme-60">
+                    <CheckCircle2 size={14} className="text-accent shrink-0 mt-0.5" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="https://byd.simemotors.my/about-byd"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 min-h-9 py-2 mt-3 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
+              >
+                <ExternalLink size={11} />
+                About BYD — official page →
+              </a>
+            </div>
+
+            <div
+              className="rounded-2xl border p-5 md:p-6"
+              style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--cz-accent-soft)", border: "1px solid var(--cz-accent-line)", color: "var(--cz-accent)" }}>
+                  <MapPin size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base md:text-lg font-bold text-theme-90 leading-tight">In Malaysia</h3>
+                  <p className="text-xs text-theme-40">Sime Motors · launched Dec 2022</p>
+                </div>
+              </div>
+              <ul className="space-y-1.5">
+                {aboutBydMalaysiaPoints.map((point) => (
+                  <li key={point} className="flex items-start gap-2 text-sm text-theme-60">
+                    <CheckCircle2 size={14} className="text-accent shrink-0 mt-0.5" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-2xl border p-5 md:p-6 bg-accent-soft" style={{ borderColor: "var(--cz-accent-line)" }}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin size={14} className="text-accent shrink-0" />
+                  <h3 className="text-base font-bold text-theme-90">And in Miri</h3>
+                </div>
+                <p className="text-sm text-theme-70 leading-relaxed">
+                  BYD is available in Sarawak through Kah Progression Auto, the authorised BYD dealer in Miri —
+                  sales, financing, and after-sales support for the full lineup, handled locally by Ridzuan Jahari.
+                </p>
+              </div>
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold bg-accent"
+                style={{ color: "var(--cz-accent-ink)" }}
+              >
+                Visit Us in Miri
+              </Link>
+            </div>
+            <p className="text-[11px] text-theme-40 mt-3">
+              Source: BYD Malaysia by Sime Motors. Brand and distributor facts as published by the official distributor; subject to change.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -430,7 +589,7 @@ export default function WhyBydPage() {
               It&rsquo;s Not About Specs
             </span>
             <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
-              What You Actually Gain
+              What You Get for Your Money with BYD
             </h2>
             <p className="text-sm text-theme-40 mt-2 max-w-xl mx-auto">
               We don&apos;t sell kilowatts. We sell what matters — how it feels, how it fits your life, what you save.
@@ -457,100 +616,153 @@ export default function WhyBydPage() {
         </div>
       </section>
 
-      {/* ── Curated Comparisons ── */}
+      {/* ── BYD Prices in Sarawak ── */}
       <section className="relative px-6 pb-16 md:pb-24">
-        <div className="absolute inset-0 parking-lot-bg opacity-15" />
-        <div className="max-w-5xl mx-auto relative">
-          <div className="text-center mb-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
             <span className="label-mono justify-center mb-3">
-              <Gauge size={12} />
-              How We Compare
+              <Car size={12} />
+              OTR Sarawak
             </span>
             <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
-              BYD vs The Rest
+              BYD Prices in Miri &amp; Sarawak
             </h2>
-            <p className="text-sm text-theme-40 mt-2">
-              Honest, real-world comparisons. See where BYD leads and why it matters to you.
+            <p className="text-sm text-theme-40 mt-2 max-w-2xl mx-auto">
+              OTR prices for Sarawak, including road tax and insurance estimate. Prices shown are before
+              rebate — ask for the current promotion.
             </p>
-            <div className="mt-5 max-w-xl mx-auto rounded-lg border bg-counter-soft border-counter-line  p-3">
-              <p className="text-[11px] text-counter leading-relaxed">
-                <span className="font-semibold text-counter">⚠ Disclaimer:</span> All comparisons shown are for illustrative and suggestive purposes only. Competitor data sourced from publicly available information and may vary by variant, region, and specifications. BYD Miri makes no representations or warranties regarding the accuracy or completeness of competitor data. Pricing, specifications, and availability are subject to change without notice. Data as of August 2026.
-              </p>
-            </div>
           </div>
 
-          <div className="space-y-5">
-            {comparisons.map((cmp) => (
-              <div
-                key={cmp.title}
-                className="rounded-2xl border p-5 md:p-6"
-                style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}
-              >
-                <h3 className="text-base md:text-lg font-bold text-theme-80 mb-4">{cmp.title}</h3>
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  {/* BYD side — model image + spec list */}
-                  <div className="rounded-xl border border-[color:var(--cz-accent-line)] bg-accent-soft p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                      <span className="text-accent text-xs font-bold uppercase tracking-wide">BYD</span>
-                    </div>
-                    <div
-                      className="rounded-lg overflow-hidden border mb-3"
-                      style={{ borderColor: "var(--cz-accent-line)", backgroundColor: "var(--cz-input)" }}
-                    >
-                      <Img
-                        src={cmp.bydImage}
-                        alt={cmp.bydImageAlt}
-                        className="w-full object-contain"
-                        style={{ aspectRatio: "2572/1200" }}
-                      />
-                    </div>
-                    <div className="text-theme-90 font-bold text-sm mb-1">{cmp.byd.name}</div>
-                    <div className="text-[11px] text-accent mb-2">{cmp.byd.tag}</div>
-                    <ul className="space-y-1">
-                      {cmp.byd.items.map((item) => (
-                        <li key={item} className="flex items-start gap-1.5 text-xs text-theme-60">
-                          <CheckCircle2 size={11} className="text-accent shrink-0 mt-0.5" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+          <div className="overflow-x-auto rounded-xl border" style={{ borderColor: "var(--cz-border)" }}>
+            <table className="w-full min-w-[560px] text-left border-collapse">
+              <caption className="sr-only">BYD OTR prices and driving range in Sarawak</caption>
+              <thead>
+                <tr style={{ backgroundColor: "var(--cz-bg-alt)" }}>
+                  <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70">Model</th>
+                  <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70">Type</th>
+                  <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70 text-right">OTR Price</th>
+                  <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70 text-right">Range</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicles.map((v) => (
+                  <tr key={v.id} className="border-t" style={{ borderColor: "var(--cz-border)" }}>
+                    <th scope="row" className="px-4 py-2.5 text-sm font-medium text-theme-80">{v.name}</th>
+                    <td className="px-4 py-2.5 text-xs text-theme-40">{v.category}</td>
+                    <td className="px-4 py-2.5 text-sm text-theme-70 text-right tabular-nums whitespace-nowrap">RM{fmt(v.otr)}</td>
+                    <td className="px-4 py-2.5 text-xs text-theme-40 text-right tabular-nums whitespace-nowrap">{v.range} km</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-[11px] text-theme-30 mt-3 text-center">
+            Prices as listed by the authorised distributor and subject to change. Confirm your exact quote in Miri before booking.
+          </p>
+        </div>
+      </section>
 
-                  {/* VS side */}
-                  <div className="rounded-xl border border-[color:var(--cz-border)] bg-theme-card p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--cz-text-20)" }} />
-                      <span className="text-theme-30 text-xs font-bold uppercase tracking-wide">{cmp.vs.name}</span>
-                    </div>
-                    <div className="text-theme-50 font-bold text-sm mb-1">{cmp.vs.name}</div>
-                    <div className="text-[11px] text-theme-20 mb-2">{cmp.vs.tag}</div>
-                    <ul className="space-y-1">
-                      {cmp.vs.items.map((item) => (
-                        <li key={item} className="flex items-start gap-1.5 text-xs text-theme-40">
-                          <span className="text-theme-20 shrink-0 mt-0.5">—</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+      {/* ── Charging in Sarawak ── */}
+      <section className="relative px-6 pb-16 md:pb-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="label-mono justify-center mb-3">
+              <Battery size={12} />
+              Living With an EV Here
+            </span>
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
+              Charging a BYD in Sarawak
+            </h2>
+          </div>
 
-                {/* Verdict */}
-                <div className="rounded-lg bg-accent-soft border p-3" style={{ borderColor: "var(--cz-accent-line)" }}>
-                  <div className="flex items-start gap-2">
-                    <BadgeCheck size={14} className="text-accent shrink-0 mt-0.5" />
-                    <p className="text-sm text-theme-70 leading-relaxed">{cmp.verdict}</p>
-                  </div>
-                </div>
+          <div className="space-y-4 text-sm text-theme-60 leading-relaxed">
+            <p>
+              Most Sarawak owners charge at home. A 7 kW wallbox adds roughly <strong className="text-theme-80">246 km
+              of range in under five hours</strong> and costs around <strong className="text-theme-80">RM11</strong> at
+              domestic tariffs — a fraction of the petrol equivalent. BYD models sold here return between
+              <strong className="text-theme-80"> 410 km and 650 km</strong> on a full charge.
+            </p>
+            <p>
+              For longer routes: Miri to Bintulu is roughly 200 km, Miri to Limbang about 230 km, and
+              Miri to Lawas about 230 km. All three are within a single charge, and for travels to
+              Sibu or Kuching, DC fast chargers are available in Bintulu, Sibu, Layar, Sri Aman and
+              more upcoming along the Pan Borneo Highway.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-6">
+            {[
+              { route: "Miri → Bintulu", km: "~200 km", note: "Single charge" },
+              { route: "Miri → Limbang", km: "~230 km", note: "Single charge" },
+              { route: "Miri → Lawas", km: "~230 km", note: "Single charge" },
+            ].map((r) => (
+              <div key={r.route} className="rounded-xl border p-4" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
+                <div className="text-xs text-theme-40">{r.route}</div>
+                <div className="font-data text-lg font-semibold text-theme-80 mt-1 tabular-nums">{r.km}</div>
+                <div className="text-[11px] text-accent mt-0.5">{r.note}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* ── Test Drive & FAQ ── */}
+      <section className="relative px-6 pb-16 md:pb-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <span className="label-mono justify-center mb-3">
+              <MapPin size={12} />
+              Miri Showroom · Sarawak
+            </span>
+            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
+              Test Drive a BYD in Miri
+            </h2>
+            <p className="text-sm text-theme-40 mt-2 max-w-2xl mx-auto">
+              Test drives are held at our Miri showroom on Jalan Krokop Utama. Get in contact with
+              Ridzuan and set an appointment according to your convenience. Bring your IC and driving
+              licence — allow about 30 minutes.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
+            <h3 className="text-base font-bold text-theme-80 mb-3">Common questions</h3>
+            <div className="space-y-3">
+              {[
+                {
+                  q: "Is there a BYD dealer in Miri?",
+                  a: "Yes — BYD is represented in Miri by Kah Progression Auto, an authorised dealer. Sales, financing, test drives and warranty support are handled locally.",
+                },
+                {
+                  q: "How much is a BYD in Sarawak?",
+                  a: "Prices start at RM106,353 OTR for the Atto 2 Premium and reach RM213,073 for the Sealion 7 Performance. Monthly instalments start around RM979.",
+                },
+                {
+                  q: "Do I have to send my car to Kuching for servicing?",
+                  a: "No. Servicing and warranty work are carried out at authorised BYD service centres, coordinated locally in Miri.",
+                },
+                {
+                  q: "What warranty comes with a BYD in Malaysia?",
+                  a: "6 years or 150,000 km on the vehicle, plus a separate 8-year or 160,000 km High-Voltage Blade Battery warranty with a guaranteed 70% minimum state of health.",
+                },
+                {
+                  q: "Can I trade in my current car?",
+                  a: "Yes. Trade-in can be arranged against any BYD model — ask for a valuation when you book your test drive.",
+                },
+              ].map((f) => (
+                <details key={f.q} className="border-t pt-3" style={{ borderColor: "var(--cz-border)" }}>
+                  <summary className="cursor-pointer text-sm font-medium text-theme-70 hover:text-theme-90 transition-colors">
+                    {f.q}
+                  </summary>
+                  <p className="text-xs text-theme-40 leading-relaxed mt-1.5">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
-      <section className="relative px-6 pb-16 md:pb-24 overflow-hidden">
+      <section id="contact" className="relative px-6 pt-12 pb-16 md:pt-16 md:pb-24 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
         
         <div className="max-w-3xl mx-auto relative text-center">
@@ -560,14 +772,15 @@ export default function WhyBydPage() {
               Ready to Go Electric?
             </span>
             <h2 className="text-3xl md:text-4xl font-semibold text-theme-90">
-              Own Your BYD. Find Your Monthly Payment.
+              Get Your BYD Price in Miri
             </h2>
             <p className="text-sm md:text-base text-theme-50 max-w-lg mx-auto">
-              Use our calculator to see your monthly payment in seconds. No registration required.
+              See your monthly instalment in seconds — no registration required. Test drives are
+              available at the Miri showroom.
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
               <Link
-                href="/#main-content"
+                href="/#full-lineup"
                 className="hero-cta inline-flex items-center gap-2.5 bg-accent px-8 py-3.5 rounded-full font-bold text-sm"
                 style={{ color: "var(--cz-accent-ink)" }}
               >
@@ -608,6 +821,7 @@ export default function WhyBydPage() {
           <p className="text-xs text-theme-20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
         </div>
       </footer>
+      </main>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #00E676;
-  --color-secondary: #00D4FF;
+  --color-primary: #3B82F6;
+  --color-secondary: #60A5FA;
   --color-whatsapp: #25D366;
 }
 
@@ -24,56 +24,56 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 ::selection {
-  background: #00E676;
+  background: #3B82F6;
   color: black;
 }
 
 /* ──────────────────────────────────────────────────────────────
    DESIGN TOKENS — Hallmark-inspired system
    Paper → Ink → Neutrals → Accent, all OKLCH, all named.
-   Dark theme anchored to emerald hue 160; light theme keeps the
+   Dark theme anchored to blue hue 250; light theme keeps the
    same anchor (hue never switches between modes, only L and C).
    ────────────────────────────────────────────────────────────── */
 
 :root,
 [data-theme="dark"] {
   /* Paper — tinted near-black, never #000 */
-  --cz-bg:          oklch(15% 0.008 160);
-  --cz-bg-alt:      oklch(17% 0.010 160);
-  --cz-bg-section:  oklch(15% 0.008 160);
-  --cz-bg-card:     oklch(16.5% 0.009 160);
+  --cz-bg:          oklch(15% 0.008 255);
+  --cz-bg-alt:      oklch(17% 0.010 255);
+  --cz-bg-section:  oklch(15% 0.008 255);
+  --cz-bg-card:     oklch(16.5% 0.009 255);
 
   /* Ink — tinted near-white, never #fff */
-  --cz-text:        oklch(96% 0.006 160);
-  --cz-text-90:     oklch(93% 0.006 160);
-  --cz-text-80:     oklch(88% 0.006 160);
-  --cz-text-70:     oklch(80% 0.006 160);
-  --cz-text-50:     oklch(66% 0.008 160);
-  --cz-text-40:     oklch(55% 0.008 160);
-  --cz-text-30:     oklch(42% 0.008 160);
-  --cz-text-20:     oklch(30% 0.008 160);
+  --cz-text:        oklch(96% 0.006 255);
+  --cz-text-90:     oklch(93% 0.006 255);
+  --cz-text-80:     oklch(88% 0.006 255);
+  --cz-text-70:     oklch(80% 0.006 255);
+  --cz-text-50:     oklch(66% 0.008 255);
+  --cz-text-40:     oklch(55% 0.008 255);
+  --cz-text-30:     oklch(42% 0.008 255);
+  --cz-text-20:     oklch(30% 0.008 255);
 
   /* Rules & surfaces */
-  --cz-border:        oklch(28% 0.010 160);
-  --cz-border-strong: oklch(38% 0.012 160);
-  --cz-nav:           oklch(15% 0.008 160 / 0.8);
-  --cz-input:         oklch(19% 0.010 160);
-  --cz-ledger:        oklch(17.5% 0.010 160);
+  --cz-border:        oklch(28% 0.010 255);
+  --cz-border-strong: oklch(38% 0.012 255);
+  --cz-nav:           oklch(15% 0.008 255 / 0.8);
+  --cz-input:         oklch(19% 0.010 255);
+  --cz-ledger:        oklch(17.5% 0.010 255);
 
   /* Hero — tinted dark, single subtle two-stop gradient */
-  --cz-hero-from:    oklch(16% 0.012 160);
-  --cz-hero-via:     oklch(15% 0.010 160);
-  --cz-hero-to:      oklch(14% 0.008 160);
-  --cz-footer:       oklch(14.5% 0.008 160);
-  --cz-card-border:  oklch(28% 0.010 160);
-  --cz-ring:         oklch(80% 0.16 163 / 0.15);
+  --cz-hero-from:    oklch(16% 0.012 255);
+  --cz-hero-via:     oklch(15% 0.010 255);
+  --cz-hero-to:      oklch(14% 0.008 255);
+  --cz-footer:       oklch(14.5% 0.008 255);
+  --cz-card-border:  oklch(28% 0.010 255);
+  --cz-ring:         oklch(72% 0.17 250 / 0.18);
 
-  /* Accent — one accent (emerald), meaningful chroma */
-  --cz-accent:       oklch(80% 0.19 163);
-  --cz-accent-strong: oklch(72% 0.19 163);
-  --cz-accent-ink:   oklch(20% 0.05 163);   /* text on accent fill */
-  --cz-accent-soft:  oklch(80% 0.19 163 / 0.10);   /* selection/washes */
-  --cz-accent-line:  oklch(80% 0.19 163 / 0.35);
+  /* Accent — one accent (blue), meaningful chroma */
+  --cz-accent:       oklch(72% 0.17 250);
+  --cz-accent-strong: oklch(63% 0.18 250);
+  --cz-accent-ink:   oklch(16% 0.04 250);   /* text on accent fill */
+  --cz-accent-soft:  oklch(72% 0.17 250 / 0.12);   /* selection/washes */
+  --cz-accent-line:  oklch(72% 0.17 250 / 0.38);
 
   /* Functional data-coding counterpoint (0%-down figures) */
   --cz-counter:      oklch(80% 0.16 75);    /* amber, tuned for dark */
@@ -81,47 +81,47 @@ input[type="number"]::-webkit-outer-spin-button {
   --cz-counter-line: oklch(80% 0.16 75 / 0.35);
 
   /* Focus */
-  --cz-focus:        oklch(80% 0.19 163);
+  --cz-focus:        oklch(72% 0.17 250);
 }
 
 [data-theme="light"] {
   /* Paper — tinted off-white, never #fff */
-  --cz-bg:          oklch(97.5% 0.006 160);
-  --cz-bg-alt:      oklch(95% 0.010 160);
-  --cz-bg-section:  oklch(97% 0.007 160);
-  --cz-bg-card:     oklch(98.5% 0.005 160);
+  --cz-bg:          oklch(97.5% 0.006 255);
+  --cz-bg-alt:      oklch(95% 0.010 255);
+  --cz-bg-section:  oklch(97% 0.007 255);
+  --cz-bg-card:     oklch(98.5% 0.005 255);
 
   /* Ink — tinted near-black */
-  --cz-text:        oklch(20% 0.010 160);
-  --cz-text-90:     oklch(25% 0.010 160);
-  --cz-text-80:     oklch(30% 0.012 160);
-  --cz-text-70:     oklch(38% 0.012 160);
-  --cz-text-50:     oklch(50% 0.012 160);
-  --cz-text-40:     oklch(58% 0.010 160);
-  --cz-text-30:     oklch(70% 0.008 160);
-  --cz-text-20:     oklch(84% 0.006 160);
+  --cz-text:        oklch(20% 0.010 255);
+  --cz-text-90:     oklch(25% 0.010 255);
+  --cz-text-80:     oklch(30% 0.012 255);
+  --cz-text-70:     oklch(38% 0.012 255);
+  --cz-text-50:     oklch(50% 0.012 255);
+  --cz-text-40:     oklch(58% 0.010 255);
+  --cz-text-30:     oklch(70% 0.008 255);
+  --cz-text-20:     oklch(84% 0.006 255);
 
   /* Rules & surfaces */
-  --cz-border:        oklch(88% 0.008 160);
-  --cz-border-strong: oklch(78% 0.010 160);
-  --cz-nav:           oklch(97.5% 0.006 160 / 0.85);
-  --cz-input:         oklch(93% 0.010 160);
-  --cz-ledger:        oklch(95.5% 0.008 160);
+  --cz-border:        oklch(88% 0.008 255);
+  --cz-border-strong: oklch(78% 0.010 255);
+  --cz-nav:           oklch(97.5% 0.006 255 / 0.85);
+  --cz-input:         oklch(93% 0.010 255);
+  --cz-ledger:        oklch(95.5% 0.008 255);
 
   /* Hero — light mode keeps a quiet tinted wash */
-  --cz-hero-from:    oklch(96% 0.020 160);
-  --cz-hero-via:     oklch(95% 0.014 160);
-  --cz-hero-to:      oklch(97% 0.010 160);
-  --cz-footer:       oklch(95% 0.010 160);
-  --cz-card-border:  oklch(88% 0.008 160);
-  --cz-ring:         oklch(55% 0.16 163 / 0.10);
+  --cz-hero-from:    oklch(96% 0.020 255);
+  --cz-hero-via:     oklch(95% 0.014 255);
+  --cz-hero-to:      oklch(97% 0.010 255);
+  --cz-footer:       oklch(95% 0.010 255);
+  --cz-card-border:  oklch(88% 0.008 255);
+  --cz-ring:         oklch(50% 0.17 250 / 0.12)
 
   /* Accent — same hue, darker for contrast on light paper */
-  --cz-accent:        oklch(55% 0.17 163);
-  --cz-accent-strong: oklch(48% 0.17 163);
-  --cz-accent-ink:    oklch(98% 0.005 160);
-  --cz-accent-soft:   oklch(55% 0.17 163 / 0.10);
-  --cz-accent-line:   oklch(55% 0.17 163 / 0.40);
+  --cz-accent:        oklch(50% 0.17 250);
+  --cz-accent-strong: oklch(43% 0.17 250);
+  --cz-accent-ink:    oklch(98% 0.005 250);
+  --cz-accent-soft:   oklch(50% 0.17 250 / 0.10);
+  --cz-accent-line:   oklch(50% 0.17 250 / 0.40);
 
   /* Functional counterpoint */
   --cz-counter:      oklch(55% 0.15 75);
@@ -129,7 +129,7 @@ input[type="number"]::-webkit-outer-spin-button {
   --cz-counter-line: oklch(55% 0.15 75 / 0.40);
 
   /* Focus */
-  --cz-focus:        oklch(48% 0.17 163);
+  --cz-focus:        oklch(43% 0.17 250);
 }
 
 /* ── Motion tokens — named easings & duration buckets ── */
@@ -314,22 +314,22 @@ a:focus-visible {
   background-image:
     repeating-linear-gradient(
       90deg,
-      oklch(80% 0.19 163 / 0.035) 0px,
-      oklch(80% 0.19 163 / 0.035) 1px,
+      oklch(80% 0.19 255 / 0.035) 0px,
+      oklch(80% 0.19 255 / 0.035) 1px,
       transparent 1px,
       transparent 60px
     ),
     repeating-linear-gradient(
       0deg,
-      oklch(80% 0.19 163 / 0.035) 0px,
-      oklch(80% 0.19 163 / 0.035) 1px,
+      oklch(80% 0.19 255 / 0.035) 0px,
+      oklch(80% 0.19 255 / 0.035) 1px,
       transparent 1px,
       transparent 60px
     ),
     radial-gradient(
       circle at 50% 50%,
-      oklch(80% 0.19 163 / 0.07) 0px,
-      oklch(80% 0.19 163 / 0.07) 2px,
+      oklch(80% 0.19 255 / 0.07) 0px,
+      oklch(80% 0.19 255 / 0.07) 2px,
       transparent 2px
     );
   background-size: 60px 60px, 60px 60px, 30px 30px;
@@ -340,22 +340,22 @@ a:focus-visible {
   background-image:
     repeating-linear-gradient(
       90deg,
-      oklch(55% 0.17 163 / 0.05) 0px,
-      oklch(55% 0.17 163 / 0.05) 1px,
+      oklch(55% 0.17 255 / 0.05) 0px,
+      oklch(55% 0.17 255 / 0.05) 1px,
       transparent 1px,
       transparent 60px
     ),
     repeating-linear-gradient(
       0deg,
-      oklch(55% 0.17 163 / 0.05) 0px,
-      oklch(55% 0.17 163 / 0.05) 1px,
+      oklch(55% 0.17 255 / 0.05) 0px,
+      oklch(55% 0.17 255 / 0.05) 1px,
       transparent 1px,
       transparent 60px
     ),
     radial-gradient(
       circle at 50% 50%,
-      oklch(55% 0.17 163 / 0.08) 0px,
-      oklch(55% 0.17 163 / 0.08) 2px,
+      oklch(55% 0.17 255 / 0.08) 0px,
+      oklch(55% 0.17 255 / 0.08) 2px,
       transparent 2px
     );
 }
@@ -368,15 +368,15 @@ a:focus-visible {
       0deg,
       transparent,
       transparent 3px,
-      oklch(96% 0.006 160 / 0.012) 3px,
-      oklch(96% 0.006 160 / 0.012) 4px
+      oklch(96% 0.006 255 / 0.012) 3px,
+      oklch(96% 0.006 255 / 0.012) 4px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 3px,
-      oklch(96% 0.006 160 / 0.008) 3px,
-      oklch(96% 0.006 160 / 0.008) 4px
+      oklch(96% 0.006 255 / 0.008) 3px,
+      oklch(96% 0.006 255 / 0.008) 4px
     );
 }
 
@@ -386,15 +386,15 @@ a:focus-visible {
       0deg,
       transparent,
       transparent 3px,
-      oklch(20% 0.010 160 / 0.012) 3px,
-      oklch(20% 0.010 160 / 0.012) 4px
+      oklch(20% 0.010 255 / 0.012) 3px,
+      oklch(20% 0.010 255 / 0.012) 4px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 3px,
-      oklch(20% 0.010 160 / 0.008) 3px,
-      oklch(20% 0.010 160 / 0.008) 4px
+      oklch(20% 0.010 255 / 0.008) 3px,
+      oklch(20% 0.010 255 / 0.008) 4px
     );
 }
 
@@ -538,4 +538,60 @@ a:focus-visible {
 /* --- iOS safe-area support for hero --- */
 @supports (padding: env(safe-area-inset-bottom)) {
   .safe-area-bottom { padding-bottom: max(7rem, calc(env(safe-area-inset-bottom) + 6rem)); }
+}
+
+/* ── Range slider (calculator) ── */
+.cz-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cz-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.cz-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--cz-border-strong);
+}
+
+.cz-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -7px;
+  border-radius: 999px;
+  background: var(--cz-accent);
+  border: 2px solid var(--cz-bg-card);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+}
+
+.cz-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--cz-accent);
+  outline-offset: 2px;
+}
+
+.cz-range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--cz-border-strong);
+}
+
+.cz-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--cz-accent);
+  border: 2px solid var(--cz-bg-card);
+}
+
+.cz-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--cz-accent);
+  outline-offset: 2px;
 }
