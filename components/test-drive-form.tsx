@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, ChevronDown } from "lucide-react";
 import { PHONE_DISPLAY, waLink } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 const TIMES = ["Any time", "Morning (9am–12pm)", "Afternoon (12pm–4pm)"];
 
@@ -53,6 +54,12 @@ export default function TestDriveForm() {
       `Name: ${name.trim()}`,
       `Phone: ${phone.trim()}`,
     ].join("\n");
+
+    track("test_drive_submit", {
+      model,
+      preferred_time: time,
+      has_date: Boolean(date),
+    });
 
     const url = waLink(message);
     setSentUrl(url);
@@ -225,6 +232,7 @@ export default function TestDriveForm() {
           href={waLink("Hi Ridzuan, I'd like to book a BYD test drive in Miri.")}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => track("whatsapp_click", { location: "booking_form" })}
           className="inline-flex min-h-11 items-center font-medium text-accent underline decoration-accent/40 underline-offset-2"
         >
           WhatsApp {PHONE_DISPLAY}

@@ -6,6 +6,7 @@ import type { Vehicle } from "@/lib/vehicles";
 import { activeRebate } from "@/lib/vehicles";
 import { calculateFinance, fmt, fmtDec } from "@/lib/finance";
 import { generateWhatsAppBookingUrl } from "@/lib/whatsapp";
+import { track } from "@/lib/analytics";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 
 interface Props {
@@ -381,6 +382,7 @@ export default function Calculator({ vehicle }: Props) {
               href={whatsappBookingUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track("whatsapp_click", { location: "calculator" })}
               className="hero-cta mt-4 w-full inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl font-bold text-sm bg-accent"
               style={{ color: "var(--cz-accent-ink)" }}
             >

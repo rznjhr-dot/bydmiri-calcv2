@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import Analytics from "@/components/analytics";
 
 const baseUrl = "https://bydmiri.com";
 
@@ -151,7 +152,7 @@ export default function RootLayout({
              environment where _headers may not apply (e.g., dev server). */}
         <meta
           httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://img.youtube.com; font-src 'self' data:; frame-src https://www.google.com https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://img.youtube.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self' data:; frame-src https://www.google.com https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com"
         />
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
@@ -170,6 +171,8 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+
+        <Analytics />
 
         {children}
 

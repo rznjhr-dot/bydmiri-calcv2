@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BadgeCheck, BatteryCharging, ShieldCheck } from "lucide-react";
 import { Img } from "@/components/img";
 import { PHONE_DISPLAY, PHONE_E164, TEST_DRIVE_WHATSAPP_URL } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 /**
  * Static conversion hero.
@@ -57,6 +58,7 @@ export default function Hero() {
           <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Link
               href="#contact"
+              onClick={() => track("book_test_drive_click", { location: "hero" })}
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3.5 text-base font-bold sm:w-auto"
               style={{ color: "var(--cz-accent-ink)" }}
             >
@@ -65,6 +67,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/pricelist"
+              onClick={() => track("prices_click", { location: "hero" })}
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border border-white/40 px-6 py-3.5 text-base font-medium text-white transition-colors hover:bg-white/10 sm:w-auto"
             >
               See prices &amp; calculate
@@ -99,6 +102,7 @@ export default function Hero() {
                 <span className="mx-1 text-white/50">·</span>
                 <a
                   href={`tel:${PHONE_E164}`}
+                  onClick={() => track("phone_click", { location: "hero" })}
                   className="inline-flex min-h-11 items-center text-white/80 underline decoration-white/30 underline-offset-4 hover:text-white"
                 >
                   {PHONE_DISPLAY}
@@ -109,6 +113,7 @@ export default function Hero() {
               href={TEST_DRIVE_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track("whatsapp_click", { location: "hero" })}
               className="ml-1 hidden text-[13px] font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-white sm:inline"
             >
               WhatsApp

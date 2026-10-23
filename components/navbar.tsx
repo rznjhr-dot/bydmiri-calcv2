@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { CalendarCheck, Menu, X } from "lucide-react";
 import { Img } from "@/components/img";
 import { TEST_DRIVE_WHATSAPP_URL } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -71,7 +72,10 @@ export default function Navbar() {
             })}
             <Link
               href="/#contact"
-              onClick={close}
+              onClick={() => {
+                close();
+                track("book_test_drive_click", { location: "navbar_desktop" });
+              }}
               className="ml-2 inline-flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-4 text-sm font-semibold"
               style={{ color: "var(--cz-accent-ink)" }}
             >
@@ -116,7 +120,10 @@ export default function Navbar() {
               })}
               <Link
                 href="/#contact"
-                onClick={close}
+                onClick={() => {
+                  close();
+                  track("book_test_drive_click", { location: "navbar_mobile_menu" });
+                }}
                 className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-lg bg-accent px-3 text-base font-semibold"
                 style={{ color: "var(--cz-accent-ink)" }}
               >
@@ -138,6 +145,7 @@ export default function Navbar() {
             href={TEST_DRIVE_WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("whatsapp_click", { location: "mobile_bar" })}
             className="cta-outline inline-flex min-h-12 w-12 shrink-0 items-center justify-center rounded-xl"
             aria-label="Book a test drive on WhatsApp"
           >
@@ -147,6 +155,7 @@ export default function Navbar() {
           </a>
           <Link
             href="/#contact"
+            onClick={() => track("book_test_drive_click", { location: "mobile_bar" })}
             className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold"
             style={{ color: "var(--cz-accent-ink)" }}
           >

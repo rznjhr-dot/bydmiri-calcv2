@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, ChevronDown } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 const GSHEET_WEBAPP_URL =
   process.env.NEXT_PUBLIC_GSHEET_URL ||
@@ -50,6 +51,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
       mode: "no-cors",
     }).catch(() => {});
 
+    track("eligibility_submit", { model: targetCar.trim() });
     setSubmitted(true);
   };
 

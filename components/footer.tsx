@@ -6,6 +6,7 @@ import { ArrowUpRight, Clock, Info, MapPin, Phone } from "lucide-react";
 import { Img } from "@/components/img";
 import { Modal } from "@/components/modal";
 import { PHONE_DISPLAY, PHONE_E164, WHATSAPP_URL } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 type LegalType = "privacy" | "terms" | "disclaimer";
 
@@ -66,6 +67,11 @@ export default function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
+                    onClick={() => {
+                      if (item.href === "/#contact") {
+                        track("book_test_drive_click", { location: "footer" });
+                      }
+                    }}
                     className="inline-flex min-h-11 items-center text-sm text-theme-50 transition-colors hover:text-theme-90"
                   >
                     {item.label}
@@ -100,6 +106,7 @@ export default function Footer() {
               </p>
               <a
                 href={`tel:${PHONE_E164}`}
+                onClick={() => track("phone_click", { location: "footer" })}
                 className="flex min-h-11 items-center gap-2 text-theme-50 transition-colors hover:text-theme-90"
               >
                 <Phone size={15} className="shrink-0 text-accent" aria-hidden />
@@ -183,6 +190,12 @@ export default function Footer() {
             <p>
               Loan and charging calculations run in your browser. Nothing you type into the
               calculator is stored by this website.
+            </p>
+            <p>
+              Google Analytics 4 is used to understand how the site is used, including pages
+              viewed, approximate location, device type and referral source. It uses cookies and
+              is processed by Google under its own terms. No name, phone number or income details
+              are sent to Analytics. Analytics cookies can be blocked in your browser settings.
             </p>
             <p>
               If you submit the loan eligibility form, the name, phone number, target model and

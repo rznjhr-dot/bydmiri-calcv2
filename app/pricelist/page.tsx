@@ -9,6 +9,7 @@ import { calcCardMonthly, calcFullLoanMonthly, fmt } from "@/lib/finance";
 import { Img } from "@/components/img";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { track } from "@/lib/analytics";
 
 const REG_FEE = 60;
 const EV_PLATE_FEE = 150;
@@ -84,10 +85,10 @@ export default function PricelistPage() {
               Monthly estimates for 10% &amp; 0% down, 9 years, 2.3% rate. Subject to bank approval T&amp;Cs.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/#contact" className="hero-cta inline-flex items-center gap-1.5 px-5 py-3 min-h-12 rounded-full bg-accent text-sm font-semibold" style={{ color: "var(--cz-accent-ink)" }}>
+              <Link href="/#contact" onClick={() => track("book_test_drive_click", { location: "pricelist_summary" })} className="hero-cta inline-flex items-center gap-1.5 px-5 py-3 min-h-12 rounded-full bg-accent text-sm font-semibold" style={{ color: "var(--cz-accent-ink)" }}>
                 Book a test drive
               </Link>
-              <Link href="/#full-lineup" className="inline-flex items-center gap-1.5 px-5 py-3 min-h-12 rounded-full border border-[color:var(--cz-border-strong)] text-theme-50 text-sm font-semibold hover:bg-theme-alt hover:text-theme transition-all">
+              <Link href="/#full-lineup" onClick={() => track("prices_click", { location: "pricelist_summary" })} className="inline-flex items-center gap-1.5 px-5 py-3 min-h-12 rounded-full border border-[color:var(--cz-border-strong)] text-theme-50 text-sm font-semibold hover:bg-theme-alt hover:text-theme transition-all">
                 Calculate instalment
               </Link>
             </div>
@@ -184,7 +185,10 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
       </td>
       <td className="px-2.5 py-2.5">
         <button
-          onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+          onClick={() => {
+            track("calculator_open", { model: v.name, location: "pricelist" });
+            router.push(`/?calc=${encodeURIComponent(v.id)}`);
+          }}
           className="calc-btn flex items-center justify-center w-11 h-11 rounded-md cursor-pointer"
           aria-label={`Calculate for ${v.name}`}
         >
@@ -219,7 +223,10 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
           <div className="text-[11px] text-theme-50 mt-0.5">{v.range} km range</div>
         </div>
         <button
-          onClick={() => router.push(`/?calc=${encodeURIComponent(v.id)}`)}
+          onClick={() => {
+            track("calculator_open", { model: v.name, location: "pricelist" });
+            router.push(`/?calc=${encodeURIComponent(v.id)}`);
+          }}
           className="calc-btn flex items-center justify-center w-11 h-11 rounded-md cursor-pointer shrink-0"
           aria-label={`Calculate for ${v.name}`}
         >

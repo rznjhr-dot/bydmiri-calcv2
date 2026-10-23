@@ -27,6 +27,7 @@ import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
 import SectionHeader from "@/components/section-header";
 import TestDriveForm from "@/components/test-drive-form";
+import { track } from "@/lib/analytics";
 import {
   PHONE_DISPLAY,
   PHONE_E164,
@@ -123,6 +124,8 @@ export default function Home() {
   }, [selectedId]);
 
   const handleSelect = useCallback((id: string) => {
+    const vehicle = vehicles.find((v) => v.id === id);
+    track("calculator_open", { model: vehicle?.name ?? id, location: "lineup" });
     setSelectedId((prev) => (prev === id ? null : id));
   }, []);
 
@@ -232,7 +235,10 @@ export default function Home() {
                   <button
                     key={f.id}
                     type="button"
-                    onClick={() => setFilter(f.id)}
+                    onClick={() => {
+                      setFilter(f.id);
+                      track("model_filter", { filter: f.id });
+                    }}
                     aria-pressed={active}
                     className={`inline-flex min-h-11 items-center rounded-full border px-4 text-[13px] font-medium transition-colors ${
                       active
@@ -267,6 +273,7 @@ export default function Home() {
             <div className="mt-4 text-center">
               <Link
                 href="/pricelist"
+                onClick={() => track("prices_click", { location: "lineup" })}
                 className="inline-flex min-h-12 items-center gap-1.5 px-3 text-sm font-medium text-accent transition-colors hover:text-theme-90"
               >
                 Compare every price and specification
@@ -289,6 +296,7 @@ export default function Home() {
               />
               <Link
                 href="#contact"
+                onClick={() => track("book_test_drive_click", { location: "how_it_works" })}
                 className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-sm font-semibold text-accent hover:text-theme-90"
               >
                 Start with a test drive
@@ -326,6 +334,11 @@ export default function Home() {
               {FAQS.map((item) => (
                 <details
                   key={item.q}
+                  onToggle={(e) => {
+                    if (e.currentTarget.open) {
+                      track("faq_open", { question: item.q });
+                    }
+                  }}
                   className="group border-b"
                   style={{ borderColor: "var(--cz-border)" }}
                 >
@@ -468,6 +481,7 @@ export default function Home() {
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                     <a
                       href={`tel:${PHONE_E164}`}
+                      onClick={() => track("phone_click", { location: "booking" })}
                       className="inline-flex min-h-11 items-center text-sm font-medium text-accent hover:text-theme-90"
                     >
                       {PHONE_DISPLAY}
@@ -476,6 +490,7 @@ export default function Home() {
                       href={TEST_DRIVE_WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => track("whatsapp_click", { location: "booking" })}
                       className="inline-flex min-h-11 items-center text-sm font-medium text-theme-50 underline decoration-theme-30 underline-offset-4 hover:text-theme-90"
                     >
                       WhatsApp
