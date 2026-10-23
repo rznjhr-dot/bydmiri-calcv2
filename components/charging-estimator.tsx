@@ -7,10 +7,10 @@ import { vehicles } from "@/lib/vehicles";
 import { ResultBox } from "@/components/result-box";
 
 const CHARGERS = [
-  { kw: 7, label: "7 kW", type: "Wallbox (Home Charger)", ac: true },
-  { kw: 22, label: "22 kW", type: "AC Public", ac: true },
-  { kw: 60, label: "60 kW", type: "DC Fast", ac: false },
-  { kw: 180, label: "180 kW", type: "DC Ultra-fast", ac: false },
+  { kw: 7, label: "7 kW", type: "Wallbox (AC)", ac: true },
+  { kw: 22, label: "22 kW", type: "Wallbox (AC)", ac: true },
+  { kw: 60, label: "60 kW", type: "Fast Charger (DC)", ac: false },
+  { kw: 180, label: "180 kW", type: "Fast Charger (DC)", ac: false },
 ];
 
 const VEHICLES_URL = "https://bydmiri-data.netlify.app/data/vehicles.json";
@@ -253,19 +253,23 @@ export default function ChargingEstimator() {
       ? parseACKW(vehicle.acCharging)
       : parseDCWatts(vehicle.maxChargePower);
     const effectivePower = Math.min(chargerKw, carLimit);
-    const efficiency = isAc ? 0.9 : 0.95; // real-world conversion losses (AC OBC / DC charger)
+    // AC charging loses 6-10% to AC→DC conversion, thermal management, and
+    // resistance. Use 8% average loss (92% efficiency) for AC.
+    // DC fast charging skips the onboard converter — keep at 95% (minimal loss).
+    const efficiency = isAc ? 0.92 : 0.95;
+    const powerAfterLoss = effectivePower * (isAc ? efficiency : 1);
     const energyNeeded = vehicle.battery * ((toPct - fromPct) / 100);
-    const wallEnergy = energyNeeded / efficiency; // kWh drawn from the wall
+    const wallEnergy = isAc ? energyNeeded / efficiency : energyNeeded;
     const hours =
-      effectivePower > 0
-        ? integrateChargeTime(energyNeeded, fromPct, toPct, effectivePower, efficiency, isAc)
+      powerAfterLoss > 0
+        ? integrateChargeTime(energyNeeded, fromPct, toPct, effectivePower, isAc ? efficiency : 1, isAc)
         : 0;
     /* Both AC (home tariff) and DC (public networks) bill per kWh.
        Cost = energy drawn from the wall × rate. */
     const rate = isAc ? (profiles?.homeRate ?? 0.33) : (profiles?.dcRate ?? 1.40);
     const cost = wallEnergy * rate;
     const kmRecouped = Math.round(((toPct - fromPct) / 100) * vehicle.range);
-    return { energyNeeded, effectivePower, carLimit, isAc, hours, cost, rate, kmRecouped, efficiency, wallEnergy };
+    return { energyNeeded, effectivePower, powerAfterLoss, carLimit, isAc, hours, cost, rate, kmRecouped, efficiency, wallEnergy };
   }, [vehicle, chargerKw, fromPct, toPct, selectedCharger, profiles]);
 
   if (loading) {
@@ -335,9 +339,9 @@ export default function ChargingEstimator() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
               {CHARGERS.map((c) => (
                 <button
-                  key={c.kw}
+                  key={`${c.kw}-${c.type}`}
                   onClick={() => setChargerKw(c.kw)}
-                  className="py-2.5 min-h-11 rounded-lg border text-xs font-medium transition-all text-center"
+                  className="btn-holo py-2.5 min-h-11 rounded-lg border text-xs font-medium transition-all text-center"
                   style={{
                     backgroundColor:
                       chargerKw === c.kw
@@ -421,7 +425,7 @@ export default function ChargingEstimator() {
                   )}
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] text-theme-20">
+              <div className="flex justify-between text-[10px] text-theme-50">
                 <span>0%</span>
                 <span>50%</span>
                 <span>100%</span>
@@ -462,6 +466,7 @@ export default function ChargingEstimator() {
                     icon={<Zap size={13} />}
                     label="Effective Power"
                     value={`${result.effectivePower} kW`}
+                    sub={result.isAc ? `est. ${result.powerAfterLoss.toFixed(1)} kW after losses` : undefined}
                   />
                 </div>
 
@@ -496,17 +501,13 @@ export default function ChargingEstimator() {
                   </p>
                 )}
 
-                <p className="text-[10px] text-theme-30 text-center">
-                  ~{Math.round(result.efficiency * 100)}% charging efficiency applied (conversion losses)
-                </p>
-
                 {result.isAc ? (
-                  <p className="text-[10px] text-theme-30 text-center leading-relaxed">
-                    AC charging holds near full speed until ~90% — taper is barely noticeable.
+                  <p className="text-xs text-theme-50 text-center leading-relaxed">
+                    ~{Math.round(result.efficiency * 100)}% efficiency applied — AC charging loses {Math.round((1 - result.efficiency) * 100)}% to heat and conversion.
                   </p>
                 ) : (
                   <div className="text-center">
-                    <p className="text-[10px] text-theme-30 mb-1.5 leading-relaxed">
+                    <p className="text-xs text-theme-50 mb-1.5 leading-relaxed">
                       DC fast charging slows down as the battery fills — the last 20% often takes as
                       long as the first 30%.
                     </p>
@@ -516,7 +517,7 @@ export default function ChargingEstimator() {
                       <div style={{ width: "12.5%", backgroundColor: "var(--cz-counter)" }} />
                       <div style={{ width: "12.5%", backgroundColor: "var(--cz-counter)", opacity: 0.7 }} />
                     </div>
-                    <div className="flex max-w-[260px] mx-auto text-[10px] text-theme-30 mt-1">
+                    <div className="flex max-w-[260px] mx-auto text-[11px] text-theme-50 mt-1">
                       <span className="w-[37.5%] text-left">Full speed</span>
                       <span className="w-[37.5%] text-center">Easing off</span>
                       <span className="w-[12.5%] text-center">Slow</span>
@@ -527,7 +528,7 @@ export default function ChargingEstimator() {
 
                 <div className="flex items-start gap-1.5 mt-2 pt-2 sm:mt-3 sm:pt-3 border-t" style={{ borderColor: "var(--cz-border)" }}>
                   <Info size={11} className="shrink-0 mt-0.5 text-theme-30" />
-                  <p className="text-[10px] text-theme-30 leading-relaxed">
+                  <p className="text-xs text-theme-50 leading-relaxed">
                     Charging times &amp; costs are estimates and already account for slower DC charging
                     above ~80%. Public DC rates vary by charging network and location.
                   </p>

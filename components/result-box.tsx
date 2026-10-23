@@ -27,14 +27,14 @@ export function ResultBox({ icon, label, value, sub, highlight, color }: ResultB
     >
       <div className="flex items-center gap-1 text-theme-40 mb-0.5">
         {icon}
-        <span className="text-[10px]">{label}</span>
+        <span className="text-[11px]">{label}</span>
       </div>
       <div
         className={`font-data text-sm font-semibold ${highlight ? (isCounter ? "text-counter" : "text-accent") : "text-theme-80"}`}
       >
         {value}
       </div>
-      {sub && <div className="text-[10px] text-theme-30 mt-0.5">{sub}</div>}
+      {sub && <div className="text-[11px] text-theme-50 mt-0.5">{sub}</div>}
     </div>
   );
 }

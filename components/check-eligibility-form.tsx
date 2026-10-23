@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronDown } from "lucide-react";
 
 const GSHEET_WEBAPP_URL =
   process.env.NEXT_PUBLIC_GSHEET_URL ||
@@ -65,7 +65,7 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
         <CheckCircle2 size={28} className="text-accent mx-auto mb-2" />
         <p className="text-sm font-semibold text-accent">Thank You!</p>
         <p className="text-xs text-theme-50 mt-1">
-          We will review your eligibility and contact you via WhatsApp within 24 hours.
+          Eligibility is reviewed and answered on WhatsApp within 24 hours.
         </p>
       </div>
     );
@@ -97,13 +97,14 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <select
-            value={targetCar}
-            aria-label="Target car"
-            onChange={(e) => setTargetCar(e.target.value)}
-            className="field w-full px-3 py-2.5 rounded-lg text-base transition-colors appearance-none"
-            required
-          >
+          <div className="relative">
+            <select
+              value={targetCar}
+              aria-label="Target car"
+              onChange={(e) => setTargetCar(e.target.value)}
+              className="field w-full px-3 py-2.5 pr-10 rounded-lg text-base transition-colors appearance-none"
+              required
+            >
             <option value="" disabled className="bg-theme-card text-theme-30">
               Target car *
             </option>
@@ -117,8 +118,14 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
             <option value="Seal Premium" className="bg-theme-card">Seal Premium</option>
             <option value="Seal Performance" className="bg-theme-card">Seal Performance</option>
             <option value="M6 Extended" className="bg-theme-card">M6 Extended</option>
-            <option value="Not sure yet" className="bg-theme-card">Not sure yet</option>
-          </select>
+              <option value="Not sure yet" className="bg-theme-card">Not sure yet</option>
+            </select>
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-theme-50"
+              aria-hidden
+            />
+          </div>
           <input
             type="number"
             placeholder="Monthly income (RM) *"
@@ -141,8 +148,8 @@ export default function CheckEligibilityForm({ className = "", defaultCar = "" }
           Check My Eligibility
         </button>
 
-        <p className="text-[10px] text-theme-20 text-center">
-          We will WhatsApp you regarding your eligibility. Your data is kept confidential.
+        <p className="text-xs text-theme-50 text-center">
+          Eligibility answers are sent by WhatsApp. Your details are kept confidential.
         </p>
       </form>
     </div>

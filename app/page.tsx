@@ -1,37 +1,126 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Zap, Gauge, Battery, CircleDot, Info, MapPin, Clock, Menu, X } from "lucide-react";
+import {
+  Zap,
+  Gauge,
+  Battery,
+  CircleDot,
+  MapPin,
+  Clock,
+  ShieldCheck,
+  BadgeCheck,
+  BatteryCharging,
+  Wrench,
+  ArrowRight,
+  Plus,
+} from "lucide-react";
 import Hero from "@/components/hero";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import VehicleCard from "@/components/vehicle-card";
 import Calculator from "@/components/calculator";
 import { Modal } from "@/components/modal";
 import { Img } from "@/components/img";
 import { vehicles } from "@/lib/vehicles";
-import CheckEligibilityForm from "@/components/check-eligibility-form";
 import SectionHeader from "@/components/section-header";
+import TestDriveForm from "@/components/test-drive-form";
+import {
+  PHONE_DISPLAY,
+  PHONE_E164,
+  SHOWROOM_ADDRESS,
+  TEST_DRIVE_WHATSAPP_URL,
+} from "@/lib/site";
+
+type Filter = "all" | "suv" | "sedan" | "mpv";
+
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "all", label: "All models" },
+  { id: "suv", label: "SUV" },
+  { id: "sedan", label: "Sedan" },
+  { id: "mpv", label: "MPV" },
+];
+
+const TRUST = [
+  {
+    icon: BadgeCheck,
+    title: "Authorised BYD dealer",
+    sub: "Kah Progression Auto",
+  },
+  {
+    icon: ShieldCheck,
+    title: "6-year vehicle warranty",
+    sub: "150,000 km",
+  },
+  {
+    icon: BatteryCharging,
+    title: "8-year battery warranty",
+    sub: "160,000 km",
+  },
+  {
+    icon: Wrench,
+    title: "Serviced in Miri",
+    sub: "Sales, service and parts",
+  },
+];
+
+const STEPS = [
+  {
+    n: "01",
+    title: "Pick a model",
+    body: "Use the lineup or tell Ridzuan what you need. Ten models, one recommendation.",
+  },
+  {
+    n: "02",
+    title: "Test drive in Miri",
+    body: "Book a slot at Kah Progression Auto, Jalan Krokop Utama. Weekdays, weekends and public holidays.",
+  },
+  {
+    n: "03",
+    title: "Loan and trade-in",
+    body: "Estimate the instalment, then submit for bank approval. Trade-in valuation available.",
+  },
+  {
+    n: "04",
+    title: "Collect your BYD",
+    body: "Handover at the Miri showroom, with service and warranty support handled locally.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Can I test drive before I decide?",
+    a: "Yes. Test drives are held at Kah Progression Auto on Jalan Krokop Utama. Bring your driving licence and book a slot that suits you.",
+  },
+  {
+    q: "Can I trade in my current car?",
+    a: "Trade-in can be arranged against any BYD model. Ask for a valuation when you book; the final figure depends on the car's condition and current market value.",
+  },
+  {
+    q: "How does loan approval work?",
+    a: "Start with the instalment estimate, then submit your documents for bank assessment. Approval, rate and tenure depend on the bank, your income and your CCRIS/CTOS record.",
+  },
+  {
+    q: "Where is the car serviced?",
+    a: "At the authorised BYD 3S centre in Miri. Sales, service and spare parts are handled locally by Kah Progression Auto.",
+  },
+  {
+    q: "What warranty is included?",
+    a: "6 years or 150,000 km for the vehicle, and 8 years or 160,000 km for the Blade Battery and drive unit. Full terms are in the warranty booklet.",
+  },
+];
 
 export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [modalType, setModalType] = useState<"privacy" | "terms" | "disclaimer" | null>(null);
-  const [navOpen, setNavOpen] = useState(false);
-  const legalCloseRef = useRef<HTMLButtonElement>(null);
-
-  const scrollToSection = useCallback((id: string) => {
-    setNavOpen(false);
-    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 50);
-  }, []);
+  const [filter, setFilter] = useState<Filter>("all");
+  const calcCloseRef = useRef<HTMLButtonElement>(null);
 
   // Focus modal close button when modal opens
   useEffect(() => {
     if (selectedId) calcCloseRef.current?.focus();
   }, [selectedId]);
-
-  useEffect(() => {
-    if (modalType) legalCloseRef.current?.focus();
-  }, [modalType]);
 
   const handleSelect = useCallback((id: string) => {
     setSelectedId((prev) => (prev === id ? null : id));
@@ -39,13 +128,10 @@ export default function Home() {
 
   const handleClose = useCallback(() => setSelectedId(null), []);
 
-  // Close modals on Escape
+  // Close the calculator on Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-        setModalType(null);
-      }
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
@@ -56,7 +142,6 @@ export default function Home() {
   // cleans the URL and opens the modal on the next frame. usePathname (not
   // useSearchParams) keeps this page statically prerenderable.
   const pathname = usePathname();
-  const calcCloseRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const calcId = new URLSearchParams(window.location.search).get("calc");
     if (!calcId || !vehicles.some((v) => v.id === calcId)) return;
@@ -79,366 +164,372 @@ export default function Home() {
     if (target) window.location.replace(target);
   }, [pathname]);
 
+  const filtered = useMemo(
+    () =>
+      vehicles.filter((v) => {
+        if (filter === "all") return true;
+        if (filter === "suv") return /SUV/i.test(v.category);
+        if (filter === "sedan") return /Sedan/i.test(v.category);
+        if (filter === "mpv") return /MPV/i.test(v.category);
+        return true;
+      }),
+    [filter]
+  );
+
   const selectedVehicle = selectedId
     ? vehicles.find((v) => v.id === selectedId)
     : null;
 
   return (
     <>
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-theme backdrop-blur-xl border-b border-theme">
-        <div className="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between gap-2">
-          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-1 text-sm text-white shrink-0" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
-            <span className="font-wordmark text-[11px] sm:text-xs ml-2">/ MIRI</span>
-          </Link>
-
-          {/* Desktop links */}
-          <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
-            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Home
-            </Link>
-            <button onClick={() => scrollToSection("full-lineup")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
-              Models
-            </button>
-            <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Why BYD
-            </Link>
-            <Link href="/charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Charging, Savings &amp; Warranty
-            </Link>
-            <button onClick={() => scrollToSection("contact")} className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap cursor-pointer">
-              Contact Us
-            </button>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setNavOpen((o) => !o)}
-            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-            aria-label={navOpen ? "Close menu" : "Open menu"}
-            aria-expanded={navOpen}
-          >
-            {navOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-
-        {/* Mobile menu panel */}
-        {navOpen && (
-          <div className="sm:hidden border-t bg-theme/95 backdrop-blur-xl" style={{ borderColor: "var(--cz-border)" }}>
-            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
-              <Link
-                href="/"
-                onClick={() => {
-                  setNavOpen(false);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Home
-              </Link>
-              {[
-                { id: "full-lineup", label: "Models" },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors cursor-pointer"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <Link
-                href="/why-byd"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Why BYD
-              </Link>
-              <Link
-                href="/charging"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Charging, Savings &amp; Warranty
-              </Link>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="flex items-center min-h-11 px-3 rounded-lg text-left text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors cursor-pointer"
-              >
-                Contact Us
-              </button>
-            </div>
-          </div>
-        )}
-      </nav>
+      <Navbar />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
-      {/* Hero */}
-      <Hero />
+        <Hero />
 
-      {/* ── Full Lineup — model photo grid (5 columns on lg, 3 on md, stack on mobile) ── */}
-      <section
-        id="full-lineup"
-        className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24 bg-theme"
-      >
-        <div className="absolute inset-0 parking-lot-bg opacity-30" />
+        {/* ── Trust strip ── */}
+        <section aria-label="Buying assurances" className="border-y border-theme bg-theme-section">
+          <div className="mx-auto max-w-[1240px] px-5 py-5 sm:px-6 sm:py-6">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4">
+              {TRUST.map(({ icon: Icon, title, sub }) => (
+                <li key={title} className="flex items-start gap-2.5">
+                  <Icon size={17} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold leading-tight text-theme-80 sm:text-sm">
+                      {title}
+                    </p>
+                    <p className="mt-0.5 text-xs leading-tight text-theme-50">{sub}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-        <div className="max-w-6xl mx-auto relative">
-          <SectionHeader
-            icon={<span className="w-1.5 h-1.5 rounded-full bg-accent" />}
-            label="Complete BYD Lineup"
-            title="Discover the Lineup. 6 Models, 10 Choices."
-            subtitle="Pick your model, click the calculator icon to estimate your monthly instalment instantly."
-            align="start"
-            className="mb-6"
-          />
+        {/* ── Lineup ── */}
+        <section
+          id="full-lineup"
+          className="relative scroll-mt-24 overflow-hidden bg-theme px-5 py-14 sm:px-6 md:py-20"
+        >
+          <div className="parking-lot-bg absolute inset-0 opacity-25" />
+          <div className="relative mx-auto max-w-[1240px]">
+            <SectionHeader
+              icon={<span className="h-1.5 w-1.5 rounded-full bg-accent" />}
+              label="The lineup"
+              title="Find the BYD that fits."
+              subtitle="10 models, prices from RM106,353. Filter by body type, then open any model to calculate your instalment."
+              className="mb-6"
+            />
 
-          {/* Parking Lot Grid — same component as the old #main-content.
-              Photos are 16:9 landscape via PNGs from public/images/models/png/. */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-1 gap-y-5 lg:gap-x-2.5 lg:px-2.5">
-            {vehicles.map((v, i) => (
-              <div key={v.id} className="px-1">
+            <div
+              className="mb-7 flex flex-wrap items-center justify-center gap-2"
+              role="group"
+              aria-label="Filter models by body type"
+            >
+              {FILTERS.map((f) => {
+                const active = filter === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setFilter(f.id)}
+                    aria-pressed={active}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-4 text-[13px] font-medium transition-colors ${
+                      active
+                        ? "border-accent bg-accent text-[var(--cz-accent-ink)]"
+                        : "border-theme text-theme-50 hover:border-[color:var(--cz-border-strong)] hover:text-theme-90"
+                    }`}
+                    style={active ? { borderColor: "var(--cz-accent)" } : undefined}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="grid grid-cols-2 gap-x-3 gap-y-6 lg:grid-cols-5 lg:gap-x-4">
+              {filtered.map((v, i) => (
                 <VehicleCard
+                  key={v.id}
                   vehicle={v}
                   isSelected={selectedId === v.id}
                   onSelect={handleSelect}
                   index={i}
                 />
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-theme-40">
+              Monthly figures assume 10% down, a 9-year tenure and 2.3% flat rate. OTR prices
+              shown before rebate. Actual approval depends on the bank.
+            </p>
+
+            <div className="mt-4 text-center">
+              <Link
+                href="/pricelist"
+                className="inline-flex min-h-12 items-center gap-1.5 px-3 text-sm font-medium text-accent transition-colors hover:text-theme-90"
+              >
+                Compare every price and specification
+                <ArrowRight size={15} aria-hidden />
+              </Link>
+            </div>
           </div>
+        </section>
 
-          <div className="text-center mt-2">
-            <Link
-              href="/pricelist"
-              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline underline-offset-2 transition-colors py-2 px-2"
-            >
-              View full details &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Map & Location ── */}
-      <section className="relative px-6 py-12 md:py-16 overflow-hidden bg-theme">
-        <div className="absolute inset-0 parking-lot-bg opacity-20" />
-        <div className="max-w-6xl mx-auto relative">
-          <SectionHeader
-            icon={<MapPin size={12} />}
-            label="Our Location"
-            title="Visit Our Showroom"
-            subtitle="Kah Progression Auto — Official BYD Dealer Miri"
-            align="start"
-          />
-
-          <div className="grid md:grid-cols-2 gap-4 items-stretch w-full">
-            {/* Map */}
-            <div
-              className="rounded-2xl overflow-hidden border bg-theme-card min-h-[300px] md:min-h-[320px] min-w-0 w-full"
-              style={{ borderColor: "var(--cz-border)" }}
-            >
-              <iframe
-                src="https://www.google.com/maps?q=4.4279602,114.0020263&output=embed"
-                className="w-full h-full max-w-full block"
-                style={{ minHeight: "300px", filter: "invert(0.88) hue-rotate(160deg) saturate(0.7)" }}
-                loading="lazy"
-                allowFullScreen
-                title="BYD Kah Progression Auto Miri"
+        {/* ── How buying works ── */}
+        <section className="border-t border-theme bg-theme-section px-5 py-14 sm:px-6 md:py-20">
+          <div className="mx-auto max-w-[1240px]">
+            <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+              <SectionHeader
+                align="start"
+                label="How it works"
+                title="From shortlist to handover."
+                subtitle="Four steps, no showroom pressure. Start with a test drive and decide after."
+                className="mb-0"
               />
+              <Link
+                href="#contact"
+                className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-sm font-semibold text-accent hover:text-theme-90"
+              >
+                Start with a test drive
+                <ArrowRight size={15} aria-hidden />
+              </Link>
             </div>
 
-            {/* Info card */}
-            <div
-              className="flex flex-col justify-center gap-1.5 min-w-0"
-            >
-              <div className="rounded-xl p-3 bg-theme-card border" style={{ borderColor: "var(--cz-border)" }}>
-                <div className="flex items-start gap-2">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-accent">
-                    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  <div>
-                    <h3 className="text-sm font-bold text-theme-90">BYD Kah Progression Auto</h3>
-                    <p className="text-xs text-theme-50">Official BYD Dealer · Sales · Service</p>
-                    <p className="text-xs text-theme-50 mt-1">
-                      Lot 1829, Jalan Krokop Utama, 98000 Miri, Sarawak
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col min-[420px]:flex-row gap-2 min-w-0 max-w-full">
-                <a
-                  href="https://www.google.com/maps?q=4.4279602,114.0020263"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-outline flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold"
+            <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+              {STEPS.map((step) => (
+                <li
+                  key={step.n}
+                  className="border-t pt-4"
+                  style={{ borderColor: "var(--cz-border-strong)" }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
-                    <circle cx="12" cy="9" r="3" fill="white"/>
-                    <circle cx="12" cy="9" r="1.5" fill="#4285F4"/>
-                  </svg>
-                  <span>Open in Google Maps</span>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
-                    <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  </svg>
-                </a>
-                <a
-                  href="https://www.waze.com/ul?ll=4.4279602,114.0020263&navigate=yes"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-outline flex-1 min-w-0 flex items-center justify-center gap-2 px-3 py-3 min-h-11 rounded-xl text-sm font-semibold"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="11" fill="#33CCFF"/>
-                    <polygon points="3,11 22,2 13,21 11,13" fill="white"/>
-                  </svg>
-                  <span>Navigate with Waze</span>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60 shrink-0">
-                    <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  </svg>
-                </a>
-              </div>
-            </div>
+                  <span className="font-data text-xs font-medium text-accent">{step.n}</span>
+                  <h3 className="mt-2 text-base font-semibold text-theme-90">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-theme-50">{step.body}</p>
+                </li>
+              ))}
+            </ol>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── Schedule a Test Drive — Minimal: pure paper ── */}
-      <section id="contact" className="relative px-6 py-16 md:py-20 overflow-hidden scroll-mt-24 bg-theme">
-        <div className="max-w-2xl mx-auto relative text-center">
-          <div className="space-y-5">
+        {/* ── Common questions ── */}
+        <section className="border-t border-theme bg-theme px-5 py-14 sm:px-6 md:py-20">
+          <div className="mx-auto grid max-w-[1240px] gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <SectionHeader
-              icon={<Clock size={12} />}
-              label="Experience the Future"
-              title="Schedule a Test Drive Today"
-              size="lg"
+              align="start"
+              label="Before you book"
+              title="The questions buyers ask first."
+              subtitle="Straight answers on test drives, trade-in, loans and servicing in Miri."
               className="mb-0"
             />
-            <div className="space-y-1">
-              <p className="text-sm md:text-base text-theme-50 max-w-md mx-auto">
-                Book your appointment with Ridzuan today.
-              </p>
-              <p className="text-sm md:text-base text-theme-50 max-w-md mx-auto">
-                Experience the thrill of electric driving with your dream BYD.
-              </p>
+            <div>
+              {FAQS.map((item) => (
+                <details
+                  key={item.q}
+                  className="group border-b"
+                  style={{ borderColor: "var(--cz-border)" }}
+                >
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 text-[15px] font-semibold text-theme-90 marker:hidden sm:text-base">
+                    {item.q}
+                    <Plus
+                      size={17}
+                      className="shrink-0 text-accent transition-transform group-open:rotate-45"
+                      aria-hidden
+                    />
+                  </summary>
+                  <p className="max-w-[60ch] pb-4 pr-6 text-sm leading-relaxed text-theme-50">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
             </div>
-            <a
-              href="https://wa.me/601131933930?text=Saya%20nak%20jadualkan%20test%20drive%20untuk%20BYD!%20Boleh%20bantu%20saya%20tentang%20masa%20dan%20model%20yang%20tersedia%3F%20Terima%20kasih!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-cta relative inline-flex items-center gap-3 bg-accent px-8 py-3.5 rounded-full font-bold text-base"
-              style={{ color: "var(--cz-accent-ink)" }}
-            >
-              <span className="relative z-10 flex items-center gap-2.5">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Book Test Drive
-              </span>
-            </a>
           </div>
+        </section>
 
-          {/* Advisor info card */}
-          <div className="mt-8 rounded-2xl border bg-theme-card p-5 sm:p-6 max-w-md mx-auto text-left" style={{ borderColor: "var(--cz-border)" }}>
-            <div className="flex items-start gap-4">
-              {/* Photo */}
-              <div className="shrink-0">
-                <Img
-                  src="/ridzuan.jpg"
-                  alt="Ridzuan Jahari — BYD Sales Advisor Miri"
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border"
-                  style={{ borderColor: "var(--cz-border-strong)" }}
+        {/* ── Showroom ── */}
+        <section className="relative overflow-hidden bg-theme px-5 py-14 sm:px-6 md:py-20">
+          <div className="parking-lot-bg absolute inset-0 opacity-20" />
+          <div className="relative mx-auto max-w-[1240px]">
+            <SectionHeader
+              icon={<MapPin size={12} />}
+              label="The showroom"
+              title="Visit Kah Progression Auto."
+              subtitle="Test drives are held at the BYD 3S Centre on Jalan Krokop Utama. A home or office visit can also be arranged, within Miri."
+            />
+
+            <div className="grid w-full items-stretch gap-4 md:grid-cols-2">
+              <div
+                className="min-h-[320px] w-full min-w-0 overflow-hidden rounded-2xl border bg-theme-card"
+                style={{ borderColor: "var(--cz-border)" }}
+              >
+                <iframe
+                  src="https://www.google.com/maps?q=BYD+Kah+Progression+Auto+Lot+1829+Jalan+Krokop+Utama+98000+Miri+Sarawak&output=embed"
+                  className="block h-full w-full max-w-full"
+                  style={{ minHeight: "320px", filter: "invert(0.88) hue-rotate(160deg) saturate(0.7)" }}
+                  loading="lazy"
+                  allowFullScreen
+                  title="BYD Kah Progression Auto Miri"
                 />
               </div>
-              {/* Details */}
-              <div className="min-w-0 flex-1">
-                <h3 className="font-display text-base sm:text-lg font-semibold text-theme-90 leading-tight">
-                  Ridzuan Jahari
-                </h3>
-                <p className="text-xs text-theme-50 mt-0.5">
-                  BYD Sales Advisor · Kah Progression Auto Miri
-                </p>
-                <div className="mt-2 flex items-center gap-1.5">
+
+              <div className="flex min-w-0 flex-col justify-center gap-3">
+                <div
+                  className="rounded-xl border bg-theme-card p-5"
+                  style={{ borderColor: "var(--cz-border)" }}
+                >
+                  <div className="flex items-start gap-3">
+                    <MapPin size={18} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                    <div>
+                      <h3 className="text-base font-semibold text-theme-90">
+                        BYD Kah Progression Auto
+                      </h3>
+                      <p className="mt-0.5 text-[13px] text-theme-50">
+                        Authorised BYD 3S Centre · Sales, service and spare parts
+                      </p>
+                      <p className="mt-2 text-sm leading-relaxed text-theme-50">
+                        {SHOWROOM_ADDRESS}
+                      </p>
+                      <div className="mt-3 space-y-1 text-sm text-theme-50">
+                        <p>
+                          <span className="text-theme-70">Mon–Sat</span> · 9:00am–6:00pm
+                        </p>
+                        <p>
+                          <span className="text-theme-70">Sun &amp; Public Holiday</span> ·
+                          9:00am–4:00pm
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex min-w-0 flex-col gap-2 min-[420px]:flex-row">
                   <a
-                    href="https://wa.me/601131933930"
+                    href="https://www.google.com/maps/search/?api=1&query=BYD+Kah+Progression+Auto+Lot+1829+Jalan+Krokop+Utama+98000+Miri+Sarawak"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline underline-offset-2"
+                    className="cta-outline flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold"
                   >
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335" />
+                      <circle cx="12" cy="9" r="3" fill="white" />
+                      <circle cx="12" cy="9" r="1.5" fill="#4285F4" />
                     </svg>
-                    011 3193 3930
+                    <span>Open in Google Maps</span>
+                  </a>
+                  <a
+                    href="https://www.waze.com/ul?q=BYD%20Kah%20Progression%20Auto%20Lot%201829%20Jalan%20Krokop%20Utama%20Miri%20Sarawak&navigate=yes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cta-outline flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <circle cx="12" cy="12" r="11" fill="#33CCFF" />
+                      <polygon points="3,11 22,2 13,21 11,13" fill="white" />
+                    </svg>
+                    <span>Navigate with Waze</span>
                   </a>
                 </div>
               </div>
             </div>
-            {/* Social links */}
-            <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--cz-border)" }}>
-              <p className="text-xs text-theme-50 mb-2">Follow for updates &amp; promos:</p>
-              <div className="flex items-center gap-2">
-                {/* Facebook */}
-                <a
-                  href="https://web.facebook.com/ridzuanbydmiri"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-outline inline-flex flex-1 items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold min-h-9"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073"/>
-                  </svg>
-                  Facebook
-                </a>
-                {/* TikTok */}
-                <a
-                  href="https://www.tiktok.com/@ridzuanbydmiri"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-outline inline-flex flex-1 items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold min-h-9"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.14v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.5-4.41c.3 0 .6.04.88.13V9.4a6.03 6.03 0 0 0-1-.08A6.04 6.04 0 0 0 4 15.33a6.04 6.04 0 0 0 10.42 4.13 6.04 6.04 0 0 0 1.77-4.28V8.68a8.02 8.02 0 0 0 4.69 1.5V7.04a4.83 4.83 0 0 1-1.29-.35z"/>
-                  </svg>
-                  TikTok
-                </a>
+          </div>
+        </section>
+
+        {/* ── Booking ── */}
+        <section
+          id="contact"
+          className="scroll-mt-24 border-t border-theme bg-theme-section px-5 py-14 sm:px-6 md:py-20"
+        >
+          <div className="mx-auto grid max-w-[1240px] gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+            <div>
+              <SectionHeader
+                align="start"
+                icon={<Clock size={12} />}
+                label="Book a test drive"
+                title="Book a test drive in Miri."
+                subtitle="Pick a model and a preferred time. Test drives are held at the showroom on Jalan Krokop Utama. No obligation."                size="lg"
+                className="mb-6"
+              />
+
+              <div
+                className="flex items-center gap-4 rounded-2xl border bg-theme-card p-4"
+                style={{ borderColor: "var(--cz-border)" }}
+              >
+                <Img
+                  src="/ridzuan.jpg"
+                  alt="Ridzuan Jahari, BYD Sales Advisor in Miri"
+                  className="h-16 w-16 shrink-0 rounded-full border object-cover"
+                  style={{ borderColor: "var(--cz-border-strong)" }}
+                />
+                <div className="min-w-0">
+                  <p className="text-base font-semibold text-theme-90">Ridzuan Jahari</p>
+                  <p className="text-[13px] text-theme-50">
+                    Sales Advisor · Kah Progression Auto
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <a
+                      href={`tel:${PHONE_E164}`}
+                      className="inline-flex min-h-11 items-center text-sm font-medium text-accent hover:text-theme-90"
+                    >
+                      {PHONE_DISPLAY}
+                    </a>
+                    <a
+                      href={TEST_DRIVE_WHATSAPP_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center text-sm font-medium text-theme-50 underline decoration-theme-30 underline-offset-4 hover:text-theme-90"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-2.5 text-sm text-theme-50">
+                <p className="flex items-start gap-2.5">
+                  <MapPin size={16} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                  <span>{SHOWROOM_ADDRESS}</span>
+                </p>
+                <p className="flex items-start gap-2.5">
+                  <Clock size={16} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                  <span>
+                    Mon–Sat 9:00am–6:00pm
+                    <br />
+                    Sun &amp; public holiday 9:00am–4:00pm
+                  </span>
+                </p>
+              </div>
+
+              <ul className="mt-5 space-y-2 text-sm text-theme-50">
+                {[
+                  "Loan estimate and bank submission",
+                  "Trade-in valuation at the showroom",
+                  "Service and warranty support in Miri",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <ShieldCheck size={15} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div
+              className="rounded-2xl border bg-theme-card p-5 sm:p-6"
+              style={{ borderColor: "var(--cz-border)" }}
+            >
+              <h3 className="text-lg font-semibold text-theme-90">Request a test drive</h3>
+              <p className="mt-1 text-sm text-theme-50">
+                A few details and a preferred time. It opens WhatsApp with the message ready to
+                send.
+              </p>
+              <div className="mt-5">
+                <TestDriveForm />
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Check Eligibility — form rendered directly, no accordion. */}
-          <div className="mt-6 pt-6 border-t" style={{ borderColor: "var(--cz-border)" }}>
-            <p className="text-xs text-theme-50 mb-3">
-              Not sure if you&apos;re eligible? Let us check for you — free &amp; no obligation.
-            </p>
-            <CheckEligibilityForm />
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-theme bg-theme-section py-10 px-6 text-center text-sm text-theme-40">
-        <div className="max-w-6xl mx-auto">
-          <div className="space-y-1.5">
-            <p>&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
-            <div className="flex items-center justify-center flex-wrap gap-x-3 gap-y-2 text-xs">
-              <button onClick={() => setModalType("privacy")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
-                Privacy Policy
-              </button>
-              <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("terms")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
-                Terms of Use
-              </button>
-              <span className="text-theme-30">·</span>
-              <button onClick={() => setModalType("disclaimer")} className="text-theme-50 hover:text-theme-90 underline underline-offset-2 transition-colors min-h-11 py-2.5 px-1">
-                Disclaimer
-              </button>
-            </div>
-          </div>
-        </div>
-      </footer>
+        <Footer />
       </main>
 
       {/* ── Calculator Modal ── */}
@@ -447,57 +538,56 @@ export default function Home() {
         onClose={handleClose}
         label={selectedVehicle?.name ?? "Calculator"}
         closeRef={calcCloseRef}
-        className="max-w-2xl md:max-w-4xl p-5 md:p-6"
+        className="max-w-2xl p-5 md:max-w-4xl md:p-6"
       >
         {selectedVehicle && (
           <>
-            {/* Header */}
             <div className="mb-3 text-center">
-              <h3 id="calc-modal-title" className="text-lg text-theme-90 font-semibold">
+              <h3 id="calc-modal-title" className="text-lg font-semibold text-theme-90">
                 {selectedVehicle.name}
               </h3>
-              <p className="text-xs text-theme-50 mt-0.5">
-                {selectedVehicle.category}
-              </p>
+              <p className="mt-0.5 text-xs text-theme-50">{selectedVehicle.category}</p>
             </div>
 
-            {/* Quick specs — 6 items, always balanced: 3+3 on mobile, 6 on md+ */}
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-x-1.5 gap-y-1.5 justify-items-center mb-3">
+            <div className="mb-3 grid grid-cols-3 justify-items-center gap-x-1.5 gap-y-1.5 md:grid-cols-6">
               <span className="specs-bar-item w-full justify-center">
-                <Gauge className="spec-icon" />
+                <Gauge className="spec-icon" aria-hidden />
                 {selectedVehicle.range} km
               </span>
               <span className="specs-bar-item w-full justify-center">
-                <Battery className="spec-icon" />
+                <Battery className="spec-icon" aria-hidden />
                 {selectedVehicle.battery} kWh
               </span>
               <span className="specs-bar-item w-full justify-center">
-                <span className="spec-icon flex items-center justify-center text-[10px] font-bold">{selectedVehicle.seats}</span>
+                <span className="spec-icon flex items-center justify-center text-[10px] font-bold">
+                  {selectedVehicle.seats}
+                </span>
                 {selectedVehicle.seats}-Seater
               </span>
               <span className="specs-bar-item w-full justify-center">
-                <CircleDot className="spec-icon" />
+                <CircleDot className="spec-icon" aria-hidden />
                 {selectedVehicle.driveType}
               </span>
               <span className="specs-bar-item w-full justify-center">
-                <Zap className="spec-icon" />
+                <Zap className="spec-icon" aria-hidden />
                 {selectedVehicle.power} kW
               </span>
               <span className="specs-bar-item w-full justify-center">
-                <span className="spec-icon flex items-center justify-center text-[10px] font-bold">Nm</span>
+                <span className="spec-icon flex items-center justify-center text-[10px] font-bold">
+                  Nm
+                </span>
                 {selectedVehicle.torque} Nm
               </span>
             </div>
 
-            {/* Brochure / Learn More */}
-            <div className="text-center mb-3">
+            <div className="mb-3 text-center">
               <a
                 href={selectedVehicle.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline hover:decoration-from-font transition-colors py-2"
+                className="inline-flex min-h-10 items-center gap-1.5 py-2 text-xs font-medium text-accent transition-colors hover:underline hover:decoration-from-font"
               >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                   <line x1="16" y1="13" x2="8" y2="13" />
@@ -505,7 +595,7 @@ export default function Home() {
                   <polyline points="10 9 9 9 8 9" />
                 </svg>
                 Brochure
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-50">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60" aria-hidden>
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   <polyline points="15 3 21 3 21 9" />
                   <line x1="10" y1="14" x2="21" y2="3" />
@@ -513,116 +603,17 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Loan Calculator heading */}
             <h3
-              className="font-display text-xl text-center text-theme-90 mb-3"
+              className="mb-3 text-center font-display text-xl text-theme-90"
               style={{ fontWeight: 600, letterSpacing: "-0.025em" }}
             >
-              Loan Calculator
+              Loan calculator
             </h3>
 
-            {/* Calculator */}
             <Calculator vehicle={selectedVehicle} />
           </>
         )}
       </Modal>
-
-      {/* ── Legal Modal ── */}
-      <Modal
-        open={!!modalType}
-        onClose={() => setModalType(null)}
-        label={modalType === "privacy" ? "Privacy Policy" : modalType === "terms" ? "Terms of Use" : "Disclaimer"}
-        closeRef={legalCloseRef}
-        className="p-6"
-      >
-        {/* Content */}
-        {modalType === "privacy" && (
-                <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg text-theme-90 font-semibold">Privacy Policy</h3>
-                  <p>
-                    BYD Miri values your privacy. This calculator does not store,
-                    collect, or share any personal information you enter. All
-                    calculations are performed locally in your browser.
-                  </p>
-                  <p>
-                    We use minimal analytics to improve our service. No personal
-                    data is sold or shared with third parties.
-                  </p>
-                  <p>
-                    For inquiries, contact Ridzuan Jahari at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
-                      011 3193 3930
-                    </a>.
-                  </p>
-                </div>
-              )}
-
-              {modalType === "terms" && (
-                <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg text-theme-90 font-semibold">Terms of Use</h3>
-                  <p>
-                    The monthly instalment estimates provided are for preliminary
-                    reference only and do not constitute a formal financing offer.
-                  </p>
-                  <p>
-                    All calculations are based on the information you provide and
-                    current indicative interest rates which may change without
-                    notice.
-                  </p>
-                  <p>
-                    Actual financing approval, terms, and conditions are subject to
-                    bank assessment, CCRIS/CTOS records, and applicable financing
-                    rates at the time of application.
-                  </p>
-                  <p>
-                    For a formal quotation, please contact Ridzuan Jahari at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
-                      011 3193 3930
-                    </a>.
-                  </p>
-                </div>
-              )}
-
-              {modalType === "disclaimer" && (
-                <div className="space-y-3 text-sm text-theme-70 leading-relaxed">
-                  <h3 className="text-lg text-theme-90 font-semibold">Disclaimer</h3>
-                  <p className="flex items-center gap-1.5 font-semibold text-theme-80">
-                    <Info size={15} className="shrink-0" />
-                    Monthly instalment estimates shown are for preliminary reference only.
-                  </p>
-                  <p>
-                    The calculation takes into account: downpayment you entered, current
-                    rebate offered, financing tenure period, and estimated current interest
-                    rate of 2.3% per annum.
-                  </p>
-                  <p>
-                    Actual instalment and financing approval are subject to bank assessment,
-                    CCRIS/CTOS records, current financial commitments, and applicable
-                    financing rates at the time of application.
-                  </p>
-                  <p className="flex items-center gap-1.5 font-semibold text-theme-80 pt-2 border-t" style={{ borderColor: "var(--cz-border)" }}>
-                    <Info size={15} className="shrink-0" />
-                    Charging estimates
-                  </p>
-                  <p>
-                    Charging cost estimates are for reference only. Actual rates depend on
-                    charger type, location, network operator, and time of use.
-                  </p>
-                  <p>
-                    Charging times are estimates and may vary based on temperature, battery
-                    condition, and charger output.
-                  </p>
-                  <p>
-                    For a more accurate assessment based on your financial profile, please
-                    contact Ridzuan at{" "}
-                    <a href="https://wa.me/601131933930" target="_blank" rel="noopener noreferrer" className="text-accent underline underline-offset-2">
-                      011 3193 3930
-                    </a>.
-                  </p>
-                </div>
-              )}
-      </Modal>
     </>
   );
 }
-

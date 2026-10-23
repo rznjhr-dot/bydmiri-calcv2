@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     template: "%s | BYD Miri, Sarawak",
   },
   description:
-    "Authorised BYD dealer in Miri, Sarawak. Compare 10 models with prices from RM106,353 and monthly instalments from RM979. Test drive at our Miri showroom, plus trade-in and 8-year battery warranty.",
+    "Authorised BYD dealer in Miri, Sarawak. Compare 10 models with prices from RM106,353 and monthly instalments from RM979. Test drive at the Miri showroom, plus trade-in and 8-year battery warranty.",
 
   // ── Keywords ──
   keywords: [
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BYD Miri, Sarawak — Test Drive, Price & Financing",
     description:
-      "Authorised BYD dealer in Miri, Sarawak. 10 models, prices from RM106,353, monthly from RM979. Test drive at our Miri showroom, with warranty support across Sarawak.",
+      "Authorised BYD dealer in Miri, Sarawak. 10 models, prices from RM106,353, monthly from RM979. Test drive at the Miri showroom, with warranty support across Sarawak.",
     url: baseUrl,
     siteName: "BYD Miri & Sarawak",
     locale: "en_MY",
@@ -137,7 +137,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-theme="dark" className={`h-full antialiased ${geist.variable} ${geistMono.variable} ${conthrax.variable}`}>
+    <html lang="en" suppressHydrationWarning data-theme="dark" data-scroll-behavior="smooth" className={`h-full antialiased ${geist.variable} ${geistMono.variable} ${conthrax.variable}`}>
       <head>
         {/* ── Body font — Geist 400 base; light display cuts handled in CSS ── */}
         <style
@@ -154,11 +154,15 @@ export default function RootLayout({
           content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://img.youtube.com; font-src 'self' data:; frame-src https://www.google.com https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self' https://script.google.com https://bydmiri-data.netlify.app"
         />
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-        <meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
         <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
       </head>
       <body className="min-h-full flex flex-col bg-theme text-theme-90">
+        {/* Keep content readable if JavaScript never runs. */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+
         {/* ── Skip-to-content (keyboard users) ── */}
         <a
           href="#main-content"
@@ -229,19 +233,27 @@ export default function RootLayout({
                     areaServed: ["MY", "Sarawak", "Miri", "Bintulu", "Limbang", "Lawas"],
                     availableLanguage: ["en", "ms"],
                   },
-                  openingHoursSpecification: {
-                    "@type": "OpeningHoursSpecification",
-                    dayOfWeek: [
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ],
-                    opens: "08:30",
-                    closes: "17:30",
-                  },
+                  openingHoursSpecification: [
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      dayOfWeek: [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                      ],
+                      opens: "09:00",
+                      closes: "18:00",
+                    },
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      dayOfWeek: ["Sunday"],
+                      opens: "09:00",
+                      closes: "16:00",
+                    },
+                  ],
                   sameAs: [
                     "https://web.facebook.com/ridzuanbydmiri",
                     "https://www.tiktok.com/@ridzuanbydmiri",

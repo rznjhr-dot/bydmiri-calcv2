@@ -12,18 +12,16 @@ import {
   VolumeX,
   Smartphone,
   Heart,
-  Menu,
-  X,
-  CheckCircle2,
-  ExternalLink,
+  CheckCircle2,  ExternalLink,
   Factory,
   MapPin,
   Globe2,
   ChevronDown,
   Cpu,
-  Battery,
 } from "lucide-react";
 import { Img } from "@/components/img";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import VideoEmbed from "@/components/video-embed";
 import CheckEligibilityForm from "@/components/check-eligibility-form";
 import { vehicles } from "@/lib/vehicles";
@@ -35,7 +33,7 @@ function FaqAccordion({ items }: { items: Faq[] }) {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="mt-4 border-t pt-3" style={{ borderColor: "var(--cz-border)" }}>
-      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-theme-40 mb-2">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-theme-40 mb-2">
         FAQs
       </p>
       <div className="divide-y" style={{ borderColor: "var(--cz-border)" }}>
@@ -47,7 +45,7 @@ function FaqAccordion({ items }: { items: Faq[] }) {
                 type="button"
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
-                className="w-full flex items-start justify-between gap-3 py-2 text-left text-xs text-theme-60 hover:text-theme-90 transition-colors"
+                className="w-full flex min-h-11 items-start justify-between gap-3 py-3 text-left text-[13px] text-theme-60 hover:text-theme-90 transition-colors"
               >
                 <span className="leading-snug">{item.q}</span>
                 <ChevronDown
@@ -56,7 +54,7 @@ function FaqAccordion({ items }: { items: Faq[] }) {
                 />
               </button>
               {isOpen && (
-                <p className="pb-2.5 pr-5 text-[11px] text-theme-40 leading-relaxed">{item.a}</p>
+                <p className="pb-3 pr-5 text-xs text-theme-50 leading-relaxed">{item.a}</p>
               )}
             </div>
           );
@@ -260,120 +258,38 @@ const salesPoints = [
 ];
 
 export default function WhyBydPage() {
-  const [navOpen, setNavOpen] = useState(false);
   return (
     <div className="min-h-screen" style={{  }}>
-      {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-theme/80 backdrop-blur-xl border-b border-[color:var(--cz-border)]">
-        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-theme shrink-0" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
-            <span className="font-wordmark text-[11px] ml-2">| MIRI</span>
-          </Link>
-
-          {/* Desktop links */}
-          <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
-            <Link href="/" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Home
-            </Link>
-            <Link href="/#full-lineup" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Models
-            </Link>
-            <Link href="/why-byd" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-90 px-2 py-3 whitespace-nowrap">
-              Why BYD
-            </Link>
-            <Link href="/charging" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Charging, Savings &amp; Warranty
-            </Link>
-                          <Link
-                href="#contact" className="hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium text-theme-50 px-2 py-3 whitespace-nowrap">
-              Contact Us
-            </Link>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setNavOpen((o) => !o)}
-            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-            aria-label={navOpen ? "Close menu" : "Open menu"}
-            aria-expanded={navOpen}
-          >
-            {navOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-
-        {/* Mobile menu panel */}
-        {navOpen && (
-          <div className="sm:hidden border-t bg-theme/95 backdrop-blur-xl" style={{ borderColor: "var(--cz-border)" }}>
-            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
-              <Link
-                href="/"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Home
-              </Link>
-              <Link
-                href="/#full-lineup"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Models
-              </Link>
-              <Link
-                href="/why-byd"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme hover:bg-white/5 transition-colors"
-              >
-                Why BYD
-              </Link>
-              <Link
-                href="/charging"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Charging, Savings &amp; Warranty
-              </Link>
-              <Link
-                href="/#contact"
-                onClick={() => setNavOpen(false)}
-                className="flex items-center min-h-11 px-3 rounded-lg text-sm font-medium text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-              >
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        )}
-      </nav>
+      <Navbar />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
       {/* ── Hero — Minimal: pure paper, no decoration ── */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-theme">
-        <div className="relative max-w-4xl mx-auto px-6 text-center">
+        <div className="relative max-w-[1240px] mx-auto px-5 sm:px-6 text-center">
           <div>
             <span className="label-mono justify-center mb-5">
               <BadgeCheck size={12} />
-              BYD Miri &amp; Sarawak
+              Authorised BYD dealer · Miri
             </span>
             <h1 className="font-display text-[34px] sm:text-5xl md:text-6xl mb-5">
-              <span className="text-theme-90">BYD in Miri &amp; Sarawak —</span>
+              <span className="text-theme-90">Why BYD in Miri,</span>
               <br />
-              <strong className="text-accent">test drive, price &amp; financing.</strong>
+              <strong className="text-accent">and where to buy it.</strong>
             </h1>
             <p className="text-base md:text-lg text-theme-50 max-w-2xl mx-auto leading-relaxed">
-              BYD is available in Miri, Sarawak through authorised dealer Kah Progression Auto.
-              Test drives, financing and after-sales support for all 10 BYD models — Atto 2, Atto 3,
-              Seal 6, Sealion 7, Seal and M6 — are handled locally by Ridzuan Jahari, with prices
-              from <strong className="text-theme-70">RM106,353</strong> and monthly instalments
-              from <strong className="text-theme-70">RM979</strong>.
+              Kah Progression Auto is the authorised BYD dealer in Miri, with sales, service and
+              spare parts at its 3S centre on Jalan Krokop Utama. This page covers the brand,
+              battery, warranty and charging facts that matter for Sarawak buyers, with prices from{" "}
+              <strong className="text-theme-70">RM106,353</strong> and monthly instalments from{" "}
+              <strong className="text-theme-70">RM979</strong> across the 10-model lineup.
             </p>
           </div>
         </div>
       </section>
 
       {/* ── Brand Stat Bar ── */}
-      <section className="relative px-6 pb-12">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-16">
+        <div className="max-w-[1240px] mx-auto">
           <div
             className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-[color:var(--cz-border)] bg-theme-alt"
           >
@@ -395,9 +311,9 @@ export default function WhyBydPage() {
       </section>
 
       {/* ── Advantages Grid ── */}
-      <section className="relative px-6 pb-16 md:pb-24">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-20">
         <div className="absolute inset-0 parking-lot-bg opacity-20" />
-        <div className="max-w-5xl mx-auto relative">
+        <div className="max-w-[1240px] mx-auto relative">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
               Why the World Is Choosing BYD
@@ -459,7 +375,7 @@ export default function WhyBydPage() {
                           href={adv.link2.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 min-h-9 py-2 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
+                          className="inline-flex items-center gap-1 min-h-11 py-2 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
                         >
                           <ExternalLink size={11} />
                           {adv.link2.text}
@@ -479,8 +395,8 @@ export default function WhyBydPage() {
       </section>
 
       {/* ── About BYD — global + Malaysia ── */}
-      <section className="relative px-6 pb-16 md:pb-24">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-20">
+        <div className="max-w-[1240px] mx-auto">
           <div className="text-center mb-10">
             <span className="label-mono justify-center mb-3">
               <Factory size={12} />
@@ -520,7 +436,7 @@ export default function WhyBydPage() {
                 href="https://byd.simemotors.my/about-byd"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 min-h-9 py-2 mt-3 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
+                className="inline-flex items-center gap-1 min-h-11 py-2 mt-3 text-xs font-medium text-theme-40 hover:text-theme-60 transition-colors"
               >
                 <ExternalLink size={11} />
                 About BYD — official page →
@@ -565,7 +481,7 @@ export default function WhyBydPage() {
               </div>
               <Link
                 href="/#contact"
-                className="inline-flex items-center justify-center shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold bg-accent"
+                className="inline-flex min-h-12 items-center justify-center shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold bg-accent"
                 style={{ color: "var(--cz-accent-ink)" }}
               >
                 Visit Us in Miri
@@ -579,10 +495,10 @@ export default function WhyBydPage() {
       </section>
 
       {/* ── What We Sell (Sales Rules) ── */}
-      <section className="relative px-6 pb-16 md:pb-24 overflow-hidden">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-20 overflow-hidden">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
         
-        <div className="max-w-5xl mx-auto relative">
+        <div className="max-w-[1240px] mx-auto relative">
           <div className="text-center mb-10">
             <span className="label-mono justify-center mb-3">
               <Heart size={12} />
@@ -592,7 +508,7 @@ export default function WhyBydPage() {
               What You Get for Your Money with BYD
             </h2>
             <p className="text-sm text-theme-40 mt-2 max-w-xl mx-auto">
-              We don&apos;t sell kilowatts. We sell what matters — how it feels, how it fits your life, what you save.
+              This is not a kilowatt contest. What matters is how the car feels, how it fits your life, and what you save.
             </p>
           </div>
 
@@ -617,8 +533,8 @@ export default function WhyBydPage() {
       </section>
 
       {/* ── BYD Prices in Sarawak ── */}
-      <section className="relative px-6 pb-16 md:pb-24">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-20">
+        <div className="max-w-[1240px] mx-auto">
           <div className="text-center mb-8">
             <span className="label-mono justify-center mb-3">
               <Car size={12} />
@@ -641,16 +557,17 @@ export default function WhyBydPage() {
                   <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70">Model</th>
                   <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70">Type</th>
                   <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70 text-right">OTR Price</th>
-                  <th scope="col" className="px-4 py-3 text-xs font-semibold text-theme-70 text-right">Range</th>
                 </tr>
               </thead>
               <tbody>
                 {vehicles.map((v) => (
                   <tr key={v.id} className="border-t" style={{ borderColor: "var(--cz-border)" }}>
-                    <th scope="row" className="px-4 py-2.5 text-sm font-medium text-theme-80">{v.name}</th>
+                    <th scope="row" className="px-4 py-2.5 text-sm font-medium text-theme-80">
+                      {v.name}
+                      <div className="text-[11px] font-normal text-theme-50 mt-0.5">{v.range} km range</div>
+                    </th>
                     <td className="px-4 py-2.5 text-xs text-theme-40">{v.category}</td>
                     <td className="px-4 py-2.5 text-sm text-theme-70 text-right tabular-nums whitespace-nowrap">RM{fmt(v.otr)}</td>
-                    <td className="px-4 py-2.5 text-xs text-theme-40 text-right tabular-nums whitespace-nowrap">{v.range} km</td>
                   </tr>
                 ))}
               </tbody>
@@ -662,53 +579,9 @@ export default function WhyBydPage() {
         </div>
       </section>
 
-      {/* ── Charging in Sarawak ── */}
-      <section className="relative px-6 pb-16 md:pb-24">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="label-mono justify-center mb-3">
-              <Battery size={12} />
-              Living With an EV Here
-            </span>
-            <h2 className="text-2xl md:text-3xl font-semibold text-theme-90">
-              Charging a BYD in Sarawak
-            </h2>
-          </div>
-
-          <div className="space-y-4 text-sm text-theme-60 leading-relaxed">
-            <p>
-              Most Sarawak owners charge at home. A 7 kW wallbox adds roughly <strong className="text-theme-80">246 km
-              of range in under five hours</strong> and costs around <strong className="text-theme-80">RM11</strong> at
-              domestic tariffs — a fraction of the petrol equivalent. BYD models sold here return between
-              <strong className="text-theme-80"> 410 km and 650 km</strong> on a full charge.
-            </p>
-            <p>
-              For longer routes: Miri to Bintulu is roughly 200 km, Miri to Limbang about 230 km, and
-              Miri to Lawas about 230 km. All three are within a single charge, and for travels to
-              Sibu or Kuching, DC fast chargers are available in Bintulu, Sibu, Layar, Sri Aman and
-              more upcoming along the Pan Borneo Highway.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-3 mt-6">
-            {[
-              { route: "Miri → Bintulu", km: "~200 km", note: "Single charge" },
-              { route: "Miri → Limbang", km: "~230 km", note: "Single charge" },
-              { route: "Miri → Lawas", km: "~230 km", note: "Single charge" },
-            ].map((r) => (
-              <div key={r.route} className="rounded-xl border p-4" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
-                <div className="text-xs text-theme-40">{r.route}</div>
-                <div className="font-data text-lg font-semibold text-theme-80 mt-1 tabular-nums">{r.km}</div>
-                <div className="text-[11px] text-accent mt-0.5">{r.note}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Test Drive & FAQ ── */}
-      <section className="relative px-6 pb-16 md:pb-24">
-        <div className="max-w-3xl mx-auto">
+      <section className="relative px-5 sm:px-6 pb-14 md:pb-20">
+        <div className="max-w-[1240px] mx-auto">
           <div className="text-center mb-8">
             <span className="label-mono justify-center mb-3">
               <MapPin size={12} />
@@ -718,13 +591,13 @@ export default function WhyBydPage() {
               Test Drive a BYD in Miri
             </h2>
             <p className="text-sm text-theme-40 mt-2 max-w-2xl mx-auto">
-              Test drives are held at our Miri showroom on Jalan Krokop Utama. Get in contact with
+              Test drives are held at the Miri showroom on Jalan Krokop Utama. Get in contact with
               Ridzuan and set an appointment according to your convenience. Bring your IC and driving
               licence — allow about 30 minutes.
             </p>
           </div>
 
-          <div className="rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
+          <div className="max-w-3xl mx-auto rounded-2xl border p-5 md:p-6" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
             <h3 className="text-base font-bold text-theme-80 mb-3">Common questions</h3>
             <div className="space-y-3">
               {[
@@ -750,7 +623,7 @@ export default function WhyBydPage() {
                 },
               ].map((f) => (
                 <details key={f.q} className="border-t pt-3" style={{ borderColor: "var(--cz-border)" }}>
-                  <summary className="cursor-pointer text-sm font-medium text-theme-70 hover:text-theme-90 transition-colors">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-theme-70 hover:text-theme-90 transition-colors">
                     {f.q}
                   </summary>
                   <p className="text-xs text-theme-40 leading-relaxed mt-1.5">{f.a}</p>
@@ -762,10 +635,10 @@ export default function WhyBydPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section id="contact" className="relative px-6 pt-12 pb-16 md:pt-16 md:pb-24 overflow-hidden scroll-mt-24">
+      <section id="contact" className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden scroll-mt-24">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
         
-        <div className="max-w-3xl mx-auto relative text-center">
+        <div className="max-w-[1240px] mx-auto relative text-center">
           <div className="space-y-5 animate-fade-up">
             <span className="label-mono justify-center">
               <Car size={12} />
@@ -812,16 +685,9 @@ export default function WhyBydPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[color:var(--cz-border)] py-8 px-6 text-center">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-xs text-counter mt-3 max-w-md mx-auto leading-relaxed">
-            All comparisons and estimates are for illustrative purposes only. Data as of August 2026. Subject to change. Verify with authorised BYD dealer.
-          </p>
-          <p className="text-xs text-theme-20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
-        </div>
-      </footer>
       </main>
+
+      <Footer />
     </div>
   );
 }

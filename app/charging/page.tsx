@@ -1,23 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { BatteryCharging, MapPin, Menu, X, Zap, Wallet, Shield } from "lucide-react";
-import { Img } from "@/components/img";
+import { Battery, BatteryCharging, MapPin, Zap, Wallet, Shield } from "lucide-react";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import ChargingEstimator from "@/components/charging-estimator";
 import FuelSavingsCalculator from "@/components/fuel-savings-calculator";
 import WarrantyDetails from "@/components/warranty-details";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/#full-lineup", label: "Models" },
-  { href: "/why-byd", label: "Why BYD" },
-  { href: "/charging", label: "Charging, Savings & Warranty" },
-  { href: "/#contact", label: "Contact Us" },
-];
-
 export default function ChargingPage() {
-  const [navOpen, setNavOpen] = useState(false);
 
   // Deep links such as /charging#warranty are resolved by the browser before
   // this client component hydrates, so the target can be missed (or land short
@@ -50,76 +42,20 @@ export default function ChargingPage() {
 
   return (
     <div className="min-h-screen">
-      {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-theme/80 backdrop-blur-xl border-b border-[color:var(--cz-border)]">
-        <div className="max-w-6xl mx-auto px-6 h-12 flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-theme shrink-0" aria-label="BYD Miri Home">
-            <Img src="/byd-logo-white.svg" alt="BYD" className="h-3.5 w-auto -mt-[2px]" />
-            <span className="font-wordmark text-[11px] ml-2">| MIRI</span>
-          </Link>
-
-          <div className="hidden sm:flex items-center gap-1 md:gap-3 ml-auto">
-            {navLinks.map((item) => {
-              const active = item.href === "/charging";
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`hover:text-theme-90 transition-colors shrink-0 text-[11px] font-medium px-2 py-3 whitespace-nowrap ${
-                    active ? "text-theme-90" : "text-theme-50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={() => setNavOpen((o) => !o)}
-            className="sm:hidden ml-auto w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-theme-70 hover:text-theme hover:bg-white/5 transition-colors"
-            aria-label={navOpen ? "Close menu" : "Open menu"}
-            aria-expanded={navOpen}
-          >
-            {navOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        {navOpen && (
-          <div className="sm:hidden border-t bg-theme/95 backdrop-blur-xl" style={{ borderColor: "var(--cz-border)" }}>
-            <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setNavOpen(false)}
-                  aria-current={item.href === "/charging" ? "page" : undefined}
-                  className={`flex items-center min-h-11 px-3 rounded-lg text-sm font-medium hover:bg-white/5 transition-colors ${
-                    item.href === "/charging" ? "text-theme" : "text-theme-70 hover:text-theme"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
+      <Navbar />
 
       <main id="main-content" tabIndex={-1} className="outline-none">
         {/* ── Hero ── */}
-        <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden bg-theme">
-          <div className="relative max-w-4xl mx-auto px-6 text-center">
+        <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-theme">
+          <div className="relative max-w-[1240px] mx-auto px-5 sm:px-6 text-center">
             <span className="label-mono justify-center mb-5">
               <BatteryCharging size={12} />
               Charging · Savings · Warranty
             </span>
             <h1 className="font-display text-[34px] sm:text-5xl md:text-6xl mb-5">
-              <span className="text-theme-90">Run the numbers</span>
+              <span className="text-theme-90">Charge smart.</span>
               <br />
-              <strong className="text-accent">before you commit.</strong>
+              <strong className="text-accent">Drive for less.</strong>
             </h1>
             <p className="text-base md:text-lg text-theme-50 max-w-2xl mx-auto leading-relaxed">
               Estimate BYD charging time and cost, compare what you spend on petrol today, and read the
@@ -129,8 +65,8 @@ export default function ChargingPage() {
         </section>
 
         {/* ── At a glance ── */}
-        <section className="relative px-6 pb-12">
-          <div className="max-w-5xl mx-auto">
+        <section className="relative px-5 sm:px-6 pb-14 md:pb-16">
+          <div className="max-w-[1240px] mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-[color:var(--cz-border)] bg-theme-alt">
               {[
                 { icon: Zap, value: "~RM11", label: "Home charge 20% → 80%" },
@@ -140,7 +76,7 @@ export default function ChargingPage() {
                 <div key={s.label} className="bg-theme-card px-5 py-6 text-center">
                   <s.icon size={16} className="text-accent mx-auto mb-2" />
                   <div className="font-data text-xl font-semibold text-theme-90 tabular-nums">{s.value}</div>
-                  <div className="text-[11px] text-theme-40 mt-1 leading-snug">{s.label}</div>
+                  <div className="text-[11px] text-theme-50 mt-1 leading-snug">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -148,17 +84,17 @@ export default function ChargingPage() {
         </section>
 
         {/* ── Charging estimator ── */}
-        <section className="relative px-6 py-12 md:py-16 overflow-hidden scroll-mt-24 bg-theme">
+        <section className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden scroll-mt-24 bg-theme">
           <div className="absolute inset-0 bg-theme-alt" />
           <div className="absolute inset-0 parking-lot-bg opacity-15" />
-          <div className="max-w-6xl mx-auto relative">
+          <div className="max-w-[1240px] mx-auto relative">
             <div className="mb-6">
               <span className="label-mono mb-3">
                 <Zap size={12} />
                 Charging
               </span>
               <h2 className="font-display text-2xl md:text-3xl text-theme-90">Charging Time &amp; Cost</h2>
-              <p className="text-sm text-theme-40 mt-2 max-w-2xl">
+              <p className="text-sm text-theme-50 mt-2 max-w-2xl">
                 Pick a model and charger to see how long a 20% → 80% top-up takes and what it costs at
                 Sarawak domestic tariffs.
               </p>
@@ -168,16 +104,16 @@ export default function ChargingPage() {
         </section>
 
         {/* ── Fuel savings ── */}
-        <section className="relative px-6 py-12 md:py-16 overflow-hidden bg-theme">
+        <section className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden bg-theme">
           <div className="absolute inset-0 parking-lot-bg opacity-20" />
-          <div className="max-w-6xl mx-auto relative">
+          <div className="max-w-[1240px] mx-auto relative">
             <div className="mb-6">
               <span className="label-mono mb-3">
                 <Wallet size={12} />
                 Savings
               </span>
               <h2 className="font-display text-2xl md:text-3xl text-theme-90">Fuel vs EV Running Cost</h2>
-              <p className="text-sm text-theme-40 mt-2 max-w-2xl">
+              <p className="text-sm text-theme-50 mt-2 max-w-2xl">
                 Compare your current petrol spend against charging an EV over a year of driving.
               </p>
             </div>
@@ -185,33 +121,76 @@ export default function ChargingPage() {
           </div>
         </section>
 
+        {/* ── Living with an EV ── */}
+        <section className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden bg-theme">
+          <div className="absolute inset-0 parking-lot-bg opacity-20" />
+          <div className="relative max-w-[1240px] mx-auto">
+          <div className="text-center mb-8">
+            <span className="label-mono justify-center mb-3">
+              <Battery size={12} />
+              Living With an EV Here
+            </span>
+            <h2 className="font-display text-2xl md:text-3xl text-theme-90">
+              Charging a BYD in Sarawak
+            </h2>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-4 text-sm text-theme-50 leading-relaxed">
+            <p>
+              Most Sarawak owners charge at home. A 7 kW wallbox adds roughly <strong className="text-theme-80">246 km
+              of range in under five hours</strong> and costs around <strong className="text-theme-80">RM11</strong> at
+              domestic tariffs — a fraction of the petrol equivalent. BYD models sold here return between
+              <strong className="text-theme-80"> 410 km and 650 km</strong> on a full charge.
+            </p>
+            <p>
+              For longer routes: Miri to Bintulu is roughly 200 km, Miri to Limbang about 230 km, and
+              Miri to Lawas about 230 km. All three are within a single charge, and for travels to
+              Sibu or Kuching, DC fast chargers are available in Bintulu, Sibu, Layar, Sri Aman and
+              more upcoming along the Pan Borneo Highway.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 mt-6 max-w-3xl mx-auto">
+            {[
+              { route: "Miri → Bintulu", km: "~200 km", note: "Single charge" },
+              { route: "Miri → Limbang", km: "~230 km", note: "Single charge" },
+              { route: "Miri → Lawas", km: "~230 km", note: "Single charge" },
+            ].map((r) => (
+              <div key={r.route} className="rounded-xl border p-4" style={{ borderColor: "var(--cz-border)", backgroundColor: "var(--cz-bg-card)" }}>
+                <div className="text-xs text-theme-50">{r.route}</div>
+                <div className="font-data text-lg font-semibold text-theme-80 mt-1 tabular-nums">{r.km}</div>
+                <div className="text-[11px] text-accent mt-0.5">{r.note}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
         {/* ── Warranty ── */}
-        <section id="warranty" className="relative px-6 pt-12 pb-10 md:pt-16 md:pb-12 overflow-hidden scroll-mt-24 bg-theme">
+        <section id="warranty" className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden scroll-mt-24 bg-theme">
           <div className="absolute inset-0 bg-theme-alt" />
           <div className="absolute inset-0 parking-lot-bg opacity-15" />
-          <div className="max-w-6xl mx-auto relative">
+          <div className="max-w-[1240px] mx-auto relative">
             <div className="mb-6">
               <span className="label-mono mb-3">
                 <Shield size={12} />
                 Warranty
               </span>
               <h2 className="font-display text-2xl md:text-3xl text-theme-90">Warranty Coverage</h2>
-              <p className="text-sm text-theme-40 mt-2 max-w-2xl">
+              <p className="text-sm text-theme-50 mt-2 max-w-2xl">
                 Vehicle, battery, drive unit and servicing terms as they apply to BYD vehicles sold in
                 Malaysia.
               </p>
             </div>
             <WarrantyDetails />
           </div>
-          {/* Trailing space so /charging#warranty can scroll this section to the
-              top of the viewport instead of stopping at the document end. */}
-          <div aria-hidden="true" className="h-[min(70vh,560px)]" />
         </section>
 
         {/* ── CTA ── */}
-        <section className="relative px-6 pt-12 pb-20 md:pb-28 overflow-hidden">
+        <section className="relative px-5 sm:px-6 py-14 md:py-20 overflow-hidden">
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, var(--cz-bg) 0%, var(--cz-bg-alt) 50%, var(--cz-bg) 100%)" }} />
-          <div className="max-w-2xl mx-auto relative text-center">
+          <div className="max-w-[1240px] mx-auto relative text-center">
             <span className="label-mono justify-center mb-4">
               <MapPin size={12} />
               Miri Showroom · Sarawak
@@ -239,14 +218,7 @@ export default function ChargingPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-[color:var(--cz-border)] py-8 px-6 text-center">        <div className="max-w-6xl mx-auto">
-          <p className="text-xs text-theme-20">
-            Charging times, costs and savings are estimates. Actual figures vary with driving style, tariff and conditions.
-          </p>
-          <p className="text-xs text-theme-20 mt-1.5">&copy; 2026 Ridzuan Jahari. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Why BYD?",
   description:
-    "Why choose BYD? Blade Battery safety, 6+8 year warranty, V2L technology, and honest comparisons vs competitors. BYD Miri, Sarawak.",
+    "BYD in Miri through authorised dealer Kah Progression Auto. Blade Battery safety, 6+8 year warranty, charging in Sarawak and honest comparisons, with prices from RM106,353.",
   alternates: {
     canonical: "/why-byd",
   },
