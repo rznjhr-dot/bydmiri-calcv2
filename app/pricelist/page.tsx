@@ -186,6 +186,7 @@ function PricelistRow({ v }: { v: (typeof vehicles)[0] }) {
       <td className="px-2.5 py-2.5">
         <button
           onClick={() => {
+            track("model_click", { model: v.name, location: "pricelist" });
             track("calculator_open", { model: v.name, location: "pricelist" });
             router.push(`/?calc=${encodeURIComponent(v.id)}`);
           }}
@@ -224,6 +225,7 @@ function PricelistCard({ v }: { v: (typeof vehicles)[0] }) {
         </div>
         <button
           onClick={() => {
+            track("model_click", { model: v.name, location: "pricelist" });
             track("calculator_open", { model: v.name, location: "pricelist" });
             router.push(`/?calc=${encodeURIComponent(v.id)}`);
           }}

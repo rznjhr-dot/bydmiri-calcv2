@@ -125,7 +125,9 @@ export default function Home() {
 
   const handleSelect = useCallback((id: string) => {
     const vehicle = vehicles.find((v) => v.id === id);
-    track("calculator_open", { model: vehicle?.name ?? id, location: "lineup" });
+    const model = vehicle?.name ?? id;
+    track("model_click", { model, location: "lineup" });
+    track("calculator_open", { model, location: "lineup" });
     setSelectedId((prev) => (prev === id ? null : id));
   }, []);
 

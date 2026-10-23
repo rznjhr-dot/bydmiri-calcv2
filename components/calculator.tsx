@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { Check, MousePointerClick, ClipboardCheck } from "lucide-react";
 import type { Vehicle } from "@/lib/vehicles";
 import { activeRebate } from "@/lib/vehicles";
@@ -25,6 +25,13 @@ export default function Calculator({ vehicle }: Props) {
   const [tenure, setTenure] = useState(9);
   const [interestRate, setInterestRate] = useState(String(DEFAULT_INTEREST));
   const [showEligibilityForm, setShowEligibilityForm] = useState(false);
+  const trackedUse = useRef(false);
+
+  const markUse = useCallback(() => {
+    if (trackedUse.current) return;
+    trackedUse.current = true;
+    track("calculator_use", { model: vehicle.name });
+  }, [vehicle.name]);
 
   const hasPromoOptions =
     !!vehicle.promotionOptions && vehicle.promotionOptions.length > 0;
@@ -89,7 +96,10 @@ export default function Calculator({ vehicle }: Props) {
             {/* Rebate toggle */}
             <div className="space-y-2">
               <button
-                onClick={() => setRebateOn(!rebateOn)}
+                onClick={() => {
+                  markUse();
+                  setRebateOn(!rebateOn);
+                }}
                   className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
                     rebateOn
                       ? "text-accent"
@@ -117,7 +127,10 @@ export default function Calculator({ vehicle }: Props) {
               {vehicle.cspRebate > 0 ? (
                 <>
                   <button
-                    onClick={() => setCspOn(!cspOn)}
+                    onClick={() => {
+                    markUse();
+                    setCspOn(!cspOn);
+                  }}
                   className={`flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-11 rounded-lg border transition-colors text-sm w-full ${
                     cspOn
                       ? "text-accent"
@@ -177,7 +190,10 @@ export default function Calculator({ vehicle }: Props) {
                   max={DEPOSIT_PCTS.length - 1}
                   step={1}
                   value={Math.max(0, DEPOSIT_PCTS.indexOf(depositPct))}
-                  onChange={(e) => handleDepositPct(DEPOSIT_PCTS[Number(e.target.value)] ?? 0)}
+                  onChange={(e) => {
+                    markUse();
+                    handleDepositPct(DEPOSIT_PCTS[Number(e.target.value)] ?? 0);
+                  }}
                   aria-label="Downpayment percentage"
                   aria-valuetext={`${depositPct}% — ${fmtDec(result.depositAmount)}`}
                   disabled={showCustom}
@@ -209,7 +225,10 @@ export default function Calculator({ vehicle }: Props) {
                   type="text"
                   inputMode="numeric"
                   value={customDeposit}
-                  onChange={(e) => setCustomDeposit(e.target.value.replace(/[^\d]/g, ""))}
+                  onChange={(e) => {
+                      markUse();
+                      setCustomDeposit(e.target.value.replace(/[^\d]/g, ""));
+                    }}
                   placeholder="Custom downpayment amount"
                   aria-label="Custom downpayment amount"
                   className="w-full h-8 pl-8 pr-2.5 rounded-md text-[11px] leading-none outline-none transition-colors placeholder:text-[10px] placeholder:text-theme-30 tabular-nums"
@@ -241,7 +260,10 @@ export default function Calculator({ vehicle }: Props) {
                       type="text"
                       inputMode="decimal"
                       value={interestRate}
-                      onChange={(e) => setInterestRate(e.target.value.replace(/[^\d.]/g, ""))}
+                      onChange={(e) => {
+                        markUse();
+                        setInterestRate(e.target.value.replace(/[^\d.]/g, ""));
+                      }}
                       aria-label="Interest rate percentage"
                       className="w-12 px-1 py-0.5 rounded-md text-sm text-right tabular-nums outline-none transition-colors"
                       style={{
@@ -259,7 +281,10 @@ export default function Calculator({ vehicle }: Props) {
                   max={TENURES.length - 1}
                   step={1}
                   value={Math.max(0, TENURES.indexOf(tenure))}
-                  onChange={(e) => setTenure(TENURES[Number(e.target.value)] ?? 9)}
+                  onChange={(e) => {
+                    markUse();
+                    setTenure(TENURES[Number(e.target.value)] ?? 9);
+                  }}
                   aria-label="Loan tenure in years"
                   aria-valuetext={`${tenure} years`}
                   className="cz-range w-full"
